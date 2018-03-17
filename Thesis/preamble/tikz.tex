@@ -1,0 +1,9 @@
+\usepackage{tikz}
+%\usepackage{background}
+\usetikzlibrary{snakes,arrows,shapes, automata, positioning, calc, backgrounds, decorations.pathreplacing}
+
+
+\newcommand{\tikzmark}[1]{\tikz[overlay, remember picture] \coordinate (#1);}
+
+\tikzset{node/.style={draw,shape=circle}}
+\newcommand{\order}[2][th]{\ensuremath{{#2}^{\mathrm{#1}}}}

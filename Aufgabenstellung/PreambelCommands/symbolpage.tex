@@ -1,0 +1,41 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Author     : Dennis Schuethe        Date    : 28.12.2011                   %
+%  Filename   : symbolpage.tex         Version : 1.0                          %
+%  Information: This file will create the nomenclature and should be designed %
+%               the way you want to. There are two options:                   %
+%               1. Use the normal nomenclature which is given and created by  %
+%                  the nomencl.sty -> see package declarations                %
+%               2. To have more than one column for the nomenclature, then    %
+%                  use the \begin{multicols}, but this cause a bad look,      %
+%                  because the name is printed within the columns, better use %
+%                  option 3                                                   %
+%               3. Find the nomencl.sty and then rewrite the lines 160 and    %
+%                  164 as it is shown below, then you need to add the         %
+%                  \chapter*{\nomname} or \section*{\nomname} by yourself     %
+%-----------------------------------------------------------------------------%
+%  Changelog  :                                                               %
+%  28.12.2011  opened this file                                               %
+%              may the nomencl.sty could be changed by adding this as option, %
+%              need to try a workaround                                       %
+%  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%157 \def\thenomenclature{%
+%158  \@ifundefined{chapter}%
+%159  {
+%160    %\section*{\nomname}
+%161    \if@intoc\addcontentsline{toc}{section}{\nomname}\fi%
+%162  }%
+%163  {
+%164    %\chapter*{\nomname}
+%165    \if@intoc\addcontentsline{toc}{chapter}{\nomname}\fi%
+%166  }%
+
+%\renewcommand{\nomname}{newname}	% New name for the nomenclature
+%\chapter*{\nomname}				% Do the heading for this chapter(section)
+% else			
+% newpage							% only if chapter command is not used
+%\begin{multicols}{2}				% Do multiple columns - use package multicol
+\printnomenclature %[2cm] 			% Symbolverzeichnis mit breite xcm für symbole, std is 1cm
+%\end{multicols}

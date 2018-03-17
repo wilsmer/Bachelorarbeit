@@ -1,0 +1,163 @@
+\pdfminorversion=4
+\documentclass[9pt]{beamer} 
+\setbeamertemplate{navigation symbols}{}
+%\setbeamertemplate{frametitle}{}
+
+%\usetheme{Montpellier}
+%\setbeamertemplate{footline}[frame number]
+
+\usepackage{pgfpages}
+\usepackage{booktabs}
+\usepackage[%				
+%   group-separator = {.}, 			 % group-seperator={,} -> 1,345,234.23
+%   round-mode 		= places,		 % round-mode= places(2digits), figures(1digit)
+%   round-precision = 3,			 % round-precision= x , xdigits are rounded to
+	binary-units 	= true,			 % Laden von \byte \bit, \kibi usw. (false default)
+	locale = DE,					 % lacale= DE, uses german
+	per=slash,
+%	loctolang={UK:english, DE:ngerman},	% loctolang={USA:USenglish,DE:ngerman}, if language changed in
+									 % document
+%			detect-all,				 % detect-all : uses the text options not the math mode to set
+									 % the letters/numbers
+			]{siunitx}				 % For typical Units in Text- and Mathmode
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Loading mathematical writing style  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{mathtools}
+    
+\mode<presentation>
+{
+%\usetheme{Madrid}
+\usetheme{Boadilla}
+
+\setbeamercovered{transparent}
+}
+\usepackage{subfigure} 
+\usepackage{amsmath}  			% erleichtert Mathe 
+\usepackage{enumerate}			% schicke Nummerierung
+\usepackage{graphicx} 			% für Grafik-Einbindung
+\usepackage{multicol}
+\usepackage{lmodern}
+\usepackage[ngerman]{babel}
+\usepackage[utf8]{inputenc}
+
+\usepackage{listings}
+\lstset{ %
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  frame=single,	                   % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  language=Matlab,                 % the language of the code
+  morekeywords={*,...},            % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=2,	                   % sets default tabsize to 2 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+\usepackage{media9}
+%\usepackage{multimedia}
+
+%=================== Set Beamer Templates ====================================
+%\definecolor{DOGGYbg}{RGB}{167,183,208} %HAW Color 
+%\definecolor{DOGGY}{RGB}{26,60,116} % HAW Color 2
+%\definecolor{DOGGYbg}{RGB}{240,240,255} %HAW Color 
+%\definecolor{DOGGY}{RGB}{26,60,116} % HAW Color 2
+%\definecolor{dgreen}{RGB}{0,150,0} % HAW Color 2
+%\definecolor{lightgray}{RGB}{150,150,150} % HAW Color 2
+
+%\setbeamercolor*{structure}{fg=DOGGY, bg=DOGGYbg}
+%\setbeamercolor*{palette primary}{use=structure,fg=structure.bg,bg=structure.fg!95!black}
+%\setbeamercolor*{palette secondary}{use=structure,fg=structure.bg,bg=structure.fg!70!black}
+%\setbeamercolor*{palette tertiary}{use=structure,fg=structure.bg,bg=structure.fg!95!black}
+%\setbeamercolor*{palette quaternary}{fg=structure.bg,bg=black}
+%\setbeamercolor*{block title}{use=structure,fg=structure.bg,bg=structure.fg!75!black}
+
+\definecolor{DOGGYbg}{RGB}{80,90,100} %HAW Color
+\definecolor{DOGGY}{RGB}{26,60,116} % HAW Color 2
+\definecolor{lgray}{RGB}{240,240,240} %HAW Color
+\definecolor{darkgreen}{RGB}{50,150,50} %HAW Color
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\setbeamercolor*{structure}{fg=DOGGY, bg=DOGGYbg} 
+\setbeamercolor*{palette primary}{use=structure,fg=structure.fg,bg=lgray}
+\setbeamercolor*{palette secondary}{use=structure,fg=structure.fg,bg=lgray!90!black}
+\setbeamercolor*{palette tertiary}{use=structure,fg=structure.fg,bg=lgray}
+\setbeamercolor*{palette quaternary}{fg=structure.fg,bg=lgray}
+\setbeamercolor*{block title}{use=structure,fg=structure.fg,bg=lgray}
+
+
+\setbeamertemplate{navigation symbols}{} % No navigation symbols
+\setbeamercolor{navigation symbols}{use=structure, fg=structure.bg,
+bg=structure.bg}
+% New footline
+\defbeamertemplate{footline}{rownav}{%
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.15\paperwidth,ht=2.5ex,dp=1ex,center]{author in
+  head/foot}% only put the author and dont use the institute name - width 1/4
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.60\paperwidth,ht=2.5ex,dp=1ex,center]{title in
+  head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.08\paperwidth,ht=2.5ex,dp=1ex,right]{date in
+  head/foot}%
+    \usebeamercolor[fg]{navigation symbols}% 
+    \insertslidenavigationsymbol\hspace*{1ex}%
+    \vspace*{-0.5ex}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.17\paperwidth,ht=2.5ex,dp=1ex,center]{date in
+  head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+    \textbf{\insertframenumber{}}% 
+  \end{beamercolorbox}%
+    }%
+  \vskip0pt%
+}
+\setbeamertemplate{footline}[rownav]{}
+
+\defbeamertemplate*{title page}{myPage}[1][]
+{
+  \vbox{}
+  \vfill
+  \begin{centering}
+    \begin{beamercolorbox}[sep=8pt,center,#1]{author}
+      \usebeamerfont{title}\inserttitle
+    \end{beamercolorbox}%
+    \vskip1em\par
+    \begin{beamercolorbox}[sep=8pt,center,#1]{author}
+      \usebeamerfont{author}\insertauthor
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[sep=8pt,center,#1]{institute}
+      \usebeamerfont{institute}\insertinstitute
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[sep=8pt,center,#1]{date}
+      \usebeamerfont{date}\insertdate
+    \end{beamercolorbox}
+  \end{centering}
+  \vfill
+}
+ 
+\setbeamertemplate{title page}[myPage]{}
+% ============== Document begin ==============================================
+

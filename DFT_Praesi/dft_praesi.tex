@@ -1,0 +1,592 @@
+\input{preamble.tex}
+
+\title[Implementierung der 1D-DFT in VHDL und Erweiterung zur 2D-DFT, Aktueller Stand der BA]{\textbf{Implementierung der 1D-DFT in VHDL\\ und Erweiterung zur 2D-DFT}\\ \vspace{1cm} Aktueller Stand der Bachelorarbeit}
+\vspace{1cm}
+\author[TL]{Thomas Lattmann}
+\date[8.1.2018]{8.1.2018} 
+\institute[HAW]{HAW-Hamburg, ISAR-Projektmeeting}
+
+
+\begin{document}
+
+
+
+
+% Define a background image for the first page
+%\usebackgroundtemplate{\includegraphics[]{backT.pdf}}
+%\usebackgroundtemplate{}
+
+\usebackgroundtemplate{\includegraphics[scale=1]{img/back.pdf}}
+%=============================================================================
+	%\begin{frame}\frametitle{Inhalt}
+	%	\tableofcontents
+	%\end{frame}	
+%=============================================================================
+
+\frame{\titlepage}
+
+\begin{frame}[t]\frametitle{Veranschaulichung}
+
+\begin{minipage}{0.55\textwidth}
+\begingroup
+ \renewcommand*{\arraystretch}{0.8} % Zeilenabstand der Tabelle  
+   $\Re\{W\}
+    \begin{bmatrix}
+     \myboxOnePos 	& \myboxOnePos 		& \myboxOnePos 	& \myboxOnePos 		& \myboxOnePos 	& \myboxOnePos 		& \myboxOnePos 	& \myboxOnePos \\
+     \myboxOnePos 	& \myboxSqrtPos 	& \myboxZero 	& \myboxSqrtNeg		& \myboxOneNeg	& \myboxSqrtNeg		& \myboxZero	& \myboxSqrtPos \\
+     \myboxOnePos 	& \myboxZero 		& \myboxOneNeg 	& \myboxZero 		& \myboxOnePos 	& \myboxZero 		& \myboxOneNeg 	& \myboxZero \\
+     \myboxOnePos 	& \myboxSqrtNeg 	& \myboxZero 	& \myboxSqrtPos 	& \myboxOneNeg 	& \myboxSqrtPos 	& \myboxZero 	& \myboxSqrtNeg \\
+     \myboxOnePos 	& \myboxOneNeg 		& \myboxOnePos 	& \myboxOneNeg 		& \myboxOnePos 	& \myboxOneNeg 		& \myboxOnePos 	& \myboxOneNeg \\
+     \myboxOnePos 	& \myboxSqrtNeg 	& \myboxZero 	& \myboxSqrtPos 	& \myboxOneNeg 	& \myboxSqrtPos 	& \myboxZero 	& \myboxSqrtNeg \\
+     \myboxOnePos 	& \myboxZero 		& \myboxOneNeg 	& \myboxZero 		& \myboxOnePos 	& \myboxZero 		& \myboxOneNeg 	& \myboxZero \\
+     \myboxOnePos 	& \myboxSqrtPos 	& \myboxZero 	& \myboxSqrtNeg		& \myboxOneNeg	& \myboxSqrtNeg		& \myboxZero	& \myboxSqrtPos 
+    \end{bmatrix}
+   $
+   
+   \vspace{0.5cm}
+   $\Im\{W\}
+   \begin{bmatrix}
+     \myboxZero 	& \myboxZero 		& \myboxZero 	& \myboxZero 		& \myboxZero 	& \myboxZero 		& \myboxZero 	& \myboxZero \\
+     \myboxZero 	& \myboxSqrtNeg 	& \myboxOneNeg 	& \myboxSqrtNeg		& \myboxZero	& \myboxSqrtPos		& \myboxOnePos	& \myboxSqrtPos \\
+     \myboxZero 	& \myboxOneNeg 		& \myboxZero 	& \myboxOnePos 		& \myboxZero 	& \myboxOneNeg 		& \myboxZero 	& \myboxOnePos \\
+     \myboxZero 	& \myboxSqrtNeg 	& \myboxOnePos 	& \myboxSqrtNeg 	& \myboxZero 	& \myboxSqrtPos 	& \myboxOneNeg 	& \myboxSqrtPos \\
+     \myboxZero 	& \myboxZero 		& \myboxZero 	& \myboxZero 		& \myboxZero 	& \myboxZero 		& \myboxZero 	& \myboxZero \\
+     \myboxZero 	& \myboxSqrtPos 	& \myboxOneNeg 	& \myboxSqrtPos		& \myboxZero 	& \myboxSqrtNeg 	& \myboxOnePos 	& \myboxSqrtNeg \\
+     \myboxZero 	& \myboxOnePos 		& \myboxZero 	& \myboxOneNeg 		& \myboxZero 	& \myboxOnePos 		& \myboxZero 	& \myboxOneNeg \\
+     \myboxZero 	& \myboxSqrtPos 	& \myboxOnePos 	& \myboxSqrtPos		& \myboxZero	& \myboxSqrtNeg		& \myboxOneNeg	& \myboxSqrtNeg 
+    \end{bmatrix}
+   $
+\endgroup
+\end{minipage}
+\pause
+\begin{minipage}{0.35\textwidth}
+ $\myboxOnePos+\myboxZero = 1+j0$\\
+ 
+ $\myboxOneNeg+\myboxZero = -1+j0$\\
+ 
+ $\myboxZero+\myboxOnePos = 0+j1$\\
+ 
+ $\myboxZero+\myboxOneNeg = 0-j1$\\
+ 
+ $\myboxSqrtPos+\myboxSqrtPos = \frac{\sqrt{2}}{2}+\frac{\sqrt{2}}{2}$\\
+ 
+ $\myboxSqrtPos+\myboxSqrtNeg = \frac{\sqrt{2}}{2}-\frac{\sqrt{2}}{2}$\\
+ 
+ $\myboxSqrtNeg+\myboxSqrtPos = -\frac{\sqrt{2}}{2}+\frac{\sqrt{2}}{2}$\\
+ 
+ $\myboxSqrtNeg+\myboxSqrtNeg = -\frac{\sqrt{2}}{2}-\frac{\sqrt{2}}{2}$\\
+\end{minipage}
+
+\pause
+
+\begin{tikzpicture}[remember picture,overlay]
+\draw (8.6,7.25) ellipse (2cm and 0.5cm);
+\draw (8.6,5.45) ellipse (2cm and 0.5cm);
+\draw (8.9,3.5) ellipse (2.5cm and 0.5cm);
+\end{tikzpicture}
+
+\end{frame}
+
+
+
+\begin{frame}\frametitle{Komplexe Eingangsmatrix}
+
+\begin{center}
+\begingroup % keep the change local
+\setlength\arraycolsep{3pt}
+ $Input = \begin{bmatrix}
+           a_{00}+jb_{00}  &  a_{01}+jb_{01} & \dots  & a_{07}+jb_{07}\\
+           a_{10}+jb_{10}  &  a_{11}+jb_{11} &        &               \\
+           \vdots          &                 & \ddots & \vdots \\
+           a_{70}+jb_{70}  &                 & \dots  & a_{77}+jb_{77}
+  \end{bmatrix}$
+\endgroup
+\end{center}
+
+\vspace{0.5cm}
+ 
+\begin{minipage}{0.45\textwidth}
+\begingroup % keep the change local
+\setlength\arraycolsep{3pt}
+ $\Re\{Input\} = \begin{bmatrix}
+           a_{00} &  a_{01} & \dots  & a_{07}\\
+           a_{10} &  a_{11} &        &               \\
+           \vdots          &                 & \ddots & \vdots \\
+           a_{07}  &                 & \dots  & a_{77}
+  \end{bmatrix}$
+\endgroup  
+\end{minipage}
+\begin{minipage}{0.45\textwidth}
+\begingroup % keep the change local
+\setlength\arraycolsep{3pt}
+ $\Im\{Input\} = \begin{bmatrix}
+           b_{00} &  b_{01} & \dots  & b_{07}\\
+           b_{10} &  b_{11} &        &               \\
+           \vdots &         & \ddots & \vdots \\
+           b_{70} &         & \dots  & b_{77}
+  \end{bmatrix}$
+\endgroup  
+\end{minipage}  
+
+\vspace{0.5cm}
+
+In der VHDL-Implementierung sind Real- und Imaginärteil von einander getrennt (\texttt{input\_real} und \texttt{input\_imag}).
+  
+\end{frame}
+
+
+
+\begin{frame}\frametitle{Komplexe Multiplikation}
+\vspace{-0.6cm}
+$x + jy$ : komplexer Twiddlefaktor \hspace{1cm}\\
+$a + jb$ : komplexer Eingangswert, cos() + j sin()
+\vspace{-0.5cm}
+\begin{center}
+\begin{equation*}
+\begin{split}
+(x+jy) \cdot (a+jb) &= xa + jya + jxb + j^2 yb\\
+                    & \\
+                    & \hspace{1cm} \Re \hspace{1.5cm} \Im \\
+                    &= xa - yb + j(ya + xb)
+\end{split}
+\end{equation*}
+\end{center}
+%\vspace{0.5cm}
+%\hline
+\hrule
+\pause
+ \vspace{0.2cm}
+\begin{tabular}{ccclll}
+$\Re$	        & & $\Im$  & & \\
+$\myboxOnePos $& +  & $\myboxZero$ 	& $\Rightarrow 1+j0 \cdot a_{kl} + jb_{kl}$ & = & $a_{kl} + jb_{kl}$\\
+\\
+\pause
+$\myboxZero $& +  & $\myboxOnePos$ 	& $\Rightarrow 0+j1 \cdot a_{kl} + jb_{kl}$ & = & $-b_{kl} + ja_{kl}$\\
+\\
+\pause
+$\myboxSqrtPos $& +  & $\myboxSqrtPos$ 	& $\Rightarrow \frac{\sqrt{2}}{2}+\frac{\sqrt{2}}{2} \cdot a_{kl} + b_{kl}$ & = & $\frac{\sqrt{2}}{2} \cdot a_{kl} - \frac{\sqrt{2}}{2} \cdot jb_{kl}$\\
+& & & & &+ $j\frac{\sqrt{2}}{2} \cdot a_{kl} + j\frac{\sqrt{2}}{2} \cdot b_{kl}$\\
+\end{tabular}
+\end{frame}
+
+
+
+\begin{frame}\frametitle{Matritzenmultiplikation}
+ \begin{center}
+ 
+\begin{minipage}{0.2\textwidth}
+ \begingroup
+ \renewcommand*{\arraystretch}{0.8} % Zeilenabstand
+ \renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
+
+ \[
+  \stackrel{\mbox{$W$}}{
+   \begin{bmatrix}
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+    \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
+    \myLightgrayBox 	& \myLightgrayBox	& \myLightgrayBox	& \myLightgrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
+   \end{bmatrix}
+  }
+ \]
+ \endgroup
+\end{minipage}
+\begin{minipage}{0.05\textwidth}
+ \[
+  \cdot
+ \]
+\end{minipage}
+\begin{minipage}{0.2\textwidth}
+ \begingroup
+ \renewcommand*{\arraystretch}{0.8} % Zeilenabstand
+ \renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
+
+ \[
+  \stackrel{\mbox{$I$}}{
+   \begin{bmatrix}
+    \myLightgrayBox 	& \myLightgrayBox	& \myBlackBox   & \myLightgrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myBlackBox 	& \myLightgrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox	& \myBlackBox	& \myLightgrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myBlackBox	& \myLightgrayBox 
+   \end{bmatrix}
+  }
+ \]
+ \endgroup
+\end{minipage}
+\begin{minipage}{0.05\textwidth}
+ \[
+  =
+ \]
+\end{minipage}
+\begin{minipage}{0.2\textwidth}
+\begingroup
+\renewcommand*{\arraystretch}{0.8} % Zeilenabstand
+\renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
+\[
+  \stackrel{\mbox{$D$}}{
+   \begin{bmatrix}
+     \myLightgrayBox	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myBlackBox		& \myLightgrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
+   \end{bmatrix}
+   }
+ \]
+ 
+ \endgroup
+\end{minipage}
+\end{center}
+
+\vspace{1cm}
+\begin{center}
+Zeile $W_m$  $\cdot $ Spalte $I_n$  $ = $ Element $D_{mn}$
+\end{center}
+
+
+
+\end{frame}
+
+
+
+
+\begin{frame}\frametitle{1. Spalte der komplexen Eingangsmatrix}
+ 
+ \begin{minipage}{0.45\textwidth}
+  $Input(:,0) = \begin{bmatrix}
+           a_{00}+jb_{00}\\
+           a_{10}+jb_{10}\\
+           a_{20}+jb_{20}\\
+           a_{30}+jb_{30}\\
+           a_{40}+jb_{40}\\
+           a_{50}+jb_{50}\\
+           a_{60}+jb_{60}\\
+           a_{70}+jb_{70}
+  \end{bmatrix}$
+ \end{minipage}
+ \begin{minipage}{0.45\textwidth}
+ \begin{align*}
+ \Re\{Input(:,0)\} &= \begin{bmatrix}
+           a_{00}\\
+           a_{10}\\
+           a_{20}\\
+           a_{30}\\
+           a_{40}\\
+           a_{50}\\
+           a_{60}\\
+           a_{70}\\
+  \end{bmatrix}\\
+ %\vspace{0.2cm}
+ \Im\{Input(:,0)\} &= \begin{bmatrix}
+           b_{00}\\
+           b_{10}\\
+           b_{20}\\
+           b_{30}\\
+           b_{40}\\
+           b_{50}\\
+           b_{60}\\
+           b_{70}
+  \end{bmatrix}
+\end{align*}
+ \end{minipage}
+
+ 
+\end{frame}
+
+
+\begin{frame}\frametitle{Vorüberlegungen zur Konstantenmultiplikation}
+ Von jeder Spalte der Input-Matrix müssen vor der Addition, sowohl für den Real- als auch den Imaginärteil, das 2., 4., 6. sowie 8. Element mit $+\frac{\sqrt{2}}{2}$ multipliziert werden.\\
+ 
+ Das ergibt $4 \cdot 8 \cdot 2 = 64$ Berechnungen. Diese werden im 1. Takt durchgeführt und in einem Array abgespeichert.\\
+ 
+ Die Elemente werden später so arrangiert, dass nur die positive Konstantenmultiplikation von Nöten ist.
+\end{frame}
+
+
+
+\begin{frame}\frametitle{Array erstellen}
+1. Takt: \\
+\lstinputlisting[caption=]{code/constMult_snippet.vhdl}
+
+Die Elemente werden im weiteren Verlauf mit $x_k$ bezeichnet.
+\end{frame}
+
+
+
+\begin{frame}[t]\frametitle{Veranschaulichung}
+\begin{minipage}{0.45\textwidth}
+\begingroup
+ \renewcommand*{\arraystretch}{0.8} % Zeilenabstand der Tabelle  
+   $\Re\{W\}
+    \begin{bmatrix}
+     \myboxOnePos 	& \myboxOnePos 		& \myboxOnePos 	& \myboxOnePos 		& \myboxOnePos 	& \myboxOnePos 		& \myboxOnePos 	& \myboxOnePos \\
+     \myboxOnePos 	& \myboxSqrtPos 	& \myboxZero 	& \myboxSqrtNeg		& \myboxOneNeg	& \myboxSqrtNeg		& \myboxZero	& \myboxSqrtPos \\
+     \myboxOnePos 	& \myboxZero 		& \myboxOneNeg 	& \myboxZero 		& \myboxOnePos 	& \myboxZero 		& \myboxOneNeg 	& \myboxZero \\
+     \myboxOnePos 	& \myboxSqrtNeg 	& \myboxZero 	& \myboxSqrtPos 	& \myboxOneNeg 	& \myboxSqrtPos 	& \myboxZero 	& \myboxSqrtNeg \\
+     \myboxOnePos 	& \myboxOneNeg 		& \myboxOnePos 	& \myboxOneNeg 		& \myboxOnePos 	& \myboxOneNeg 		& \myboxOnePos 	& \myboxOneNeg \\
+     \myboxOnePos 	& \myboxSqrtNeg 	& \myboxZero 	& \myboxSqrtPos 	& \myboxOneNeg 	& \myboxSqrtPos 	& \myboxZero 	& \myboxSqrtNeg \\
+     \myboxOnePos 	& \myboxZero 		& \myboxOneNeg 	& \myboxZero 		& \myboxOnePos 	& \myboxZero 		& \myboxOneNeg 	& \myboxZero \\
+     \myboxOnePos 	& \myboxSqrtPos 	& \myboxZero 	& \myboxSqrtNeg		& \myboxOneNeg	& \myboxSqrtNeg		& \myboxZero	& \myboxSqrtPos 
+    \end{bmatrix}
+   $
+   
+   \vspace{0.5cm}
+   $\Im\{W\}
+   \begin{bmatrix}
+     \myboxZero 	& \myboxZero 		& \myboxZero 	& \myboxZero 		& \myboxZero 	& \myboxZero 		& \myboxZero 	& \myboxZero \\
+     \myboxZero 	& \myboxSqrtNeg 	& \myboxOneNeg 	& \myboxSqrtNeg		& \myboxZero	& \myboxSqrtPos		& \myboxOnePos	& \myboxSqrtPos \\
+     \myboxZero 	& \myboxOneNeg 		& \myboxZero 	& \myboxOnePos 		& \myboxZero 	& \myboxOneNeg 		& \myboxZero 	& \myboxOnePos \\
+     \myboxZero 	& \myboxSqrtNeg 	& \myboxOnePos 	& \myboxSqrtNeg 	& \myboxZero 	& \myboxSqrtPos 	& \myboxOneNeg 	& \myboxSqrtPos \\
+     \myboxZero 	& \myboxZero 		& \myboxZero 	& \myboxZero 		& \myboxZero 	& \myboxZero 		& \myboxZero 	& \myboxZero \\
+     \myboxZero 	& \myboxSqrtPos 	& \myboxOneNeg 	& \myboxSqrtPos		& \myboxZero 	& \myboxSqrtNeg 	& \myboxOnePos 	& \myboxSqrtNeg \\
+     \myboxZero 	& \myboxOnePos 		& \myboxZero 	& \myboxOneNeg 		& \myboxZero 	& \myboxOnePos 		& \myboxZero 	& \myboxOneNeg \\
+     \myboxZero 	& \myboxSqrtPos 	& \myboxOnePos 	& \myboxSqrtPos		& \myboxZero	& \myboxSqrtNeg		& \myboxOneNeg	& \myboxSqrtNeg 
+    \end{bmatrix}
+   $
+\endgroup
+\end{minipage}
+\begin{minipage}{0.45\textwidth}
+ 1. Zeile: 8 Additionen\\
+ 
+ \vspace{0.5cm}
+ 3., 5. und 7. Zeile: immer 4 Additionen, 4 Subtraktionen \\
+ $\Rightarrow$ gleichviele Takte wie 1.\\
+ 
+ \vspace{0.5cm}
+ 2., 4., 6. und 8. Zeile immer 6 Additionen, 6 Subtraktionen
+\end{minipage}
+\end{frame}
+
+
+
+
+\begin{frame}\frametitle{Schrittweise Berechnung der 1. Zeile}
+
+Berechnung:
+\begin{center}
+$a_{k0} + a_{k1} + a_{k2} + a_{k3} + a_{k4} + a_{k5} + a_{k6} + a_{k7}$\\
+\end{center}
+\hrule
+\vspace{0.5cm}
+
+\begin{tabular}{ccccccccc}
+Takt&\multicolumn{6}{l}{ } & & Bit\\
+&$\underbrace{a_{k0} + a_{k1}}$ &  &$ \underbrace{a_{k2} + a_{k3}}$ &  &$\underbrace{a_{k4} + a_{k5}}$ &  &$\underbrace{a_{k6} + a_{k7}}$ & 12\\
+2&\multicolumn{7}{l}{$\hspace{0.65cm} \Downarrow \hspace{2.3cm} \Downarrow \hspace{2.3cm} \Downarrow \hspace{2.3cm}\Downarrow$}&\\
+&\multicolumn{3}{c}{$\underbrace{sum\_s1\_1 \quad + \quad sum\_s1\_2}$} & & \multicolumn{3}{c}{$\underbrace{sum\_s1\_3 \quad + \quad sum\_s1\_4}$} & 13\\
+3&\multicolumn{3}{c}{$\Downarrow$} & & \multicolumn{3}{c}{$\Downarrow$}&\\
+&\multicolumn{7}{c}{$\underbrace{sum\_s2\_1 \quad  \quad \quad \quad + \quad \quad \quad  \quad sum\_s2\_2}$} & 14\\
+4&\multicolumn{7}{c}{$\Downarrow$}&\\
+&\multicolumn{7}{c}{$sum\_s3\_1$} & 15\\
+&\end{tabular}
+
+\vspace{0.5cm}
+
+$\Rightarrow$ 3 Takte, 1. und 5. Leerlauf
+
+\end{frame}
+
+
+
+\begin{frame}\frametitle{Schrittweise Berechnung der 3., 5. und 7. Zeile}
+Beispiel: 3. Zeile der Twiddlefaktor-Matrix.\\
+
+\vspace{0.5cm}
+
+Berechnung:
+\begin{center}
+$a_{0k} - b_{1k} - a_{2k} + b_{3k} + a_{4k} - b_{5k} - a_{6k} + b_{7k}$\\
+\end{center}
+\hrule
+\vspace{0.5cm}
+
+\begin{tabular}{ccccccccc}
+Takt&\multicolumn{6}{l}{ }& & Bit\\
+&$\underbrace{a_{k0} - b_{k1}}$ &  &$ \underbrace{b_{3k} - a_{2k}}$ &  &$\underbrace{a_{4k} - b_{5k}}$ &  &$\underbrace{b_{7k} - a_{6k}}$ & 12\\
+2&\multicolumn{7}{l}{$\hspace{0.65cm} \Downarrow \hspace{2.3cm} \Downarrow \hspace{2.3cm} \Downarrow \hspace{2.3cm}\Downarrow$}&\\
+&\multicolumn{3}{c}{$\underbrace{sum\_s1\_1 \quad + \quad sum\_s1\_2}$} & & \multicolumn{3}{c}{$\underbrace{sum\_s1\_3 \quad + \quad sum\_s1\_4}$}&13\\
+3&\multicolumn{3}{c}{$\Downarrow$} & & \multicolumn{3}{c}{$\Downarrow$}&\\
+&\multicolumn{7}{c}{$\underbrace{sum\_s2\_1 \quad  \quad \quad \quad + \quad \quad \quad  \quad sum\_s2\_2}$}&14\\
+4&\multicolumn{7}{c}{$\Downarrow$}&\\
+&\multicolumn{7}{c}{$sum\_s3\_1$}&15\\
+\end{tabular}
+
+\vspace{0.5cm}
+
+$\Rightarrow$ 3 Takte, 1. und 5. Leerlauf\\
+
+\end{frame}
+
+\begin{frame}\frametitle{In der 2., 4., 6. und 8. Zeile müssen 12 Elemente addiert werden:}
+\vspace{-1cm}
+Beispiel: 2. Zeile der Twiddlefaktor-Matrix\\
+\vspace{1cm}
+
+ $a_{k0} + \frac{\sqrt{2}}{2} \cdot a_{k1} - \frac{\sqrt{2}}{2} \cdot b_{k1} + a_{k2} + \frac{\sqrt{2}}{2} \cdot a_{k3} - \frac{\sqrt{2}}{2} \cdot b_{k3} + a_{k4} + \frac{\sqrt{2}}{2} \cdot a_{k5} - \frac{\sqrt{2}}{2} \cdot b_{k5} + a_{k6} + \frac{\sqrt{2}}{2} \cdot a_{k7} - \frac{\sqrt{2}}{2} \cdot b_{k7}$\\
+ 
+ \vspace{0.5cm}
+ 
+ $= a_0 + x_0 - x_1 - b_2 + x_2 - x_3 + a_4 + x_4 - x_5 - b_6 + x_6 - x_7$\\
+ 
+ \vspace{1cm}
+ Dadurch, dass bei dem Twiddlefaktor $\pm \frac{\sqrt{2}}{2} \pm \frac{\sqrt{2}}{2}$ sowohl Real- als auch Imaginärteil existieren, erhalten wir jeweils 2 Werte und somit insgesamt 4 mehr als bei den anderen Zeilen.
+\end{frame}
+
+\begin{frame}\frametitle{Schrittweise Berechnung der 2., 4., 6. und 8. Zeile}
+ Berechnung (umsortiert):
+ \begin{center} 
+ $a_0 - x_1 + x_0 - b_2 + x_2 - x_3 + a_4 - x_5 + x_4 - b_6 + x_6 - x_7$\\
+ \end{center}
+ \hrule
+ 
+ \vspace{0.3cm}
+\begin{table}
+\hspace{-1cm}
+\begin{tabular}{ccccccccccccc}
+Takt&\multicolumn{11}{c}{}&Bit\\
+&$\underbrace{a_0 - x_1}$ &  &$ \underbrace{x_0 - b_2}$ &  &$\underbrace{x_2 - x_3}$ &  &$\underbrace{a_4 - x_5}$ &  &$\underbrace{x_4 - b_6}$ &  &$\underbrace{x_6 - x_7}$&12\\
+2&\multicolumn{11}{l}{$\hspace{0.5cm} \Downarrow \hspace{1.75cm} \Downarrow \hspace{1.8cm} \Downarrow \hspace{1.75cm}\Downarrow \hspace{1.75cm}\Downarrow \hspace{1.8cm}\Downarrow$}&\\
+&\multicolumn{3}{c}{$\underbrace{s1\_1 \quad + \quad s1\_2}$} & & \multicolumn{3}{c}{$\underbrace{s1\_3 \quad + \quad s1\_4}$} & & \multicolumn{3}{c}{$\underbrace{s1\_5 \quad + \quad s1\_6}$}&13\\
+3&\multicolumn{3}{c}{$\Downarrow$} & & \multicolumn{3}{c}{$\Downarrow$} & & \multicolumn{3}{c}{$\Downarrow$}&\\
+&\multicolumn{7}{c}{$\underbrace{s2\_1 \quad  \quad \quad \quad + \quad \quad \quad  \quad s2\_2}$} & & \multicolumn{3}{c}{$s2\_3$}&14\\
+4&\multicolumn{7}{c}{$\Downarrow$}& & \multicolumn{3}{c}{$\Downarrow$}&\\
+&\multicolumn{7}{c}{$s3\_1$}& & \multicolumn{3}{c}{$\Downarrow$}&15\\
+&\multicolumn{2}{c}{}& \multicolumn{9}{c}{$\underbrace{\quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad}$}&\\
+5&\multicolumn{2}{c}{}& \multicolumn{9}{c}{$\Downarrow$}&\\
+&\multicolumn{2}{c}{}& \multicolumn{9}{c}{$s4\_1$}&16
+\end{tabular}
+\end{table}
+
+%\vspace{0.1cm}
+5 Takte, 1. Multiplikationen, 2.-5. Additionen
+ 
+\end{frame}
+
+
+\begin{frame}[t]\frametitle{Symmetrien der rein reellen 2D-DFT}
+\hspace{-.5cm}
+\begin{minipage}{0.49\textwidth}
+%\vspace{-.3cm}
+\lstinputlisting[language=octave, frame=none, title=""]{code/Matrix_A.m}
+\lstinputlisting[language=octave, frame=none, title=""]{code/fft2_A.m}
+\end{minipage}\hspace{-.3cm}\vrule\hspace{0.1cm}
+\pause
+\begin{minipage}{0.499\textwidth}
+\lstinputlisting[language=octave, frame=none, title=""]{code/Matrix_B.m}
+\lstinputlisting[language=octave, frame=none, title=""]{code/fft2_B.m}
+\end{minipage}
+\end{frame}
+
+\begin{frame}\frametitle{Asymmetrien der komplexen 2D-DFT}
+ \lstinputlisting[language=octave, frame=none, title=""]{code/fft2_A+jB.m}
+ \begin{center}
+ $\Rightarrow$ keine Symmetrien vorhanden!
+ \end{center}
+\end{frame}
+
+
+\begin{frame}\frametitle{Ansätze \& weiteres Vorgehen}
+\begin{itemize}
+ \item Alle Spalten parallel berechnen
+ \begin{itemize}
+  \item Alle Zeilen stehen (jeweils) gleichzeitig zur Berechnung der 2D-DFT bereit
+  \item Bei der jetzigen Implementierung werden auch alle Zeilen parallel berechnet
+  \item sehr viel Parallelität!
+  \item wenig Takte nötig, evtl. stünden mehr zur Verfügung
+  \item ungleiche Ausnutzung der Hardware je Takt
+ \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[t]\frametitle{1D-DFT}
+
+Bisherige Implementierung:
+
+\hspace{2cm}
+\begin{minipage}{0.6\textwidth}
+\begingroup
+\renewcommand*{\arraystretch}{0.8}
+ \[
+  \stackrel{\mbox{$W$}}{
+   \begin{bmatrix}
+    \myBlackBox & \myBlackBox & \myBlackBox & \myBlackBox \\
+    \myBlackBox & \myBlackBox & \myBlackBox & \myBlackBox \\
+    \myBlackBox & \myBlackBox & \myBlackBox & \myBlackBox \\
+    \myBlackBox & \myBlackBox & \myBlackBox & \myBlackBox 
+   \end{bmatrix}
+  }
+  \cdot
+  \stackrel{\mbox{$x$}}{
+   \begin{bmatrix}
+    \myBlackBox & \myLightgrayBox & \myLightgrayBox & \myLightgrayBox \\
+    \myBlackBox & \myLightgrayBox & \myLightgrayBox & \myLightgrayBox \\
+    \myBlackBox & \myLightgrayBox & \myLightgrayBox & \myLightgrayBox \\
+    \myBlackBox & \myLightgrayBox & \myLightgrayBox & \myLightgrayBox 
+   \end{bmatrix}
+  }
+  =
+  \stackrel{\mbox{$X$}}{
+   \begin{bmatrix}
+    \myBlackBox & \myLightgrayBox & \myLightgrayBox & \myLightgrayBox \\
+    \myBlackBox & \myLightgrayBox & \myLightgrayBox & \myLightgrayBox \\
+    \myBlackBox & \myLightgrayBox & \myLightgrayBox & \myLightgrayBox \\
+    \myBlackBox & \myLightgrayBox & \myLightgrayBox & \myLightgrayBox 
+   \end{bmatrix}
+  }
+ \]
+\endgroup
+% \tikz[overlay,remember picture] {
+%  \draw[->] ([yshift=1.5ex,xshift=-4ex]varrowtop) -- ([xshift=-4ex]varrowbottom)
+%            node[near end,left] {\scriptsize $i = const.$};
+% }
+
+ 
+ \end{minipage}
+ \hfill
+ \begin{minipage}[t][][c]{0.2\textwidth}
+ \vspace{0pt}
+  5 Takte
+ \end{minipage}
+
+\end{frame}
+
+
+
+\begin{frame}\frametitle{Ideen, Gedanken \& Fragen}
+\begin{itemize}
+ \item Unterschiedliche Bitbreiten bei den Zeilen 1, 3, 5, 7 und 2, 4, 6, 8!
+ \begin{itemize}
+  \item 16tes Bit abschneiden?
+  \item mit wieviel Bit in die 2D-DFT hinein??
+  \item andere Breiten als 12 bedeuten in jeder Hinsicht mehr Aufwandt bezüglich der Wiederverwendbarkeit der 1D-DFT-Einheit
+ \end{itemize}
+
+ \item Wieviele Bit sollen am Ende Übrig bleiben?
+%  \item Mit wieviel Bit soll die 2D-DFT begonnen werden?
+%  \begin{itemize}
+%   \item Das hat Einfluss auf die Wiederverwendbarkeit der 1D-DFT-Einheit
+%  \end{itemize}
+
+ \item Der Faktor $\frac{\sqrt{2}}{2}$ könnte rausgezogen werden 
+ \begin{itemize}
+  \item nur 1 statt 6 Multiplikationen je Zeile
+  \item erst alle Zahlen aufsummieren, dann die Multiplikation
+ \end{itemize}
+
+ \item
+\end{itemize}
+
+
+ 
+\end{frame}
+
+
+\begin{frame}\frametitle{Speicher}
+ Wie wird die Speicherung sein?
+ 
+ Welche Art von Speicher verwenden wir?
+\end{frame}
+
+
+
+\end{document}

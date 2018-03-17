@@ -1,0 +1,414 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Author     : Thorben Schuethe        Date    : 28.12.2011                  %
+%  Filename   : preambelRep.tex        Version : 2.12                         %
+%  Information: This file contains all build information which must be loaded %
+%               before \begin{document}. All packages needed for writing are  %
+%               loaded in this preambel. File will be safed and used with     %
+%               UTF-8 Format                                                  %
+%-----------------------------------------------------------------------------%
+%  Changelog  :                                                               %
+%  10.09.2011 : build date, Koma-Script packages for report                   %
+%  14.09.2011 : add Kopfzeilen, Layoutparameter                               %
+%  03.10.2011 : schriften laden, pdfhyperref infos, crop eingebunden          %
+%  07.10.2011 : documentclass erweitert mit oneside, onecolumn,draft          %
+%  10.10.2011 : aenderung der bibtex encodierung auf utf8                     %
+%  02.11.2011 : epstopdf eingebunden                                          %
+%  26.11.2011 : pdf pages eingebunden, draft auskommentiert                   %
+%  28.12.2011 : added acronym, tested nomenclature, added multicol            %
+%  23.08.2012 : scrhack um warnungen vom listing zu entfernen                 %
+%  03.09.2012 : siunitx - option binary geladen + glossary hinzugefügt        %
+%  04.09.2012 : add glossaries - for better handling of acronym and symbols   %
+%  16.09.2012 : Mathepakete fuer andere Symbole geladen                       %
+%  13.10.2012 : ctable fuer Tabellen mit Fußnote                              %
+%  20.11.2012 : Option to epstopdf package                                    %
+%  21.11.2012 : Make living column title aktiv                                %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% load the document class KOMA-Script Report
+\documentclass[	a4paper,			% Papierformat waehlen
+				11pt,				% Schriftgroesse
+%				draft,				% Randueberschreitungen werden schwarz markiert
+				DIV13,				% Unterteilung des Blatts in DIVxx - xx Teile
+									% Je kleiner die Zahl umso groesser die Raender
+									% Um Optimale Anpassung zu erhalten : DIVcalc + \typearea...
+				BCOR5mm,			% Bindekorrektur BCORXmm - Xmm breit
+% 		KEIN ZWEITER PUNKT IN DER NUMMERIERUNG DER ÜBERSCHRIFTET 2.2 statt 2.2.	
+				%pointlessnumbers,			
+%      KOPF/FUSSZEILE
+%				headinclude,		% Head gehoert mit zum Textblock/auskommentiert im Seitenrand
+				headsepline,		% Trennlinie zwischen Kopf und Text, schaltet automatisch 
+%									 headinclude mit ein
+%				footinclude,		% wie Head nur Foot
+%				footsepline,		% wie headsepline
+%      LAYOUTPARAMETER
+%				twocolumn,			% Zweispaltige Texte
+				onecolumn,			% Einspaltig
+%				twoside,			% Zweiseitiger Druck re -li sind gespiegelt vom Satzspiegel
+				oneside,			% Einseitig
+%				openright,			% Sollte bei zweiseitigem Druck eignestellt werden
+%				cleardoublestandard	% Alles fuer 2Seitige mit openright: Kolumnentitel linke Seite
+%				cleardoubleplain	% nur Seitenzahlen linke Seite
+%				cleardoubleempty	% linke Seite ganz leer
+%				chapterprefix,		% Kapitel wir zu beginn eines Kapitels ausgegeben
+%				appendixprefix,		% Anhang wird vor Kapiteln im Anhang ausgegeben
+				headings=normal,	% kleine ueberschriften, oder small-, oder big-headings.
+									% Standard ist Big
+%		TABELLENEIGENSCHAFTEN
+				captions=tableheading,	% Um richtigen Abstand fuer Ueberschrift zu erhalten, 
+									% Ueberschrift wird genommen
+% 		VERZEICHNISEINSTELLUNGEN
+%				tocleft,			% Setzt das Inhaltverzeichnis nicht eingerueckt nach links
+%				liststotoc,			% Abb.- und Tab.Verzeichnisse ins Inhaltsverzeichnis
+%				liststotocnumbered, % wie liststotoc nur mit Gliederungspunktangabe
+%				bibtotoc,			% Literaturverzeichnis ins Inhaltverzeichnis
+%				bibtotocnumbered,	% s.o. nur mit Gliederungsebene
+%				idxtotoc,			% Eintrag ins Inhaltsverzeichnis fue Index
+%				openbib,			% Veraendert aussehen des Lit.-Verzeichnisses
+%		Language
+%				ngerman,			% to pass as standard to all packages
+						]{scrreprt}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Schnittmarken falls notwendig       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage[% Papierformate auf denen gedruckt werden soll
+%			a0,b0,
+%			a1,b1,
+%			a2,b2,
+%			a3,b3,
+%			a4,b4,
+%			a5,b5,
+%			a6,b6,
+%			letter,
+%			legal,
+%			executive,
+%			center,		% centrierter druck
+%			landscape,	% querformat
+%			]{crop}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Loading writingpackages             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% load packages for european, espacially german users
+\usepackage[T1]{fontenc}			% Schriften fuer Europaeische Zeichen passend Kodiert
+\usepackage[utf8]{inputenc}         % Eingabe von Umlauten, ss usw. - 
+									% utf8: kann nicht jeder Editor speicher, aber plattformuebergreifend
+									% latin1: Unix, VMS, Windows
+									% ansinew: Windows
+									% latin9: wie latin1, jedoch mit Eurozeichen
+\usepackage[english, ngerman]{babel}% Passt Konventionen an Sprache an
+									% ngerman: Neue Deutsche Rechtschreibung
+									% oder z.B. UKenglish, USenglish, canadian, german, austrian, 	
+									% naustrian
+									
+% Schriftfamilien Laden
+\usepackage{lmodern}				% Laedt die Schriftart Latin-Modern fuer Text
+%\usepackage[scaled=0.66]{luximono}	% Schrift fuer Typewriter - Quellcode ~8pt
+									
+%\usepackage[a4paper]{geometry}		% Anpassung von Seitenraender per Hand
+%\geometry{	left=3cm, top=2cm, 
+%			right=2cm, bottom=3cm} 	% Wenn Zweiseitig-> left->inner : right->outer
+									% Weitere Moeglichkeiten: hight - Texthoehe, width - Textbreite
+
+% FUSS UND KOPFZEILENANPASSUNG
+%\pagestyle{plain}					% empty: Keine Kopf/Fusszeile
+									% plain: Seitenzahl am Fussende
+									% headings: aktiviert lebende Kolumnentitel (Kapitel im Kopf)
+									% myheadings : eigene Kopf- fußzeilen
+									% fancy: Erlaubt die Verwendung der in dem Paket "fancyhdr" 
+									% definierten Befehle zur Erstellung eigener Kopf- und Fußzeilen
+\usepackage[%
+			automark				% takes the chapter variant
+			]{scrpage2}				% Fuer eigene Kopf/Fusszeilen, ermoeglicht 
+\pagestyle{scrheadings} %, scrpalin}
+\clearscrheadings					% clear old header style
+\clearscrplain						% clear plain header style
+\clearscrheadfoot					% clear foot style
+%\automark[section]{chapter}
+\ohead{\pagemark}					% beide Außenseiten des Headers --Seitenzahl
+\ihead{\headmark}					% beide Innenseiten Headers -- Chapter
+%\lehead{\leftmark}
+%\lohead{\rightmark}
+%\ofoot[\pagemark]{}					% auf plain seiten Seitenzahl außen
+									
+%\usepackage{setspace}				% Fuer Abstaende im Dokument
+%\onehalfspacing					% aendert Zeilenabstand auf 1 1/2
+									
+%\usepackage{microtype}				% optischer Randausgleich in PDF's
+									% ungeeignet fuer internettexte o.ae.	
+									
+\usepackage[						% To set Text at a specific 
+			absolute,				% absolute - absolute position on the page
+			overlay,				% overlay - if using absolute option text is placed below other things
+%			showboxes,				% showboxes - shows boxes around the text
+%			noshowtext,				% noshowtext - just show the box if it is on
+%			verbose,				% verbose - package writing things to output like calculations
+%			quiet,					%quiet turns this off : verbose = default
+			]{textpos}		
+
+									
+\usepackage{bbding}					% to get cross and check symbol
+									
+									
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Graphic/Color Packages              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{color}					% to use colors, espacially for source codes
+\usepackage[%
+			%table					% Zum automatischen Laden des Pakets colortbl - fuer Tabellen
+			]{xcolor}				% for Hyperref package, that one can say red than rgb values
+\usepackage{graphicx}				% laden der Graphic Optionen
+\usepackage{subfigure}				% Für Untergrafiken, wenn eine eigene Bildunterschrift erwuenscht
+\usepackage{pdfpages}				% Zum Laden und einbinden von PDF-Seiten
+\usepackage[%
+			update					% if pdf conversion is older than eps file, new conversion is done
+			]{epstopdf}				% eps to pdf needs for pdflatex - after graphicx
+\usepackage{framed}					% for use of newtheorem with a coloured box
+
+\setlength{\headheight}{1.5cm}
+\setlength{\voffset}{0.5cm}
+\usepackage{geometry}
+\geometry{
+  left=1.5cm,
+  right=1.5cm,
+  top=2cm,
+  bottom=2.8cm,
+  bindingoffset=0mm
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Math Packages                       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[%
+%			leqno,					% Nummern linksbuendig
+%			reqno,					% Nummern rechtsbuendig (Standard)
+%			fleqn,					% Gleichungen linksbuendig statt zentriert
+			]{amsmath}
+\usepackage{amsfonts}				% Um Zahlenraeume richtig darzustellen
+\usepackage{MnSymbol}				% Zusaetzliche Zeichen
+\usepackage{mathrsfs}				% Fuer Matheschrift
+%\usepackage{icomma}					% Bei deutscher Schreibweise, damit keine
+									% leerzeichen zwischen , und Zahl
+\usepackage{nicefrac}				% Fuer bessere Darstellung von Bruechen im 
+									% Fließtext
+\usepackage{trsym}					% Fuer Laplace-Fourier-Symbole
+\usepackage[%
+			right,					% Place of the Euro-Sign
+			]{eurosym}
+\usepackage[%
+			thinlines,				% dünne linien
+%			thicklines,				% dicke linien
+			]{easybmat}				% For Matrices with dottet lines between fields, horizontal or vertical
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   Berechnung der Seitenraender      %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Fuer optimale Anpassung des Satzspiegels
+%\typearea[current]{calc}				% Bestimmt Rasterzahl aus Schriftgroesse und Anzahl der 		
+									% Zeichen/Woerter pro Zeile
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Verzeichniss Packages               %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[babel,
+%			german=guillemets,  	% franz. <<  >>
+			german= quotes,			% deutsche Anfuehrungszeichen "
+			]{csquotes}				% Laden der richtigen Anfuehrungszeicehn fuer deutsche sprache
+									% = quotes fuer englische sprache
+\usepackage[backend=biber,%
+%			style=numeric-comp,%	% Zitiert durch Nummern - also [1], [siehe 1-3]
+			style=ieee,
+%			style=numeric,%			% Zitiert durch Nummern - also [1], [siehe 2,1,3]
+%			sorting,nty,%			% Sortieren nach Name,Titel,Jahr - diese Option brauch nicht
+									% geladen werden, da dies der automatische zitierstyl selbst-
+									% staendig uebernimmt
+			defernumbers=true,      % to set different numeric types -e.g. A1...A2 B1...B2
+			sortcase=false,%		% false- keine unterscheidung zwischen gross und kleinschrift
+			autolang=other,%		% jeder eintrag in seiner sprache
+			bibencoding=utf8,%
+			]{biblatex}				% um 8-bit zeichen zu erkennen, fuer umlaute
+
+% 	INDEX ERZEUGEN - falls gewuenscht muessen beide direkt so eingebunden werden
+%\usepackage{index}
+%\makeindex
+
+
+% 	ERZEUGEN DES ABKUERZUNGSVERZEICHNISSES
+%    Funktioniert nicht zusammen mit Glossary/Glossaries - aber mit nomenclature
+%\usepackage[%
+%%			footnote, 				% die Langform als Fußnote ausgeben
+%    		nohyperlinks, 			% wenn hyperref geladen ist, wird die Verlinkung unterbunden
+%    		printonlyused, 			% nur Abkürzungen auflisten, die tatsächlich verwendet werden.
+%%        	withpage, 				% Abkürzungsverzeichnis mit Seitenzahl auf welcher die Abkürzung als 
+%        							% erstes verwendet wurde
+%%    		smaller, 				% Text soll kleiner erscheinen, das Paket relsize wird vorausgesetzt
+%%    		dua, 					% es wird immer die Langform ausgegeben
+%%    		nolist 					% es wird keine Liste mit allen Abkürzungen ausgegeben
+%			]{acronym}				% Abkürzungsverzeichnis
+
+%	Symbolverzeichnis erzeugen - lade dazu mit \include{symbolpage} das Verzeichnis 
+%\usepackage[%
+%			intoc,					% Eintrag des Abkuerzungsverzeichnis
+%			notintoc,				% Kein Eintrag - default
+%			english,				% Ueberschrift in English (default)
+%			german,					% in deutsch
+%			]{nomencl}
+%\makenomenclature					% damit Symbolverzeichnis erzeugt wird
+%\usepackage{multicol}				% Zum drucken mehrerer Spalten in einem Environment
+
+% Glossary
+%\usepackage[%
+%			style    = list,		% list, altlist, super, 	long (default)
+%			header   = plain,		% Ausgabe des Kopfes, 		default - none
+%			border   = plain,		% Ausgabe einer Umrandung, 	default - none
+%			cols     = 3,			% 3 Spalten, Name, Beschreibung, Seite; default = 2
+%			number   = none,		% Keine Rückverweise, default = page, angabe anderer counter möglich
+%			toc		 = true,		% Fügt Eintrag ins Inhaltsverzeichnis hinzu, defualt false
+%			hypertoc = true,		% Setzt Anker direkt vor die Überschrift, toc danach. 
+									% Beides gleichzeitig nicht erlaubt. Selbe Funktion. default - false
+%			hyper    = true,		% Hyperlink für Seitenzahlen, bzw. bei Acronymen zum Glossary
+%			section  = true,		% Section für Überschrift auch wenn chapter defined ist. false default
+%			acronym	 = true,		% Seperate Liste für Acronyme zum Glossary, default - false
+%			global   = true,		% Acronym-Befehle haben globalen Effekt. defualt - false
+%			]{glossary}
+% \makeglossary
+% Glossaries - same as Glossary but with more options/better handling and individualization
+\usepackage[%
+%			toc,      				% Fügt Eintrag ins Inhaltsverzeichnis hinzu, defualt false
+			nonumberlist,			% keine Ausgabe der Seitenzahlen
+%			nowarn,					% unterdrückt alle warungen des pakets
+%			nomain,					% kein hauptglossary wird erzeugt, acronym oder newglossary um Einträge zu erzeugen
+%			sanitize={%				% unterdrückt die keys für einträge oder fügt sie hinzu
+%					  name        = false,%
+%					  description = false,%
+%					  symbol      = false},%
+%			translate = true,		% zur übersetzung von einträgen - siehe doku, default false
+			hyperfirst = false,		% erzeugt hyperlink zum glossar bei erster verwendung, default true
+%			hyper = false,			% Hyperlinks ausschalten
+%			numberline,				% Eintrag ins toc mit Nummerierung
+%			section=section,		% in welcher ebene der eintrag, default chapter if loaded sonst section
+%			style = long,			% default list, sonst: long, super, tree
+%			nolong,					% pakete für longtable werden nicht geladen und befehle nicht definiert
+%			nosuper,				% supertabular wird nicht geladen, pakete nicht definiert
+%			nolist,					% list wird nicht geladen definiert
+%			notree,					% gloassrytree wird nicht geladen definiert
+%			nostyles,				% keine styles werden geladen, eigene definieren
+%			counter = page,			% page default, or any other counter
+%			sort = def,				% def - sortiert nach definition, standard(default)-sortiert nach sort key, sonst name, use - sortieren nach reihenfolge wie sie im dokument vorkommen
+			%%%%%%%%%%%%% Acronym options
+			acronym,  				% Seperate Liste für Acronyme zum Glossary, default - false
+%			acronymlist={},			% wenn mehr als eine abkürzungsliste, muss diese hier mit angegeben werden damit das glossary als acronym behandelt wird
+%			description,			% erlaubt eine zusätzliche beschreibung
+%			footnote,				% schreibt die long version als fußnote bei erster nutzung
+%			smallcaps,				% acronyme werden als kapitelchen angezeigt
+%			smaller,				% kleinere schrift, laden von relsize für befehl textsmaller erforderlich
+%			dua,					% langform wird immer ausgegeben
+			shortcuts,				% um selbe befehle wie acronym paket zu haben
+			]{glossaries}
+%\usepackage{relsize}				% in verbindung mit smaller - stellt textsmaller befhel zur verfügung
+%Ein eigenes Symbolverzeichnis erstellen
+\newglossary[slg]{symbols}{syi}{syg}{Symbolverzeichnis}
+\makeglossaries
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Loading label options               %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[ngerman]
+			{varioref}	            % To get automatic "see Section xy on page xx"
+%\usepackage[german] %
+			%{fancyref}	    		% same as varioref, except this is setting section automatically
+									% Options in []-brackets:
+									% language, e.g. english, ngerman - last entry is main-language
+									% paren - sets the reference in ()-brackets
+									% plain - no pagenumber in the reference
+									% -----------------------------------------
+									% standard prefixes used by fancyref:
+									% sec, chap, part, fig, tab, enum, eq, fn
+%\fancyrefchangeprefix{\fancyrefchaplabelprefix}{cha} % sets a new prefix for the label chap
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Loading unit options                %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[%				
+%   group-separator = {.}, 			 % group-seperator={,} -> 1,345,234.23
+%   round-mode 		= places,		 % round-mode= places(2digits), figures(1digit)
+%   round-precision = 3,			 % round-precision= x , xdigits are rounded to
+	binary-units 	= true,			 % Laden von \byte \bit, \kibi usw. (false default)
+	locale = DE,					 % lacale= DE, uses german
+%	loctolang={UK:english, DE:ngerman},	% loctolang={USA:USenglish,DE:ngerman}, if language changed in
+									 % document
+%			detect-all,				 % detect-all : uses the text options not the math mode to set
+									 % the letters/numbers
+			]{siunitx}				 % For typical Units in Text- and Mathmode
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Loading sourcecode options          %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[%
+			hyperref 	= false,	% switch off hyperref hack
+			float 		= false,	% switch off float hack
+			listings 	= true,  	% switch off listings hack
+			]{scrhack}				% to get rid off the warning @addtocbasic
+\usepackage{listings}				% options : basicstyle= e.g. \ttfamily
+									% fontadjust=true % before load package [scaled=0.78]{luximono}
+									% columns=flexible
+
+
+
+
+%\hyphenation{}						 % Trennung von Woertern falls nicht automatisch korrekt erkannt
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Loading table options		          %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{multirow}				% Fuer Mehrzeilige Zellen
+%\usepackage{array}					% Festlegen von Breiten, Präfixe, Suffixe
+% see also package siunitx - damit Spalten mit Zahlen auf bestimmte Länge ausgerichtet werden
+\usepackage{tabularx}				% Zum festlegen der Gesamtbreite der Tabelle & verwenden von X fuer 
+									% variable Spaltenbreite
+%\usepackage{longtable}				% Tabelle ueber mehr als eine Seite
+\usepackage{ltxtable}				% longtable + tabularx eigenschaften
+\usepackage{booktabs}				% Fuer besseres aussehen der Linien
+%\usepackage{rotating}				% Querformat der Tabelle
+									% !!! Vorsicht !!!
+									% tablecaptionabove wird nicht ausgewertet,
+									% Einfuegen von \vskip\abovecaptionskip --> Nur unter KOMA Script
+\usepackage{ctable}					% For tables with footnote under the table directly
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Hyperref for PDFLATEX with links    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[draft 		=	false,	% all hypertext options are turned off
+			final 		=	true, 	% all hypertext options are turned on
+			raiselinks 	= 	true,	% Allow links to reflect real height - e.g. with pictures
+			breaklinks	=	false,	% false=Do not break a line within a link
+			backref		=	false,	% false=no backlinks in the bibliography
+			pagebackref =	false,	% false=no pagebacklinks in bibliography
+			linktocpage =	false,	% true=makes page-no linked and not text in TOC,LOF and LOT
+			colorlinks	=	true,	% true=Colors the text of links and anchors
+%			linkcolor 	=	red, 	% Color for normal internal links.
+%			anchorcolor =	black, 	% Color for anchor text.
+%			citecolor 	=	green, 	% Color for bibliographical citations in text.
+%			filecolor 	=	cyan, 	% Color for URLs which open local files.
+%			menucolor 	=	red,	% Color for Acrobat menu items.
+%			runcolor 	= filecolor,% Color for run links (launch annotations).
+			allcolors 	= 	red,	% Set all color options (without border and field options).
+			urlcolor 	=	blue,	% Color for linked URLs.
+			%allbordercolors  =red,	% Set all colors
+%			citebordercolor =green,	% cite color
+%			filebordercolor =cyan,	% file color
+%			linkbordercolor =red,	% link color
+			%urlbordercolor  =blue,	% url color
+%			pdfborder = 0 0 0,		% weder farbige links noch umrandung			
+%			menubordercolor =red,	% set menu color
+%			frenchlinks = 	false,	% Use small caps instead of color for links.
+			bookmarks	=	true,	% true=Bookmarks are added to the pdf
+			bookmarksopen=	false,	% false=Bookmarks not open when opening the pdf
+			bookmarksnumbered=true,	% true= Eintraege sind nummeriert
+%			pdfpagemode	=	FullScreen,	% File is opened in Full Screen
+%			pdfstartview=	fit,	% Fit size when opening pdf
+			pdfpagelabels=	true,	% true = Roemische Zahlen usw werden dargestellt,
+									% false= fortlaufende nummerierung
+			]{hyperref}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	Usepackage für Pseudocode 			 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\usepackage{algorithm}
+\usepackage[Algorithmus]{algorithm} 	% deutsche notation im titel
+\usepackage[noend]{algpseudocode}

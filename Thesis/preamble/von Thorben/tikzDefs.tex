@@ -1,0 +1,64 @@
+% tikz definitions
+\tikzset{
+		>=stealth,
+		types/.style={
+			rectangle,
+			minimum size=6mm,
+			very thick,
+			draw=blue!30!black!70,
+			top color=white,
+			bottom color=blue!40!white!20,
+			font=\itshape
+			},
+		trans/.style={
+		 	rectangle,
+		 	minimum height= 1cm,
+		 	minimum width =.1cm,
+		 	very thick,
+		 	draw = blue!50!white!30,
+		 	fill = blue!50!white!30,
+		 	font={\itshape,\tiny},
+		 	text width = .1cm
+		 	},
+		 point/.style={
+		 	circle,
+		 	inner sep=0pt,
+		 	minimum size=0pt,
+		 	fill = red
+		 	},
+		 nonterminal/.style={
+			% The shape:
+			rectangle,
+			% The size:
+			%minimum size=6mm,
+			minimum width = 5cm,
+			minimum height= 6mm,
+			% The border:
+			very thick,
+			draw=stillOrange, % 50% red and 50% black,
+			% and that mixed with 50% white
+			% The filling:
+			%top color=white, % a shading that is white at the top...
+			%bottom color=red!50!black!20, % and something else at the bottom
+			top color=stillOrange!80,bottom color=stillOrange!80, middle color=stillOrange,
+			% Font
+			font=\itshape
+			},
+		terminal/.style={
+			% The shape:
+			rectangle,minimum size=6mm,rounded corners=3mm,
+			% The rest
+			very thick,draw=stillOrange,
+			top color=stillOrange!80,bottom color=stillOrange!80, middle color=stillOrange,
+			font=\ttfamily
+			},
+		gui/.style={
+			% The shape:
+			rectangle,minimum size=6mm,rounded corners=3mm,
+			% The rest
+			very thick,draw=blue!80,
+			top color=blue!40,bottom color=blue!40,middle color=blue!20,
+			font=\ttfamily
+			},
+}
+\definecolor{stillOrange}{RGB}{250,105,20}

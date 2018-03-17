@@ -1,0 +1,20 @@
+\usepackage{multirow}				% Fuer Mehrzeilige Zellen
+\usepackage{multicol}
+%\usepackage{array}					% Festlegen von Breiten, Präfixe, Suffixe
+% see also package siunitx - damit Spalten mit Zahlen auf bestimmte Länge ausgerichtet werden
+\usepackage{tabularx}				% Zum festlegen der Gesamtbreite der Tabelle & verwenden von X fuer 
+									% variable Spaltenbreite
+%\usepackage{longtable}				% Tabelle ueber mehr als eine Seite
+\usepackage{ltxtable}				% longtable + tabularx eigenschaften
+
+%\usepackage{rotating}				% Querformat der Tabelle
+									% !!! Vorsicht !!!
+									% tablecaptionabove wird nicht ausgewertet,
+									% Einfuegen von \vskip\abovecaptionskip --> Nur unter KOMA Script
+\usepackage{ctable}					% For tables with footnote under the table directly
+
+
+\setlength{\arraycolsep}{0.4pt}
+\delimitershortfall=0pt % Höhereduzierung der Klammern von Matrizen gegenüber dem Inhalt
+
+\usepackage{tabu} % fuer farbige Zeilen in Tabellen

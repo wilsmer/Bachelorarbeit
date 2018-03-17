@@ -1,0 +1,165 @@
+\section{Abschätzung des Rechenaufwandes}\label{sec:abschaetzung_Rechenaufwand}
+\subsection{Komplexe Multiplikation}
+
+Im allgemeinen Fall müssen gemäß Gl. \ref{eq:komplexe_Multiplikation} bei der komplexen Multiplikation vier einfache Multiplikation sowie zwei Additionen durchgeführt werden.
+
+\begin{align}\label{eq:komplexe_Multiplikation}
+\begin{split}
+ e + jf &= (a + jb) \cdot (c + jd)\\
+        &= a \cdot c + j(a \cdot d) + j(b \cdot c) + j^2(b \cdot d)\\
+        &= a \cdot c + b \cdot d + j(a \cdot d + b \cdot c)
+\end{split}
+\end{align}
+
+
+Da das Signal $x_{sens}(t)$ der Sensoren rein reell ist, reduziert sich der Aufwand wie in Gl. \ref{eq:halb_komplexe_Multiplikation} zu sehen auf zwei Multiplikationen und eine Addition.
+
+\begin{align}\label{eq:halb_komplexe_Multiplikation}
+\begin{split}
+ e + jf &= a \cdot (c + jd)\\
+        &= a \cdot c + j(a \cdot d)\\
+\end{split}
+\end{align}
+
+Wie bereits unter \ref{sec:AnalyseBewertungTwiddlefaktornMatrizen} auf Seite \pageref{sec:AnalyseBewertungTwiddlefaktornMatrizen} erörtert, kann sogar die komplexe 
+Twiddlefaktor-Matrix in diesem speziellen Fall als rein reell betrachtet werden. Somit bleibt von der anfangs komplexen Multiplikation nur eine rein reelle Multiplikation und
+in 50$\percent$ der Fälle die Bildung des 2er-Komplements übrig, was erheblich Rechenaufwand erspart.
+
+\begin{equation}
+ X_{Sens}(f) = W \cdot x_{Sens}(t) \quad \textnormal{: ``rein reell''}
+\end{equation}
+  
+
+\subsection{Matrizenmultiplikation}
+Die \gls{dft} kann als Summation oder als Matrixmultiplikation geschrieben werden, wobei sich letzteres auf einem \gls{asic} bedeutend besser implementieren lässt. 
+Gleichung \ref{eq:dft_matrixmultiplication} stellt die \gls{dft} als Matrizenmultiplikation dar, wobei $x(t)$ der Eingangsvektor (bzw. -matrix) im Zeitbereich und $W$ 
+die Twiddlefaktormatrix ist.
+
+\begin{align}\label{eq:dft_matrixmultiplication}
+ X(f) = F(k) = W \cdot x(t) = W \cdot f(m)
+\end{align}
+
+
+Betrachtet wird zunächst die Multiplikation eines Vektors mit einer Matrix. 
+
+\begingroup
+\renewcommand*{\arraystretch}{1.0}
+
+ \[
+  \stackrel{\mbox{$X(f) = \mathcal{F}\{x(t)\}$}}{
+  \begin{bmatrix}%
+   \myBlackBox \\
+   \myLightgrayBox \\
+   \myLightgrayBox \\
+   \myLightgrayBox
+  \end{bmatrix}
+  }
+  =
+  \stackrel{\mbox{$W$}}{
+   \begin{bmatrix}
+    \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox
+   \end{bmatrix}
+  }
+  \cdot
+  \stackrel{\mbox{$x(t)$}}{
+   \begin{bmatrix}
+    \myBlackBox \\
+    \myBlackBox \\
+    \myBlackBox \\
+    \myBlackBox
+   \end{bmatrix}
+  }
+ \]
+\endgroup
+
+ \vspace{1cm}  
+  
+ \[
+  \stackrel{\mbox{$X(f) = \mathcal{F}\{x(t)\}$}}{
+   \begin{bmatrix}
+    \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
+    \myDarkgrayBox 	& \myDarkgrayBox 	& \myDarkgrayBox 	& \myDarkgrayBox \\
+    \myGrayBox 		& \myGrayBox 		& \myGrayBox 		& \myGrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
+   \end{bmatrix}
+  }
+  =
+  \stackrel{\mbox{$W$}}{
+   \begin{bmatrix}
+    \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
+    \myDarkgrayBox 	& \myDarkgrayBox 	& \myDarkgrayBox 	& \myDarkgrayBox \\
+    \myGrayBox 		& \myGrayBox 		& \myGrayBox 		& \myGrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
+   \end{bmatrix}
+  }
+  \cdot
+  \stackrel{\mbox{$x(t)$}}{
+   \begin{bmatrix}
+    \myBlackBox & \myBlackBox & \myBlackBox & \myBlackBox \\
+    \myBlackBox & \myBlackBox & \myBlackBox & \myBlackBox \\
+    \myBlackBox & \myBlackBox & \myBlackBox & \myBlackBox \\
+    \myBlackBox & \myBlackBox & \myBlackBox & \myBlackBox 
+   \end{bmatrix}
+  }
+ \]
+
+ \[
+  X(f)' = F(k,l) = W \cdot F(k) = W \cdot x(t) \cdot W
+ \]
+ 
+ \[
+  \stackrel{\mbox{$X(f)' = \mathcal{F}\{X(f)\}'$}}{
+   \begin{bmatrix}
+    \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
+    \myDarkgrayBox 	& \myDarkgrayBox 	& \myDarkgrayBox 	& \myDarkgrayBox \\
+    \myGrayBox 		& \myGrayBox 		& \myGrayBox 		& \myGrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
+   \end{bmatrix}
+  }
+  =
+  \stackrel{\mbox{$X(f)$}}{
+   \begin{bmatrix}
+    \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
+    \myDarkgrayBox 	& \myDarkgrayBox 	& \myDarkgrayBox 	& \myDarkgrayBox \\
+    \myGrayBox 		& \myGrayBox 		& \myGrayBox 		& \myGrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
+   \end{bmatrix}
+  }
+  \cdot
+  \stackrel{\mbox{$W$}}{
+   \begin{bmatrix}
+    \myBlackBox & \myBlackBox & \myBlackBox & \myBlackBox \\
+    \myBlackBox & \myBlackBox & \myBlackBox & \myBlackBox \\
+    \myBlackBox & \myBlackBox & \myBlackBox & \myBlackBox \\
+    \myBlackBox & \myBlackBox & \myBlackBox & \myBlackBox 
+   \end{bmatrix}
+  }
+ \]
+ 
+
+  \subsection{Gegenüberstellung Butterfly / Matrixmultiplipation} 
+  Die \gls{dft} wurde als Matrixmultiplikation implementiert, nachfolgend soll dies begründet und ein Vergleich beider Varianten erfolgen.
+  
+  Zu einem frühen Zeitpunkt der Überlegungen 
+  an dieser Arbeit gab es noch die Idee die \gls{dft} so flexibel wie möglich zu halten, um unkompliziert auf andere Größen wechseln zu können.
+  Hierfür sollten alle Koeffizienten der Twiddlefaktormatrix ladbar sein sowie die Größe der Matrix über eine globale Deklaration variabel gehalten werden.
+  Diese Herangehensweise bedingt die Implementation als Matrixmultiplikation. Die Hoffnung der Projektgruppe bestand darin, dass das Synthesewerkzeug den 
+  VHDL-Code soweit optimiert, dass dies nicht händisch erfolgen müsste.
+  Als klar war, dass sie Optimierung nicht so tief greift, wurden die entsprechenden Schritte manuell umgesetzt. 
+  
+  Die Implementierung des Butterfly-Algorithmus nach Cooley und Tukey stellt eine effiziente Berechnung der \gls{dft} dar. 
+  
+  
+  \subsection{Gegenüberstellung reelle / komplexe Eingangswerte}
+  Die Sensormatrix liefert für jeden Pixel einen Sinus- und Kosinuswert. Diese können für die Berechnung der DFT zu einer komplexen Zahl zusammengefasst werden. 
+  Auf diese Weise lässt sich die Berechnung mathematisch kompakter schreiben. Dadurch, dass eine komplexe Multiplikation auf vier reellen Multiplikationen basiert,
+  ist es jedoch möglich, dass die Anzahl reeller Multiplikationen hierdurch derer bei der getrennten Berechnung und anschließenden Zusammenführung übersteigt.
+  
+  Bei der Berechnung der DFT 
+ 
+  
+ \subsection{Anzahl der benötigten Multiplikationen}
+ \subsection{Optimierte Matrixmultiplipation bezogen auf 8x8}

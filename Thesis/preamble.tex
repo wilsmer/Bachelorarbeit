@@ -1,0 +1,59 @@
+\input{preamble/documentclass_schriftart.tex}
+
+\input{preamble/farben.tex}
+\input{preamble/boxen.tex}
+\input{preamble/mathe.tex}
+\input{preamble/grafik.tex}
+\input{preamble/tikz.tex}
+\input{preamble/tabellen.tex}
+\input{preamble/glossar.tex}
+\input{preamble/abkuerzungen.tex}
+\input{preamble/hyperref.tex}
+\input{preamble/listings.tex}
+\input{preamble/lokalisation.tex}
+\input{preamble/literatur.tex}
+
+	
+\usepackage{bbding}					% to get cross and check symbol
+
+\usepackage{enumerate}					% schicke Nummerierung
+
+\usepackage{pdfpages}					% Zum Laden und einbinden von PDF-Seiten
+\usepackage{pgfpages}
+\usepackage{float}					% für floats (figures) in einer Minipage (geht nicht!!)
+\usepackage{booktabs}					% Fuer besseres aussehen der Linien
+\usepackage{framed}					% for use of newtheorem with a coloured box
+
+			
+% INDEX ERZEUGEN - falls gewuenscht muessen beide direkt so eingebunden werden
+%\usepackage{index}
+%\makeindex
+
+%\makenomenclature					% damit Symbolverzeichnis erzeugt wird
+
+% Symbolverzeichnis erzeugen - lade dazu mit \include{symbolpage} das Verzeichnis 
+%\usepackage[
+%	     intoc,					% Eintrag des Abkuerzungsverzeichnis
+%	     notintoc,					% Kein Eintrag - default
+%	     english,					% Ueberschrift in English (default)
+%      	     german,					% in deutsch
+%	    ]{nomencl}
+
+
+% Loading label options               
+\usepackage[ngerman]{varioref}		            	% To get automatic "see Section xy on page xx"
+%\usepackage[german]{fancyref}		    		% same as varioref, except this is setting section automatically
+							% Options in []-brackets:
+							% language, e.g. english, ngerman - last entry is main-language
+							% paren - sets the reference in ()-brackets
+							% plain - no pagenumber in the reference
+							% -----------------------------------------
+							% standard prefixes used by fancyref:
+							% sec, chap, part, fig, tab, enum, eq, fn
+%\fancyrefchangeprefix{\fancyrefchaplabelprefix}{cha} 	% sets a new prefix for the label chap
+
+
+
+
+% Pseudocode 			 %
+\usepackage[noend]{algpseudocode}

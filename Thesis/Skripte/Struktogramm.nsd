@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:nsd="http://structorizer.fisch.lu/" version="3.28" preRepeat="until " postFor="to" preReturn="return" postForIn="in" preWhile="while " output="OUTPUT" input="INPUT" preFor="for" preExit="exit" preLeave="leave" ignoreCase="true" preForIn="foreach" stepFor="by" author="tlattmann" created="2018-02-19" changedby="tlattmann" changed="2018-02-19" origin="Structorizer 3.28" text="&#34;2D-DFT&#34;" comment="" color="ffffff" type="program" style="nice">
+	<children>
+		<alternative text="&#34;Berechnung des 1. Elements der Ergebnismatrix?&#34;" comment="" color="ffffff" disabled="0">
+			<qTrue>
+				<alternative text="&#34;1. Durchlauf?&#34;,&#34;(1. Durchlauf : 1D-DFT, &#34;,&#34;2. Durchlauf : 2D-DFT)&#34;" comment="&#34;&#34;" color="ffffff" disabled="0">
+					<qTrue>
+						<instruction text="&#34;interne Matrix := Eingangswerte-Matrix;&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+					</qTrue>
+					<qFalse>
+						<instruction text="&#34;interne Matrix := 1D-DFT-Matrix;&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+					</qFalse>
+				</alternative>
+			</qTrue>
+			<qFalse>
+				<instruction text="" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+			</qFalse>
+		</alternative>
+		<case text="&#34;Zeile der Twiddlefaktor-Matrix&#34;,&#34;1&#34;,&#34;2&#34;,&#34;3&#34;,&#34;4&#34;,&#34;5&#34;,&#34;6&#34;,&#34;7&#34;,&#34;8&#34;" comment="" color="ffffff" disabled="0">
+			<qCase>
+				<instruction text="&#34;Additionen gemäß &#34;,&#34;der 1. Zeile der &#34;,&#34;Twiddlefaktor-Matrix&#34;,&#34;für das n-te Element &#34;,&#34;der Ergebnismatrix&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+			</qCase>
+			<qCase>
+				<instruction text="&#34;Subtraktionen &#34;,&#34;gemäß &#34;,&#34;2. Zeile&#34;,&#34;...&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+			</qCase>
+			<qCase>
+				<instruction text="&#34;Subtraktionen &#34;,&#34;gemäß &#34;,&#34;3. Zeile&#34;,&#34;...&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+			</qCase>
+			<qCase>
+				<instruction text="&#34;... 4. Zeile&#34;,&#34;...&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+			</qCase>
+			<qCase>
+				<instruction text="&#34;... 5. Zeile&#34;,&#34;...&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+			</qCase>
+			<qCase>
+				<instruction text="&#34;... 6. Zeile&#34;,&#34;...&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+			</qCase>
+			<qCase>
+				<instruction text="&#34;... 7. Zeile&#34;,&#34;...&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+			</qCase>
+			<qCase>
+				<instruction text="&#34;... 8. Zeile&#34;,&#34;...&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+			</qCase>
+		</case>
+		<alternative text="&#34;ungerade Zeile der Twiddlefaktor-Matrix?&#34;" comment="" color="ffffff" disabled="0">
+			<qTrue>
+				<instruction text="&#34;Die 4 Zwischenergebnisse aufsummieren&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+				<alternative text="&#34;1. Durchlauf?&#34;" comment="" color="ffffff" disabled="0">
+					<qTrue>
+						<instruction text="&#34;&#34;&#34;final&#34;&#34; aufsummieren &#34;,&#34;und Ergebnis der &#34;,&#34;internen 1D-DFT-Matrix &#34;,&#34;zuweisen&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+					</qTrue>
+					<qFalse>
+						<instruction text="&#34;final aufsummieren &#34;,&#34;und Ergebnis der&#34;,&#34;externen &#34;,&#34;Ergebnis-Matrix &#34;,&#34;zuweisen.&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+					</qFalse>
+				</alternative>
+			</qTrue>
+			<qFalse>
+				<instruction text="&#34;Die 6 Zwischenwerte getrennt nach denen,&#34;,&#34; die später noch mit Wurzel(2)/2 &#34;,&#34;multipliziert werden müssen und denen, &#34;,&#34;die es nicht müssen, aufsummieren.&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+				<instruction text="&#34;Multiplikation mit Wurzel(2)/2&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+				<alternative text="&#34;1. Durchlauf?&#34;" comment="" color="ffffff" disabled="0">
+					<qTrue>
+						<instruction text="&#34;&#34;&#34;final&#34;&#34; aufsummieren &#34;,&#34;und Ergebnis &#34;,&#34;der internen &#34;,&#34;1D-DFT-Matrix &#34;,&#34;zuweisen&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+					</qTrue>
+					<qFalse>
+						<instruction text="&#34;final aufsummieren &#34;,&#34;und Ergebnis der&#34;,&#34;externen &#34;,&#34;Ergebnis-Matrix &#34;,&#34;zuweisen.&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+					</qFalse>
+				</alternative>
+			</qFalse>
+		</alternative>
+		<alternative text="&#34;element = 63?&#34;,&#34;(Berechnung des 64. Elements?)&#34;" comment="&#34;&#34;" color="ffffff" disabled="0">
+			<qTrue>
+				<alternative text="&#34;1. Durchlauf?&#34;" comment="" color="ffffff" disabled="0">
+					<qTrue>
+						<instruction text="" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+					</qTrue>
+					<qFalse>
+						<instruction text="&#34;Ergebnis steht bereit&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+					</qFalse>
+				</alternative>
+				<instruction text="&#34;Durchlauf-Bit wird getoggelt&#34;" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+			</qTrue>
+			<qFalse>
+				<instruction text="" comment="" color="ffffff" rotated="0" disabled="0"></instruction>
+			</qFalse>
+		</alternative>
+		<instruction text="&#34;Matrix-Element := Matrix-Element + 1;  &#34;,&#34;(bezogen auf die Ergebnismatrix, läuft von 0 bis 63 und hat dann einen gewollten Überlauf (6 Bit))&#34;" comment="&#34;&#34;" color="ffffff" rotated="0" disabled="0"></instruction>
+	</children>
+</root>

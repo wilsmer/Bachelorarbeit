@@ -1,0 +1,24 @@
+\usepackage[
+	    official,
+	    right				% Position of the Euro-Sign. verwendung: \euro oder \EUR{123,45}
+	   ]{eurosym}
+
+
+% Loading unit options                
+
+\usepackage[%				
+%	    group-separator 	= {.}, 		% group-seperator={,} -> 1,345,234.23
+%   	    round-mode 		= places,		% round-mode= places(2digits), figures(1digit)
+%	    round-precision 	= 3,		% round-precision= x , xdigits are rounded to
+	    binary-units 	= true,		% Laden von \byte \bit, \kibi usw. (false default)
+	    locale 		= DE,		% lacale= DE, uses german
+	    per			= slash,
+%	    loctolang		={
+%				  UK:english, 
+%				  DE:ngerman
+%		      		 },		% loctolang={USA:USenglish,DE:ngerman}, if language changed in document
+	    detect-all,				% detect-all : uses the text options not the math mode to set the letters/numbers
+	   ]{siunitx}
+
+
+\usepackage[Algorithmus]{algorithm} 			% deutsche notation im titel

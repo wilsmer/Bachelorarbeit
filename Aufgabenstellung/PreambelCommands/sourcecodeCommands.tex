@@ -1,0 +1,517 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Author     : Thorben Schuethe        Date    : 10.10.2011                  %
+%  Filename   : sourceCodeCommands.tex Version : 1.7                          %
+%-----------------------------------------------------------------------------%
+%  Changelog  :                                                               %
+%  10.09.2011 : build date, Only Matlab and C-Code supported               1.0%
+%  14.09.2011 : Added the check of color package loaded                    1.1%
+%  10.10.2011 : add java                                                   1.2%
+%  02.11.2011 : add shell                                                  1.3%
+%  22.12.2011 : add xml                                                    1.4%
+%  26.12.2011 : added commands defcommunicate and defstate                v1.5%
+%  23.08.2012 : Add Pseudo Code and options printLstOpt                   v1.6%
+%  11.10.2012 : Add cpp und ändern der Java umgebung                      v1.7%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% define new commands to check if packages are loadedd or not
+\makeatletter
+\providecommand{\IfPackageLoaded}[2]{\@ifpackageloaded{#1}{#2}{}}
+\providecommand{\IfPackageNotLoaded}[2]{\@ifpackageloaded{#1}{}{#2}}
+\providecommand{\IfElsePackageLoaded}[3]{\@ifpackageloaded{#1}{#2}{#3}}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% global Definitions / Packages        %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\IfPackageLoaded{color}{%
+\definecolor{commMatlab}{RGB}{34,139,34}
+\definecolor{commandJAVA}{RGB}{204,0,102}
+\definecolor{shellcolor}{RGB}{230,230,230}
+}
+\newcommand{\printLstOpt}{htp}						% Option für die Position
+\newcommand{\lineSkipSpace}{-3pt}					% Option um Zeilenabstand zu vergrößern/verringern
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% global Definitions                   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\IfPackageLoaded{listings}{%
+	\renewcommand{\lstlistlistingname}{Quellcodeverzeichnis} %LST Verzeichnisname
+	\renewcommand{\lstlistingname}{Quellcode}				 %LST NAME
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% All for Matlab Source-Codes          %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Matlab environment, for in text source code
+\IfElsePackageLoaded{color}{%
+	\lstnewenvironment{Matlab}[1][]				%load with color options
+	{\lstset{language			= Matlab,
+		     numberstyle		= \tiny,
+		     numbersep			= 1em, 
+		     numbers			= left,
+		     breaklines 		= true,
+		     breakautoindent 	= true,
+		     inputencoding		= latin1,
+		     basicstyle			= \ttfamily, 
+		     tabsize			= 4,
+		     stepnumber			= 1,
+		     backgroundcolor	= \color{white},
+		     keywordstyle		= \color{blue},
+		     commentstyle		= \color{commMatlab},
+		     frame				= single,
+		     framexleftmargin	= 2.7em,				% vom quelltext zum rahmen
+		     xleftmargin		= 3em,
+		     float 				= \printLstOpt ,
+		     #1}
+	}{}
+	}
+	{\lstnewenvironment{Matlab}[1][]				% load without color options
+	{\lstset{language			= Matlab,
+		     numberstyle		= \tiny,
+		     numbersep			= 1em, 
+		     numbers			= left,
+		     breaklines 		= true,
+		     breakautoindent 	= true,
+		     inputencoding		= latin1,
+		     basicstyle			= \ttfamily,
+		     tabsize			= 4,
+		     stepnumber			= 1,
+		     frame				= single,
+		     framexleftmargin	= 2.7em,				% vom quelltext zum rahmen
+		     xleftmargin		= 3em,
+		     float 				= \printLstOpt ,
+		     #1}
+	}{}}
+% for including matlab files directly
+\IfElsePackageLoaded{color}{%
+	\newcommand{\matlabfile}[1]{\lstset{%
+			 language			= Matlab,
+		     numberstyle		= \tiny,
+		     numbersep			= 1em, 
+		     numbers			= left,
+		     breaklines 		= true,
+		     breakautoindent 	= true,
+		     inputencoding		= latin1,
+		     basicstyle			= \ttfamily,
+		     tabsize			= 4,
+		     stepnumber			= 2, 
+		     backgroundcolor	= \color{white},
+		     keywordstyle		= \color{blue},
+		     commentstyle		= \color{commMatlab},
+		     frame				= single,
+		     framexleftmargin	= 2.7em,				% vom quelltext zum rahmen
+		     xleftmargin		= 3em,
+		     float 				= \printLstOpt ,}%
+		     \lstinputlisting{#1}}
+}
+{\newcommand{\matlabfile}[1]{\lstset{%
+			 language			= Matlab,
+		     numberstyle		= \tiny,
+		     numbersep			= 1em, 
+		     numbers			= left,
+		     breaklines 		= true,
+		     breakautoindent 	= true,
+		     inputencoding		= latin1,
+		     basicstyle			= \ttfamily,
+		     tabsize			= 4,
+		     stepnumber			= 2, 
+		     frame				= single,
+		     framexleftmargin	= 2.7em,				% vom quelltext zum rahmen
+		     xleftmargin		= 3em,
+		     float 				= \printLstOpt ,}%
+		     \lstinputlisting{#1}}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% End Matlab Source-Codes              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% All for Ansi-C Source-Codes          %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\IfElsePackageLoaded{color}{%
+	\newcommand{\cfile}[1]{\lstset{%
+			 language			= C,
+		     numberstyle		= \tiny,			% kleine zahlen
+		     numbersep			= 1em, 			% abstand der zahlen 5em
+		     numbers			= left,				% nummerierung links
+		     breaklines 		= true,				% erlaubt automatische zeilenumbrueche des codes
+		     breakautoindent 	= true,				% einschub nach umbruch
+		     inputencoding		= latin1,			% quellcode codierung
+		     basicstyle			= \ttfamily,		% lade truetype family schrift
+		     tabsize			= 4,				% tabsize im quellcode = 4
+		     stepnumber			= 2,				% nummerierung jede 2te zahl
+		     backgroundcolor	= \color{white},
+		     keywordstyle		= \color{blue},
+		     commentstyle		= \color{commMatlab},
+		     frame				= single,			% zeichne rahmen um den quellcode
+		     framexleftmargin	= 2.7em,				% vom quelltext zum rahmen
+		     xleftmargin		= 3em,
+		     float 				= \printLstOpt ,}%				% rahmen 7mm links von den zahlen zeichnen
+		     \lstinputlisting{#1}}
+}
+{\newcommand{\cfile}[1]{\lstset{%
+			 language			= C,
+		     numberstyle		= \tiny,			% kleine zahlen
+		     numbersep			= 1em, 			% abstand der zahlen 5em
+		     numbers			= left,				% nummerierung links
+		     breaklines 		= true,				% erlaubt automatische zeilenumbrueche des codes
+		     breakautoindent 	= true,				% einschub nach umbruch
+		     inputencoding		= latin1,			% quellcode codierung
+		     basicstyle			= \ttfamily,		% lade truetype family schrift
+		     tabsize			= 4,				% tabsize im quellcode = 4
+		     stepnumber			= 2,				% nummerierung jede 2te zahl
+		     frame				= single,			% zeichne rahmen um den quellcode
+		     framexleftmargin	= 2.7em,				% vom quelltext zum rahmen
+		     xleftmargin		= 3em,
+		     float 				= \printLstOpt ,}%				% rahmen 7mm links von den zahlen zeichnen
+		     \lstinputlisting{#1}}
+}
+\IfElsePackageLoaded{color}{%
+\newcommand{\setC}{\lstset{%
+%			 morekeywords		={include , define},
+			 language			= C++,
+		     numberstyle		= \tiny,
+		     numberfirstline	= true,
+		     numbersep			= 1em, 
+		     numbers			= left,
+		     breaklines 		= true,
+		     breakautoindent 	= true,
+		     inputencoding		= latin1,
+		     showstringspaces	= false,			% default is true - shows blank spaces
+		     basicstyle			= \ttfamily,
+		     tabsize			= 2,
+		     stepnumber			= 1,
+		     backgroundcolor	= \color{white},
+		     keywordstyle		= \color{blue},
+		     commentstyle		= \color{commMatlab},
+		     frame				= single,
+		     framexleftmargin	= 2.7em,				% vom quelltext zum rahmen
+		     xleftmargin		= 3em,
+		     float 				= \printLstOpt ,
+		     }}
+}
+{\newcommand{\setC}{\lstset{%
+			 language			= C,
+		     numberstyle		= \tiny,
+		     numberfirstline	= true,
+		     numbersep			= 1em, 
+		     numbers			= left,
+		     breaklines 		= true,
+		     breakautoindent 	= true,
+		     inputencoding		= latin1,
+		     showstringspaces	= false,			% default is true - shows blank spaces
+		     basicstyle			= \ttfamily,
+		     tabsize			= 4,
+		     stepnumber			= 1,
+		     frame				= single,
+		     framexleftmargin	= 2.7em,				% vom quelltext zum rahmen
+		     xleftmargin		= 3em,
+		     float 				= \printLstOpt ,}}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% All for c++ Source-Codes             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\IfElsePackageLoaded{color}{%
+	\lstnewenvironment{cpplus}[1][]				%load with color options
+	{\lstset{language			= C++,
+		     numberstyle		= \tiny,
+		     numbersep			= 1em, 
+		     numbers			= left,
+		     breaklines 		= true,
+		     breakautoindent 	= true,
+		     inputencoding		= latin1,
+		     basicstyle			= \ttfamily, 
+		     tabsize			= 2,
+		     stepnumber			= 1,
+		     backgroundcolor	= \color{white},
+		     keywordstyle		= \color{blue},
+		     commentstyle		= \color{commMatlab},
+		     frame				= single,
+		     framexleftmargin	= 2.7em,				% vom quelltext zum rahmen
+		     xleftmargin		= 3em,
+		     float 				= \printLstOpt ,
+		     #1}
+	}{}
+	}
+	{\lstnewenvironment{cpplus}[1][]				% load without color options
+	{\lstset{language			= C++,
+		     numberstyle		= \tiny,
+		     numbersep			= 1em, 
+		     numbers			= left,
+		     breaklines 		= true,
+		     breakautoindent 	= true,
+		     inputencoding		= latin1,
+		     basicstyle			= \ttfamily,
+		     tabsize			= 2,
+		     stepnumber			= 1,
+		     frame				= single,
+		     framexleftmargin	= 2.7em,				% vom quelltext zum rahmen
+		     xleftmargin		= 3em,
+		     float 				= \printLstOpt ,
+		     #1}
+	}{}}
+	
+\IfElsePackageLoaded{color}{%
+	\newcommand{\cppfile}[2]{%
+		     \lstinputlisting[language			= C++,
+		     numberstyle		= \tiny,
+		     numbersep			= 1em, 
+		     numbers			= left,
+		     breaklines 		= true,
+		     breakautoindent 	= true,
+		     inputencoding		= latin1,
+		     basicstyle			= \ttfamily, 
+		     tabsize			= 2,
+		     stepnumber			= 1,
+		     backgroundcolor	= \color{white},
+		     keywordstyle		= \color{blue},
+		     commentstyle		= \color{commMatlab},
+		     frame				= single,
+		     framexleftmargin	= 2.7em,				% vom quelltext zum rahmen
+		     xleftmargin		= 3em,
+		     float 				= \printLstOpt ,#1]{#2}}
+}
+{\newcommand{\cppfile}[3]{%
+		     \lstinputlisting[language			= C++,
+		     numberstyle		= \tiny,
+		     numbersep			= 1em, 
+		     numbers			= left,
+		     breaklines 		= true,
+		     breakautoindent 	= true,
+		     inputencoding		= latin1,
+		     basicstyle			= \ttfamily,
+		     tabsize			= 2,
+		     stepnumber			= 1,
+		     frame				= single,
+		     framexleftmargin	= 2.7em,				% vom quelltext zum rahmen
+		     xleftmargin		= 3em,
+		     float 				= \printLstOpt ,#1]{#2}
+}}	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% All for JAVA Source-Codes          %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\IfElsePackageLoaded{color}{%
+	\newcommand{\javafile}[1]{\lstset{%
+			 language			= Java,
+		     numberstyle		= \tiny,			% kleine zahlen
+		     numbersep			= 1em, 			% abstand der zahlen 5em
+		     numbers			= left,				% nummerierung links
+		     breaklines 		= true,				% erlaubt automatische zeilenumbrueche des codes
+		     breakautoindent 	= true,				% einschub nach umbruch
+		     inputencoding		= latin1,			% quellcode codierung
+		     showstringspaces	= false,			% default is true - shows blank spaces
+		     basicstyle			= \ttfamily,		% lade truetype family schrift
+		     tabsize			= 4,				% tabsize im quellcode = 4
+		     stepnumber			= 2,				% nummerierung jede 2te zahl
+		     backgroundcolor	= \color{white},
+		     keywordstyle		= \color{commandJAVA},
+		     commentstyle		= \color{commMatlab},
+		     frame				= single,			% zeichne rahmen um den quellcode
+		     framexleftmargin	= 2.7em,				% vom quelltext zum rahmen
+		     xleftmargin		= 3em,
+		     float 				= \printLstOpt ,}%			% rahmen 7mm links von den zahlen zeichnen
+		     \lstinputlisting{#1}}
+}
+{\newcommand{\javafile}[1]{\lstset{%
+			 language			= Java,
+		     numberstyle		= \tiny,			% kleine zahlen
+		     numbersep			= 1em, 			% abstand der zahlen 5em
+		     numbers			= left,				% nummerierung links
+		     breaklines 		= true,				% erlaubt automatische zeilenumbrueche des codes
+		     breakautoindent 	= true,				% einschub nach umbruch
+		     inputencoding		= latin1,			% quellcode codierung
+   		     showstringspaces	= false,			% default is true - shows blank spaces
+		     basicstyle			= \ttfamily,		% lade truetype family schrift
+		     tabsize			= 4,				% tabsize im quellcode = 4
+		     stepnumber			= 2,				% nummerierung jede 2te zahl
+		     frame				= single,			% zeichne rahmen um den quellcode
+		     framexleftmargin	= 2.7em,				% vom quelltext zum rahmen
+		     xleftmargin		= 3em,
+		     float 				= \printLstOpt ,}%				% rahmen 7mm links von den zahlen zeichnen
+		     \lstinputlisting{#1}}
+}
+% JAVA Environment to include SourceCode in Text
+\IfElsePackageLoaded{color}{%
+	\lstnewenvironment{Java}[1][]				%load with color options
+	{\lstset{language			= Java,
+		     numberstyle		= \tiny,
+		     numbersep			= 1em, 
+		     numbers			= left,
+		     breaklines 		= true,
+		     breakautoindent 	= true,
+		     inputencoding		= latin1,
+		     showstringspaces	= false,			% default is true - shows blank spaces
+		     basicstyle			= \ttfamily,
+		     tabsize			= 2,
+		     stepnumber			= 2,
+		     backgroundcolor	= \color{white},
+		     keywordstyle		= \color{commandJAVA},
+		     commentstyle		= \color{commMatlab},
+		     frame				= single,
+		     framexleftmargin	= 2.7em,				% vom quelltext zum rahmen
+		     xleftmargin		= 3em,
+		     float 				= \printLstOpt ,
+		     #1}
+	}{}
+	}
+	{\lstnewenvironment{Java}[1][]				% load without color options
+	{\lstset{language			= Java,
+		     numberstyle		= \tiny,
+		     numbersep			= 1.5em, 
+		     numbers			= left,
+		     breaklines 		= true,
+		     breakautoindent 	= true,
+		     inputencoding		= latin1,
+		     showstringspaces	= false,			% default is true - shows blank spaces
+		     basicstyle			= \ttfamily,
+		     tabsize			= 2,
+		     stepnumber			= 2,
+		     frame				= single,
+		     framexleftmargin	= 2.7em,				% vom quelltext zum rahmen
+		     xleftmargin		= 3em,
+		     float 				= \printLstOpt ,
+		     #1}
+	}{}}
+	
+	\newcommand{\setJava}{\lstset{%
+			 language			= Java,
+		     numberstyle		= \tiny,
+		     numberfirstline	= true,
+		     numbersep			= 1.5em, 
+		     numbers			= left,
+		     breaklines 		= true,
+		     breakautoindent 	= true,
+		     inputencoding		= latin1,
+		     showstringspaces	= false,			% default is true - shows blank spaces
+		     basicstyle			= \ttfamily,
+		     tabsize			= 4,
+		     stepnumber			= 1,
+		     backgroundcolor	= \color{white},
+		     keywordstyle		= \color{commandJAVA},
+		     commentstyle		= \color{commMatlab},
+		     frame				= single,
+		     framexleftmargin	= 2.7em,				% vom quelltext zum rahmen
+		     xleftmargin		= 3em,
+		     float 				= \printLstOpt}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% All for SHELL Commands               %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\lstnewenvironment{Shell}[1][]{
+   \lstset{#1}   
+   \lstset{
+	  language			= bash,
+	  numbers			= none,
+	  breaklines 		= true,
+      breakautoindent 	= true,
+%	  inputencoding		= latin1,
+	  showstringspaces	= false,			% default is true - shows blank spaces
+      basicstyle		= \ttfamily,
+      tabsize			= 2,
+      backgroundcolor	= \color{shellcolor},
+      keywordstyle		= \color{black},
+	  commentstyle		= \color{black},
+      frame				= none,
+      framexleftmargin	= 0mm,
+      float 			= \printLstOpt
+	  }
+}{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FOR PSEUDO CODE                      %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\lstdefinelanguage{pseu}{%
+	morekeywords={begin, for, do, od, proc, if, fi, end, then, exit, step, where, while, elseif, elif, else},
+	sensitive=false,
+	morecomment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	morestring=[b]",%
+}
+
+\lstnewenvironment{Pseudo}[1][]{%
+   \lstset{%
+	  language			= pseu,
+	  numberstyle		= \tiny,
+      numberfirstline	= true,
+      numbersep			= 1.5em, 
+      numbers			= left,
+      stepnumber        = 2,
+	  breaklines 		= true,
+      breakautoindent 	= true,
+	  showstringspaces	= false,			% default is true - shows blank spaces
+      basicstyle		= \ttfamily,
+      tabsize			= 2,
+      backgroundcolor	= \color{shellcolor},
+      keywordstyle		= \color{black}\bfseries,
+	  commentstyle		= \color{black},
+      frame				= none,
+      framexleftmargin	= 2.7em,				% vom quelltext zum rahmen
+      xleftmargin		= 3em,
+	  float 			= \printLstOpt ,
+	  lineskip          = \lineSkipSpace ,	% space extra to normal line skip which can be +- ...pt
+	  #1,									% Option for the user
+	  }
+}{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% All for XML-Files                    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\IfElsePackageLoaded{color}{%
+	\newcommand{\xmlfile}[1]{\lstset{%
+			 language			= XML,
+		     numberstyle		= \tiny,			% kleine zahlen
+		     numbersep			= 1em, 			% abstand der zahlen 5em
+		     numbers			= left,				% nummerierung links
+		     breaklines 		= true,				% erlaubt automatische zeilenumbrueche des codes
+		     breakautoindent 	= true,				% einschub nach umbruch
+		     inputencoding		= latin1,			% quellcode codierung
+		     showstringspaces	= false,			% default is true - shows blank spaces
+		     basicstyle			= \ttfamily,		% lade truetype family schrift
+		     tabsize			= 4,				% tabsize im quellcode = 4
+		     stepnumber			= 2,				% nummerierung jede 2te zahl
+		     backgroundcolor	= \color{white},
+		     keywordstyle		= \color{commandJAVA},
+		     commentstyle		= \color{commMatlab},
+		     frame				= single,			% zeichne rahmen um den quellcode
+		     framexleftmargin	= 2.7em,				% vom quelltext zum rahmen
+		     xleftmargin		= 3em,
+		     float 				= \printLstOpt ,}%				% rahmen 7mm links von den zahlen zeichnen
+		     \lstinputlisting{#1}}
+}
+{\newcommand{\xmlfile}[1]{\lstset{%
+			 language			= XML,
+		     numberstyle		= \tiny,			% kleine zahlen
+		     numbersep			= 1em, 			% abstand der zahlen 5em
+		     numbers			= left,				% nummerierung links
+		     breaklines 		= true,				% erlaubt automatische zeilenumbrueche des codes
+		     breakautoindent 	= true,				% einschub nach umbruch
+		     inputencoding		= latin1,			% quellcode codierung
+   		     showstringspaces	= false,			% default is true - shows blank spaces
+		     basicstyle			= \ttfamily,		% lade truetype family schrift
+		     tabsize			= 4,				% tabsize im quellcode = 4
+		     stepnumber			= 2,				% nummerierung jede 2te zahl
+		     frame				= single,			% zeichne rahmen um den quellcode
+		     framexleftmargin	= 2.7em,				% vom quelltext zum rahmen
+		     xleftmargin		= 3em,
+		     float 				= \printLstOpt ,}%				% rahmen 7mm links von den zahlen zeichnen
+		     \lstinputlisting{#1}}
+}     
+
+\lstnewenvironment{Xml}[1][]{				%load with color options
+	\lstset{language			= XML,
+		     numberstyle		= \tiny,			% kleine zahlen
+		     numbersep			= 1em, 				% abstand der zahlen 5em
+		     numbers			= left,				% nummerierung links
+		     breaklines 		= true,				% erlaubt automatische zeilenumbrueche des codes
+		     breakautoindent 	= true,				% einschub nach umbruch
+		    % inputencoding		= utf8,				% quellcode codierung
+   		     showstringspaces	= false,			% default is true - shows blank spaces
+		     basicstyle			= \ttfamily,		% lade truetype family schrift
+		     tabsize			= 4,				% tabsize im quellcode = 4
+		     stepnumber			= 2,				% nummerierung jede 2te zahl
+		     frame				= single,			% zeichne rahmen um den quellcode
+		     framexleftmargin	= 2.7em,				% vom quelltext zum rahmen
+		     xleftmargin		= 3em,
+		     float 				= \printLstOpt ,
+		     #1}
+}{}
+}

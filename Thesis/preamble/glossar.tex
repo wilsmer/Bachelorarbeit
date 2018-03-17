@@ -1,0 +1,48 @@
+\usepackage[  % Packet ist jetzt glossaries-extra statt glossaries - keine Ahnung, ob die es die auskommentierten Optionen gibt!
+	    xindy,%={language=german-modern, codepage=utf8},
+	    automake,				
+	    numberedsection,
+%	    toc,      				% Fügt Eintrag ins Inhaltsverzeichnis hinzu, defualt false
+	    nonumberlist,			% keine Ausgabe der Seitenzahlen
+%	    nowarn,				% unterdrückt alle warungen des pakets
+%	    nomain,				% kein hauptglossary wird erzeugt, acronym oder newglossary um Einträge zu erzeugen
+%	    sanitize={%				% unterdrückt die keys für einträge oder fügt sie hinzu
+%	    name        = false,%
+%	    description = false,%
+%	    symbol      = false},%
+%	    translate = true,			% zur übersetzung von einträgen - siehe doku, default false
+	    hyperfirst = true,			% erzeugt hyperlink zum glossar bei erster verwendung, default true
+%	    hyper = false,			% Hyperlinks ausschalten
+%	    numberline,				% Eintrag ins toc mit Nummerierung
+%	    section=section,			% in welcher ebene der eintrag, default chapter if loaded sonst section
+%	    style = long,			% default list, sonst: long, super, tree
+%	    nolong,				% pakete für longtable werden nicht geladen und befehle nicht definiert
+%	    nosuper,				% supertabular wird nicht geladen, pakete nicht definiert
+%	    nolist,				% list wird nicht geladen definiert
+%	    notree,				% gloassrytree wird nicht geladen definiert
+%	    nostyles,				% keine styles werden geladen, eigene definieren
+%	    counter = page,			% page default, or any other counter
+%	    sort = def,				% def - sortiert nach definition, standard(default)-sortiert nach sort key, sonst name, use - sortieren nach reihenfolge wie sie im dokument vorkommen
+%	Acronym options
+%	    acronym,  				% Seperate Liste für Acronyme zum Glossary, default - false
+%	    acronymlist={},			% wenn mehr als eine abkürzungsliste, muss diese hier mit angegeben werden damit das glossary als acronym behandelt wird
+%	    description,			% erlaubt eine zusätzliche beschreibung
+%	    footnote,				% schreibt die long version als fußnote bei erster nutzung
+%	    smallcaps,				% acronyme werden als kapitelchen angezeigt
+%	    smaller,				% kleinere schrift, laden von relsize für befehl textsmaller erforderlich
+%	    dua,				% langform wird immer ausgegeben
+	    shortcuts,				% um selbe befehle wie acronym paket zu haben
+	   ]{glossaries-extra}		
+
+
+\GlsSetXdyCodePage{duden-utf8}
+
+% sorgt dafür, dass die Erklärungen alle gleich eingerückt sind
+\setglossarystyle{long}
+\renewcommand{\glsnamefont}[1]{\textbf{#1}}
+
+% Bachlorarbeit.gls erzeugen:
+% $ cd Bachelorarbeit
+% $ makeglossaries "Bachelorarbeit"
+
+\makeglossaries 

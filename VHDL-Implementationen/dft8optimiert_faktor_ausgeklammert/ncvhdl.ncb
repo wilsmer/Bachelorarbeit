@@ -1,0 +1,8 @@
+# NCLaunch User Defined Buttons
+#
+# format: button label helptext selection command visible
+
+
+button ncvhdl  {}  {}  {ncvhdl -work worklib -cdslib /home/tlattmann/cadence/mat_mult/cds.lib -logfile /home/tlattmann/cadence/mat_mult/nchvdl.log -errormax 15 -update -v93 -linedebug /home/tlattmann/cadence/mat_mult/HDL/constants.vhdl /home/tlattmann/cadence/mat_mult/HDL/datatypes.vhdl /home/tlattmann/cadence/mat_mult/HDL/functions.vhdl /home/tlattmann/cadence/mat_mult/HDL/read_input_matrix.vhdl /home/tlattmann/cadence/mat_mult/HDL/write_results.vhdl /home/tlattmann/cadence/mat_mult/HDL/dft8optimiert.vhdl /home/tlattmann/cadence/mat_mult/HDL/dft8_optimiert_top.vhdl -status }  1
+button ncelab  {}  {}  {ncelab -work worklib -cdslib /home/tlattmann/cadence/mat_mult/cds.lib -logfile /home/tlattmann/cadence/mat_mult/ncelab.log -errormax 15 -access +wc worklib.dft8optimiert_top -status }  1
+button ncsim  {}  {}  {ncsim -gui -cdslib /home/tlattmann/cadence/mat_mult/cds.lib -logfile ncsim.log -errormax 15 -status worklib.dft8optimiert_top:arch}  1

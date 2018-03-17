@@ -1,0 +1,64 @@
+\section{Binäre Zahlendarstellung von Festkommazahlen}
+
+\subsection{Integer im 1er-Komplement}
+Bei der Interpretation des Bitvektors als Integer im Einerkomplement werden die Bits anhand ihrer Position im Bitvektor gewichtet, wobei as niederwertigste Bit 
+(LSB, least significant bit) dem Wert für den Faktor $2^0$ entspricht, das Bit links davon dem für $2^1$ und so weiter. Die Summe aller Bits, ohne das höchstwertigste, 
+multipliziert mit ihrer Wertigkeit (Potenz) ergibt den Betrag der Dezimalzahl. Das höchstwertigste Bit (MSB, most significant bit) gibt Auskunft darüber, ob es sich 
+um eine negative oder positive Zahl handelt. Dies hat zur Folge, dass es eine positive und eine negative Null und somit eine Doppeldeutigkeit gibt. Desweiteren wird
+ein LSB an Auflösung verschenkt. Der Wertebereich erstreckt sich von $-2^{MSB-1}+1\,LSB$ bis $2^{MSB-1}-1\,LSB$
+
+Diese Darstellung hat den Vorteil, dass sich das Ergebnis einer Multiplikation der Zahlen $a \cdot b$ und $-a \cdot b$ nur im vorderste Bit unterscheidet. Darüber hinaus
+lässt sich das Vorzeichen des Ergebnisses durch eine einfache XOR-Verknüpfung der beiden MSB der Multiplikanden ermitteln. 
+Die eigentliche Multiplikation beschränkt sich auf die Bits MSB-1 bis LSB.
+Da als einziger konstanter Multiplikand in der 8x8-DFT-Matrix der Faktor $\pm\frac{\sqrt{2}}{2}$ auftaucht, also das oben angeführte Beispiel zutrifft, erschien diese
+Darstellungsform zwischenzeitlich interessant.
+
+Nachteile zeigen sich hingegen bei der Addition sowie Subtraktion negativer Zahlen. Auch hierfür gibt es schematische Rechenregeln, diese erfordern jedoch mehr 
+Zwischenschritte als im Zweierkomplement. Darüberhinaus ist dieses Verfahren aufgrund der geringen Bedeutung in keiner VHDL-Bibliothek implementiert.
+(Verifizieren!)
+
+
+\subsection{Integer im 2er-Komplement}
+Bei der Interpretation als Zweierkomplement kann anhand es MSB ebenfalls erkannt werden, ob es sich um eine positive oder negative Zahl handelt. Dennoch wird es nicht
+als Vorzeichenbit gewertet. Viel mehr bedeutet ein gesetztes MSB $-2^{MSB-1}$, welches der negativsten darstellbaren Zahl entspricht. Hierbei sind alle anderen 
+Bits auf 0. Für gesetzte Bits wird der Dezimalwert, wie beim Einerkomplement beschrieben, berechnet und auf den negativen Wert aufaddiert. Wenn das MSB nicht gesetzt
+ist, wird der errechnete Dezimalwert auf 0 addiert. Auf diese Weise lassen sich Zahlen im Wertebereich von $-2^{MSB-1}$ bis $2^{MSB-1}-1 \,LSB$ darstellen. Der positive
+Wertebereich ist also um ein LSB kleiner als der negative und es gibt keine doppelte Null.
+
+Um das Vorzeichen umzukehren müssen alle Bits invertiert werden. Auf den neuen Wert muss abschließend 1 LSB addiert werden.
+
+Vorteile bei dieser Darstellung ist, dass die mathematischen Operationen Addition, Subtraktion und Multiplikation direkt angewand werden können. Unterstützt werden sie z.B. 
+von den Datentypen \texttt{unsigned} sowie \texttt{signed}, welche in der Bibliothek u.a. \texttt{ieee.numeric\_std.all} definiert sind.
+
+
+
+
+\subsection{SQ-Format im 2er-Komplement}
+
+Im SQ-Format werden Zahlen als vorzeichenbehafteter Quotient (signed quotient) dargestellt. Die konkretere Schreibweise von beispielsweise S1Q10 bedeutet, dass zusätzlich zu
+einem Vorzeichenbit noch ein weiteres Bit vor dem Komma steht. Für den Quotient stehen 10 Bit zur Verfügung, was einer maximalen Auflösung  von 
+$1\,LSB = 2^{-10} = \frac{1}{1024} = 9,765625\cdot10^{-4}$ entspricht. Der Wertebereich liegt in diesem Fall liegt bei $-2$ bis $1,999023438$. Er wurde in der vorliegenden 
+Arbeit so gewählt, da sich hiermit die Werte $\pm\nicefrac{\SI{3,3}{\V}}{2} = \SI{\pm1,65}{\V}$ darstellen lassen, was nach Abzug des Offsets den Eingangsspannungen des \gls{adc}
+von $\SI{0}{\V}$ bis $\SI{3,3}{\V}$ entspricht und zum derzeitigen Stand des Projekts davon ausgegangen wird, dass der verwendete \gls{adc} Werte mit zwölf Bit Breite ausgibt. 
+Es wird von einer Vorverarbeitung ausgegangen, die dies erledigt.
+
+
+
+
+\section{Folgen der Bitbegrenzung}
+\subsection{Maximale Auflösung}
+
+Um einen guten Kompromiss aus ausreichender Genauigkeit, Geschwindigkeit und Platzbedarf zu erzielen, wird von Eingangs- / Ausgangssignalen mit 12 Bit Breite zwischen
+den einzelnen Komponenten auf dem Chip ausgegangen.
+
+Sicherlich ist eine hohe Genauigkeit erstrebenswert. Es gilt jedoch zu bedenken, dass mit höheren Bitbreiten auch der Platzbedarf jedes einzelnen Datensignals aufgrund der 
+zusätzlich benötigten Leitungen sowie der Flip-Flops für die (Zwischen-) Speicherung, linear steigt. 
+Bei Additionen und insbesondere Multiplikationen geht mit jedem zusätzlichen Bit ebenfalls ein linear steigender Zeitbedarf einher.
+Eine Bitbreite von größer 24 Bit (bei Eingangsspannungen kleiner \SI{5}{V}) ist darüber hinaus bei \gls{adc} nicht sinnvoll, da durch thermisches Rauschen die ermittelten 
+Werte beeinflusst werden und die Pegel des Rauschen in dieser Größenordnung liegen.
+Derzeit wird davon ausgegangen, dass der Chip in einer Strukturgröße von \SI{350}{nm} gefertigt wird, sodass sich jeder zusätzliche Platzbedarf merklich auswirkt.
+
+Akkumulation von Fehlern kurz ansprechen.
+ 
+\subsection{Rauschen}
+

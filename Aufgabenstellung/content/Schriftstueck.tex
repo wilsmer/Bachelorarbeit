@@ -1,0 +1,80 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Author     : Thorben Schuethe        Date    : 08.06.2014                  %
+%  Filename   : grundlagen.tex         Version : 1.00                         %
+%  Information: Beispieldatei zu den Grundlagen                               %
+%-----------------------------------------------------------------------------%
+%  Changelog  :                                                               %
+%  08.06.2014 - first version                                                 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\pathOf}[1]{content/#1}
+\newpage
+\ohead[]{\includegraphics[height=1.0cm]{\pathOf{IMG/haw}}}
+\ihead[]{{Hochschule für Angewandte Wissenschaften Hamburg\\Department Informations- und Elektrotechnik\\Prof. Dr.-Ing. Karl-Ragmar Riemschneider}}
+\pagenumbering{arabic}
+\cfoot{--~\pagemark~--}
+\subsection*{Bachelorarbeit \theauthor :}
+
+\subsection*{Digitale Chipimplementation einer 2D-DFT für die Auswertung eines Sensor-Arrays}
+%--------------------------------------------------------------------------------------------
+
+\subsubsection*{Motivation}
+Magnetische Sensoren spielen in der heutigen Zeit eine immer wichtigere Rolle. Sie werden unter anderem bei der berührungslose Erfassung von Drehzahl und Winkel verwendet. Gerade im Automobil gibt es diverse Einsatzmöglichkeiten, wie zum Beispiel das Antiblockiersystem (ABS).
+
+\smallskip
+Die HAW Hamburg arbeitet in Kooperation mit Partnern an dem Forschungsprojekt \glqq ISAR\footnote{\label{foot:1}Signalverarbeitung für Integrated Sensor-Arrays basierrend  auf dem Tunnel-Magnetoresistiven Effekt für den Einsatz in der Automobilelektronik}\grqq, das vom Bundesministerium für Bildung und Forschung gefördert wird. In dem Projekt soll ein magnetisches Sensorarray mit der dazu gehöriger Signalverarbeitung und die Systemarchitektur entwickelt werden.
+
+\smallskip
+Mit den neuen Sensoren ist eine räumliche Erfassung der Magnetfelder in einer Ebene möglich, wodurch eine Lagedetektion und Fehlerkorrektur denkbar ist. Außerdem wird eine Detektion und Kompensation von Störfeldern angestrebt.
+
+%--------------------------------------------------------------------------------------------
+\subsubsection*{Ziele}
+%--------------------------------------------------------------------------------------------
+In der Bachelorarbeit von Herrn \theauthor~wird ein Teilmodul für die Auswertung von Array-Sensoren in VHDL implementiert und anschließend in ein Chipdesign übersetzt. Dieses Teilmodul beinhaltet die zweidimensionale diskrete Fouriertransformation (2D-DFT). Diese Transformation wird häufig in der Bildverarbeitung angewendet. In der Abschlussarbeit wird sie für die nächste Generation von Magnetfeldsensoren eingesetzt. Durch die Transformation ist eine Betrachtung im Ortsraum möglich. Dort sind sämtliche Signale des Arrays zusammengefasst, wodurch die Auswertung von Fehlern vereinfacht wird. Für die Implementation und Umsetzung der 2D-DFT werden weitere Module wie zum Beispiel ein RAM für die Zwischenspeicherung benötigt. Das I/O-Modul ist kein Teil der Aufgabenstellung und wird in Absprache mit dem Projektteam entwickelt / bereitgestellt.
+%--------------------------------------------------------------------------------------------
+\subsubsection*{Aufgabenstellung}
+%--------------------------------------------------------------------------------------------
+Herr Thomas Lattmann soll in der Bachelorarbeit folgende Arbeitspakete behandeln: 
+%
+\begin{enumerate}
+	\item Einarbeitung
+	\begin{itemize}
+		\item[-] Cadence Chipdesign-Umgebung
+		\item[-] Zusammenhänge der Tools beim Chipdesign in Cadence
+		\item[-] Überblick des CMOS Prozesses c35b3 / c35b4
+		\item[-] Wo befindet sich der verwendete Prozess im Vergleich mit heutigen Prozessen (evtl. Entwicklungsgeschichte / Timeline)
+	\end{itemize}
+	
+	\item Konzeptioneller Entwurf einer 2D-DFT
+	\begin{itemize}
+		\item[-] Darstellungsformen (2D-DFT $\rightarrow$ Summe, Matrixform)
+		\item[-] Zwischenspeicherung (nach erster Operation)
+		\item[-] Symmetrieeigenschaften bei verschiedenen Arraygrößen darstellen (8x8, 9x9) 
+		\item[-] Auflistung der Twiddle-Faktoren bei Array-Größen von 2x2 bis 15x15		
+	\end{itemize}
+	
+	\item VHDL Beschreibung
+	\begin{itemize}
+		\item[-] Recherchearbeit (2D-DFT in VHDL, ...) 
+		\item[-] Parallelisierbare Komponenten, wie z.B. Multiplikation insbesondere Konstantenmultiplikation (beispielsweise für Twiddle-Faktoren)
+	\end{itemize}
+	
+	\item Implementation
+	\begin{itemize}
+		\item[-] Auswahl eines Prozesses (drei oder vier Metalllagen)
+		\item[-] Cadence Chipdesign -- Mixed Signal implementation 
+		\item[-] Simulation mittels \textit{nclaunch}
+		\item[-] Erstellen der Verilog-Netzliste (RTL-Compiler, anschließende timing simulation)
+		\item[-] Platzieren der Standardzellen und Planung der Spannungsversorgung
+		\item[-] Layout mit Padring $\rightarrow$ Abschätzung Flächenbedarf etc.
+	\end{itemize}
+
+	\item Zusammenfassung und Ausblick
+	\begin{itemize}
+		\item[-] Bewertung der Ergebnisse		
+		\item[-] Offene Punkte
+		\item[-] Fazit
+	\end{itemize}
+\end{enumerate}
+
+%--------------------------------------------------------------------------------------------
+

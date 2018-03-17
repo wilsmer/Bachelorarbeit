@@ -1,0 +1,435 @@
+\section{Ausmultiplizieren der 8x8 DFT}\label{anhang:ausmultiplizieren}
+
+
+\vspace{1cm}
+
+\begingroup
+\renewcommand*{\arraystretch}{1.1} % Zeilenabstand
+\renewcommand*{\arraycolsep}{5.5pt} % Spaltenabstand
+$\left[
+\begin{array}{rcrcrcrc}
+  \textcolor{green}{1+j0}	& \textcolor{green}{1+j0}					& \textcolor{green}{1+j0}	& \textcolor{green}{1+j0}					& \textcolor{green}{1+j0}	& \textcolor{green}{1+j0} 					& \textcolor{green}{1+j0}	& \textcolor{green}{1+j0} \\
+  \textcolor{blue}{1+j0}	& \textcolor{blue}{\frac{\sqrt{2}}{2}+j\frac{\sqrt{2}}{2}}	& \textcolor{blue}{0+j1}	& \textcolor{blue}{-\frac{\sqrt{2}}{2}+j\frac{\sqrt{2}}{2}}	& \textcolor{blue}{-1+j0}	& \textcolor{blue}{-\frac{\sqrt{2}}{2}-j\frac{\sqrt{2}}{2}} 	& \textcolor{blue}{0-j1}	& \textcolor{blue}{\frac{\sqrt{2}}{2}-j\frac{\sqrt{2}}{2}} \\
+  \textcolor{red}{1+j0}		& \textcolor{red}{0+j1}						& \textcolor{red}{-1+j0}	& \textcolor{red}{0-j1}						& \textcolor{red}{1+j0}		& \textcolor{red}{0+j1} 					& \textcolor{red}{-1+j0}	& \textcolor{red}{0-j1} \\
+  \textcolor{lila}{1+j0}	& \textcolor{lila}{-\frac{\sqrt{2}}{2}+j\frac{\sqrt{2}}{2}}	& \textcolor{lila}{0-j1}	& \textcolor{lila}{\frac{\sqrt{2}}{2}+j\frac{\sqrt{2}}{2}}	& \textcolor{lila}{-1+j0}	& \textcolor{lila}{\frac{\sqrt{2}}{2}-j\frac{\sqrt{2}}{2}} 	& \textcolor{lila}{0+j1}	& \textcolor{lila}{-\frac{\sqrt{2}}{2}-j\frac{\sqrt{2}}{2}} \\
+  \textcolor{cinnamon}{1+j0}	& \textcolor{cinnamon}{-1+j0}					& \textcolor{cinnamon}{1+j0}	& \textcolor{cinnamon}{-1+j0}					& \textcolor{cinnamon}{1+j0}	& \textcolor{cinnamon}{-1+j0} 					& \textcolor{cinnamon}{1+j0}	& \textcolor{cinnamon}{-1+j0} \\
+  \textcolor{mygreen}{1+j0}	& \textcolor{mygreen}{-\frac{\sqrt{2}}{2}-j\frac{\sqrt{2}}{2}}	& \textcolor{mygreen}{0+j1}	& \textcolor{mygreen}{\frac{\sqrt{2}}{2}-j\frac{\sqrt{2}}{2}}	& \textcolor{mygreen}{-1+j0}	& \textcolor{mygreen}{\frac{\sqrt{2}}{2}+j\frac{\sqrt{2}}{2}}	& \textcolor{mygreen}{0-j1}	& \textcolor{mygreen}{-\frac{\sqrt{2}}{2}+j\frac{\sqrt{2}}{2}} \\
+  \textcolor{mymauve}{1+j0}	& \textcolor{mymauve}{0-j1}					& \textcolor{mymauve}{-1+j0}	& \textcolor{mymauve}{0+j1}					& \textcolor{mymauve}{1+j0}	& \textcolor{mymauve}{0-j1} 					& \textcolor{mymauve}{-1+j0}	& \textcolor{mymauve}{0+j1} \\
+  \textcolor{azure}{1+j0}	& \textcolor{azure}{\frac{\sqrt{2}}{2}-j\frac{\sqrt{2}}{2}}	& \textcolor{azure}{0-j1}	& \textcolor{azure}{-\frac{\sqrt{2}}{2}-j\frac{\sqrt{2}}{2}}	& \textcolor{azure}{-1+j0}	& \textcolor{azure}{-\frac{\sqrt{2}}{2}+j\frac{\sqrt{2}}{2}} 	& \textcolor{azure}{0+j1}	& \textcolor{azure}{\frac{\sqrt{2}}{2}+j\frac{\sqrt{2}}{2}} \\
+ \end{array}
+ \right]$
+\endgroup
+
+\vspace{1cm}
+
+\begingroup
+\renewcommand*{\arraystretch}{1.1} % Zeilenabstand
+\renewcommand*{\arraycolsep}{5.5pt} % Spaltenabstand
+$\left[
+\begin{array}{cccccccc}
+  \tikzmark{varrowtop} a_{00}+jb_{00}	& a_{01}+jb_{01}	& a_{02}+jb_{02}	& a_{03}+jb_{03}	& a_{04}+jb_{04}	& a_{05}+jb_{05} 	& a_{06}+jb_{06}	& a_{07}+jb_{07} \\
+  a_{10}+jb_{10}	& a_{11}+jb_{11}	& a_{12}+jb_{12}	& a_{13}+jb_{13}	& a_{14}+jb_{14}	& a_{15}+jb_{15} 	& a_{16}+jb_{16}	& a_{17}+jb_{17} \\
+  a_{20}+jb_{20}	& a_{21}+jb_{21}	& a_{22}+jb_{22}	& a_{23}+jb_{23}	& a_{24}+jb_{24}	& a_{25}+jb_{25} 	& a_{26}+jb_{26}	& a_{27}+jb_{27} \\
+  a_{30}+jb_{30}	& a_{31}+jb_{31}	& a_{32}+jb_{32}	& a_{33}+jb_{33}	& a_{34}+jb_{34}	& a_{35}+jb_{35} 	& a_{36}+jb_{36}	& a_{37}+jb_{37} \\
+  a_{40}+jb_{40}	& a_{41}+jb_{41}	& a_{42}+jb_{42}	& a_{43}+jb_{43}	& a_{44}+jb_{44}	& a_{45}+jb_{45} 	& a_{46}+jb_{46}	& a_{47}+jb_{47} \\
+  a_{50}+jb_{50}	& a_{51}+jb_{51}	& a_{52}+jb_{52}	& a_{53}+jb_{53}	& a_{54}+jb_{54}	& a_{55}+jb_{55}	& a_{56}+jb_{56}	& a_{57}+jb_{57} \\
+  a_{60}+jb_{60}	& a_{61}+jb_{61}	& a_{62}+jb_{62}	& a_{63}+jb_{63}	& a_{64}+jb_{64}	& a_{65}+jb_{65} 	& a_{66}+jb_{66}	& a_{67}+jb_{67} \\
+  \tikzmark{varrowbottom} a_{70}+jb_{70}	& a_{71}+jb_{71}	& a_{72}+jb_{72}	& a_{73}+jb_{73}	& a_{74}+jb_{74}	& a_{75}+jb_{75} 	& a_{76}+jb_{76}	& a_{77}+jb_{77} \\
+ \end{array}
+ \right]$
+\endgroup
+
+
+\tikz[overlay,remember picture] {
+  \draw[->] ([yshift=1.5ex,xshift=-4ex]varrowtop) -- ([xshift=-4ex]varrowbottom)
+            node[near end,left] {\scriptsize $i = const.$};
+}
+
+
+
+
+\vspace{1cm}
+
+
+
+
+
+
+
+\noindent\textcolor{green}{1. Zeile:}\\
+%\vspace{0.5cm}
+
+\noindent$(1+j0) \cdot (a_{0i}+jb_{0i}) + (1+j0) \cdot (a_{1i}+jb_{1i}) + (1+j0) \cdot (a_{2i}+jb_{2i}) + (1+j0) \cdot (a_{3i}+jb_{3i}) + (1+j0) \cdot (a_{4i}+jb_{4i}) + (1+j0) \cdot (a_{5i}+jb_{5i}) + (1+j0) \cdot (a_{6i}+jb_{6i}) + (1+j0) \cdot (a_{7i}+jb_{7i})$\\
+
+\noindent$= a_{0i}+jb_{0i} + a_{1i}+jb_{1i} + a_{2i}+jb_{2i} + a_{3i}+jb_{3i} + a_{4i}+jb_{4i} + a_{5i}+jb_{5i} + a_{6i}+jb_{6i} + a_{7i}+jb_{7i}$
+
+\vspace{0.5cm}
+\indent$\Rightarrow \Re_{0i} = a_{0i} + a_{1i} + a_{2i} + a_{3i} + a_{4i} + a_{5i} + a_{6i} + a_{7i}$\\
+
+\indent$\Rightarrow \Im_{0i} = b_{0i} + b_{1i} + b_{2i} + b_{3i} + b_{4i} + b_{5i} + b_{6i} + b_{7i}$\\
+
+\vspace{1cm}
+
+\noindent\textcolor{blue}{2. Zeile:}\\
+
+\noindent$\mathunderline{red}{(1+j0) \cdot (a_{0i}+jb_{0i})} + \mathunderline{yellow}{(\frac{\sqrt{2}}{2}+j\frac{\sqrt{2}}{2}) \cdot (a_{1i}+jb_{1i})} + \mathunderline{green}{(0+j1) \cdot (a_{2i}+jb_{2i})} + \mathunderline{cinnamon}{(-\frac{\sqrt{2}}{2}+j\frac{\sqrt{2}}{2}) \cdot (a_{3i}+jb_{3i})} + \mathunderline{lila}{(-1+j0) \cdot (a_{4i}+jb_{4i})} + \mathunderline{pink}{(-\frac{\sqrt{2}}{2}-j\frac{\sqrt{2}}{2}) \cdot (a_{5i}+jb_{5i})} + \mathunderline{mygreen}{(0-j1) \cdot (a_{6i}+jb_{6i})} + \mathunderline{azure}{(\frac{\sqrt{2}}{2}-j\frac{\sqrt{2}}{2}) \cdot (a_{7i}+jb_{7i})}$\\
+
+\vspace{1cm}
+
+\noindent$\mathunderline{red}{(1+j0) \cdot (a_{0i}+jb_{0i})} = \textcolor{red}{a_{0i}}\textcolor{blue}{+jb_{0i}} \hspace{0.5cm}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=a_{0i}, \hspace{0.3cm}\Im=b_{0i}$\\
+
+\noindent$\mathunderline{yellow}{(\frac{\sqrt{2}}{2}+j\frac{\sqrt{2}}{2}) \cdot (a_{1i}+jb_{1i})} = \textcolor{red}{\frac{\sqrt{2}}{2} \cdot a_{1i}} \textcolor{blue}{+ j\frac{\sqrt{2}}{2} \cdot a_{1i} + j\frac{\sqrt{2}}{2} \cdot b_{1i}} \textcolor{red}{-\frac{\sqrt{2}}{2} \cdot b_{1i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=\frac{\sqrt{2}}{2} \cdot a_{1i} -\frac{\sqrt{2}}{2} \cdot b_{1i}, \hspace{0.3cm} \Im=\frac{\sqrt{2}}{2} \cdot a_{1i} + \frac{\sqrt{2}}{2} \cdot b_{1i}$\\
+
+\noindent$\mathunderline{green}{(0+j1) \cdot (a_{2i}+jb_{2i})} = \textcolor{red}{-b_{2i}}\textcolor{blue}{+ja_{2i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=-b_{2i}, \hspace{0.3cm}\Im=a_{2i}$\\
+
+\noindent$\mathunderline{cinnamon}{(-\frac{\sqrt{2}}{2}+j\frac{\sqrt{2}}{2}) \cdot (a_{3i}+jb_{3i})} = \textcolor{red}{-\frac{\sqrt{2}}{2} \cdot a_{3i}} \textcolor{blue}{+ j\frac{\sqrt{2}}{2} \cdot a_{3i} -j\frac{\sqrt{2}}{2} \cdot b_{3i}} \textcolor{red}{- \frac{\sqrt{2}}{2} \cdot b_{3i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=-\frac{\sqrt{2}}{2} \cdot a_{3i} -\frac{\sqrt{2}}{2} \cdot b_{3i}, \hspace{0.3cm} \Im=\frac{\sqrt{2}}{2} \cdot a_{3i} - \frac{\sqrt{2}}{2} \cdot b_{3i}$\\
+
+\noindent$\mathunderline{lila}{(-1+j0) \cdot (a_{4i}+jb_{4i})} = \textcolor{red}{-a_{4i}} \textcolor{blue}{-jb_{4i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=-a_{4i}, \hspace{0.3cm}\Im=-b_{4i}$\\
+
+\noindent$\mathunderline{pink}{(-\frac{\sqrt{2}}{2}-j\frac{\sqrt{2}}{2}) \cdot (a_{5i}+jb_{5i})} = \textcolor{red}{-\frac{\sqrt{2}}{2} \cdot a_{5i}} \textcolor{blue}{-j\frac{\sqrt{2}}{2} \cdot a_{5i} -j\frac{\sqrt{2}}{2} \cdot b_{5i}} \textcolor{red}{+\frac{\sqrt{2}}{2} \cdot b_{5i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=-\frac{\sqrt{2}}{2} \cdot a_{5i} +\frac{\sqrt{2}}{2} \cdot b_{5i}, \hspace{0.3cm} \Im=-\frac{\sqrt{2}}{2} \cdot a_{5i} - \frac{\sqrt{2}}{2} \cdot b_{5i}$\\
+
+\noindent$\mathunderline{mygreen}{(0-j1) \cdot (a_{6i}+jb_{6i})} = \textcolor{red}{b_{6i}} \textcolor{blue}{- ja_{6i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=b_{6i}, \hspace{0.3cm}\Im=-a_{6i}$\\
+
+\noindent$\mathunderline{azure}{(\frac{\sqrt{2}}{2}-j\frac{\sqrt{2}}{2}) \cdot (a_{7i}+jb_{7i})} = \textcolor{red}{\frac{\sqrt{2}}{2} \cdot a_{7i}} \textcolor{blue}{-j\frac{\sqrt{2}}{2} \cdot a_{7i} + j\frac{\sqrt{2}}{2} \cdot b_{7i}} \textcolor{red}{+\frac{\sqrt{2}}{2} \cdot b_{7i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=\frac{\sqrt{2}}{2} \cdot a_{7i} +\frac{\sqrt{2}}{2} \cdot b_{7i}, \hspace{0.3cm} \Im=-\frac{\sqrt{2}}{2} \cdot a_{7i} + \frac{\sqrt{2}}{2} \cdot b_{7i}$\\
+
+\vspace{0.5cm}
+\noindent$\Rightarrow \Re_{1i} = a_{0i} + \frac{\sqrt{2}}{2} \cdot a_{1i} -\frac{\sqrt{2}}{2} \cdot b_{1i} -b_{2i} -\frac{\sqrt{2}}{2} \cdot a_{3i} -\frac{\sqrt{2}}{2} \cdot b_{3i} -a_{4i} -\frac{\sqrt{2}}{2} \cdot a_{5i} +\frac{\sqrt{2}}{2} \cdot b_{5i} + b_{6i} + \frac{\sqrt{2}}{2} \cdot a_{7i} +\frac{\sqrt{2}}{2} \cdot b_{7i}$\\
+
+\noindent$\Rightarrow \Im_{1i} = b_{0i} + \frac{\sqrt{2}}{2} \cdot a_{1i} + \frac{\sqrt{2}}{2} \cdot b_{1i} + a_{2i} + \frac{\sqrt{2}}{2} \cdot a_{3i} - \frac{\sqrt{2}}{2} \cdot b_{3i} -b_{4i} -\frac{\sqrt{2}}{2} \cdot a_{5i} - \frac{\sqrt{2}}{2} \cdot b_{5i} -a_{6i} -\frac{\sqrt{2}}{2} \cdot a_{7i} + \frac{\sqrt{2}}{2} \cdot b_{7i}$\\
+
+\vspace{1cm}
+
+\noindent\textcolor{red}{3. Zeile:}\\
+
+\noindent$\mathunderline{red}{(1+j0) \cdot (a_{0i}+jb_{0i})} + \mathunderline{yellow}{(0+j1) \cdot (a_{1i}+jb_{1i})} + \mathunderline{green}{(-1+j0) \cdot (a_{2i}+jb_{2i})} + \mathunderline{cinnamon}{(0-j1) \cdot (a_{3i}+jb_{3i})} + \mathunderline{lila}{(1+j0) \cdot (a_{4i}+jb_{4i})} + \mathunderline{pink}{(0+j1) \cdot (a_{5i}+jb_{5i})} + \mathunderline{mygreen}{(-1+j0) \cdot (a_{6i}+jb_{6i})} + \mathunderline{azure}{(0-j1) \cdot (a_{7i}+jb_{7i})}$\\
+
+\vspace{1cm}
+
+$\mathunderline{red}{(1+j0) \cdot (a_{0i}+jb_{0i})} = \textcolor{red}{a_{0i}} \textcolor{blue}{+jb_{0i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=a_{0i}, \hspace{0.3cm}\Im=b_{0i}$\\
+
+$\mathunderline{yellow}{(0+j1) \cdot (a_{1i}+jb_{1i})} = \textcolor{red}{-b_{1i}} \textcolor{blue}{+ja_{1i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=-b_{1i}, \hspace{0.3cm}\Im=a_{1i}$\\
+
+$\mathunderline{green}{(-1+j0) \cdot (a_{2i}+jb_{2i})} = \textcolor{red}{-a_{2i}} \textcolor{blue}{-jb_{2i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=-a_{2i}, \hspace{0.3cm}\Im=-b_{2i}$\\
+
+$\mathunderline{cinnamon}{(0-j1) \cdot (a_{3i}+jb_{3i})} = \textcolor{red}{b_{3i}} \textcolor{blue}{-ja_{3i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=b_{3i}, \hspace{0.3cm}\Im=-a_{3i}$\\
+
+$\mathunderline{lila}{(1+j0) \cdot (a_{4i}+jb_{4i})} = \textcolor{red}{a_{4i}}\textcolor{blue}{+jb_{4i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=a_{4i}, \hspace{0.3cm}\Im=b_{4i}$\\
+
+$\mathunderline{pink}{(0+j1) \cdot (a_{5i}+jb_{5i})} = \textcolor{red}{-b_{5i}}\textcolor{blue}{+ja_{5i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=-b_{5i}, \hspace{0.3cm}\Im=a_{5i}$\\
+
+$\mathunderline{mygreen}{(-1+j0) \cdot (a_{6i}+jb_{6i})} = \textcolor{red}{-a_{6i}}\textcolor{blue}{-jb_{6i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=-a_{6i}, \hspace{0.3cm}\Im=-b_{6i}$\\
+
+$\mathunderline{azure}{(0-j1) \cdot (a_{7i}+jb_{7i})} = \textcolor{red}{b_{7i}}\textcolor{blue}{-ja_{7i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=b_{7i}, \hspace{0.3cm}\Im=-a_{7i}$\\
+
+
+\vspace{0.5cm}
+
+$\Rightarrow \Re_{2i} = a_{0i} -b_{1i} -a_{2i} +b_{3i} +a_{4i} -b_{5i} -a_{6i} +b_{7i}$\\
+
+$\Rightarrow \Im_{2i} = b_{0i} +a_{1i} -b_{2i} -a_{3i} +b_{4i} +a_{5i} -b_{6i} -a_{7i}$\\
+
+\vspace{1cm}
+
+\noindent\textcolor{lila}{4. Zeile:}\\
+
+\noindent$\mathunderline{red}{(1+j0) \cdot (a_{0i}+jb_{0i})} + \mathunderline{yellow}{(-\frac{\sqrt{2}}{2}+j\frac{\sqrt{2}}{2}) \cdot (a_{1i}+jb_{1i})} + \mathunderline{green}{(0+j1) \cdot (a_{2i}+jb_{2i})} + \mathunderline{cinnamon}{(\frac{\sqrt{2}}{2}+j\frac{\sqrt{2}}{2}) \cdot (a_{3i}+jb_{3i})} + \mathunderline{lila}{(-1+j0) \cdot (a_{4i}+jb_{4i})} + \mathunderline{pink}{(\frac{\sqrt{2}}{2}-j\frac{\sqrt{2}}{2}) \cdot (a_{5i}+jb_{5i})} + \mathunderline{mygreen}{(0-j1) \cdot (a_{6i}+jb_{6i})} + \mathunderline{azure}{(-\frac{\sqrt{2}}{2}-j\frac{\sqrt{2}}{2}) \cdot (a_{7i}+jb_{7i})}$\\
+
+\vspace{1cm}
+
+$\mathunderline{red}{(1+j0) \cdot (a_{0i}+jb_{0i})} = \textcolor{red}{a_{0i}}\textcolor{blue}{+jb_{1i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=a_{0i}, \hspace{0.3cm}\Im=b_{0i}$\\
+
+$\mathunderline{yellow}{(-\frac{\sqrt{2}}{2}+j\frac{\sqrt{2}}{2}) \cdot (a_{1i}+jb_{1i})} = \textcolor{red}{-\frac{\sqrt{2}}{2} \cdot a_{1i}} \textcolor{blue}{+j\frac{\sqrt{2}}{2} \cdot a_{1i} -j\frac{\sqrt{2}}{2} \cdot b_{1i}} \textcolor{red}{-\frac{\sqrt{2}}{2} \cdot b_{1i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=-\frac{\sqrt{2}}{2} \cdot a_{1i} -\frac{\sqrt{2}}{2} \cdot b_{1i}, \hspace{0.3cm} \Im=\frac{\sqrt{2}}{2} \cdot a_{1i} - \frac{\sqrt{2}}{2} \cdot b_{1i}$\\
+
+$\mathunderline{green}{(0+j1) \cdot (a_{2i}+jb_{2i})} = \textcolor{red}{-b_{2i}}\textcolor{blue}{+a_{2i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=-b_{2i}, \hspace{0.3cm}\Im=a_{2i}$\\
+
+$\mathunderline{cinnamon}{(\frac{\sqrt{2}}{2}+j\frac{\sqrt{2}}{2}) \cdot (a_{3i}+jb_{3i})} = \textcolor{red}{\frac{\sqrt{2}}{2} \cdot a_{3i}}\textcolor{blue}{+\frac{\sqrt{2}}{2}\cdot a_{3i} + \frac{\sqrt{2}}{2} \cdot b_{3i}} \textcolor{red}{-\frac{\sqrt{2}}{2} \cdot b_{3i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=\frac{\sqrt{2}}{2} \cdot a_{3i} -\frac{\sqrt{2}}{2} \cdot b_{3i}, \hspace{0.3cm} \Im=\frac{\sqrt{2}}{2} \cdot a_{3i} + \frac{\sqrt{2}}{2} \cdot b_{3i}$\\
+
+$\mathunderline{lila}{(-1+j0) \cdot (a_{4i}+jb_{4i})} = \textcolor{red}{-a_{4i}}\textcolor{blue}{-jb_{4i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=-a_{4i}, \hspace{0.3cm}\Im=-b_{4i}$\\
+
+$\mathunderline{pink}{(\frac{\sqrt{2}}{2}-j\frac{\sqrt{2}}{2}) \cdot (a_{5i}+jb_{5i})} = \textcolor{red}{\frac{\sqrt{2}}{2} \cdot a_{5i}} \textcolor{blue}{-j\frac{\sqrt{2}}{2} \cdot a_{5i} + j\frac{\sqrt{2}}{2} \cdot b_{5i}} \textcolor{red}{+\frac{\sqrt{2}}{2} \cdot b_{5i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=\frac{\sqrt{2}}{2} \cdot a_{5i} +\frac{\sqrt{2}}{2} \cdot b_{5i}, \hspace{0.3cm} \Im=-\frac{\sqrt{2}}{2} \cdot a_{5i} + \frac{\sqrt{2}}{2} \cdot b_{5i}$\\
+
+$\mathunderline{mygreen}{(0-j1) \cdot (a_{6i}+jb_{6i})} = \textcolor{red}{b_{6i}}\textcolor{blue}{-ja_{6i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=b_{6i}, \hspace{0.3cm}\Im=-a_{6i}$\\
+
+$\mathunderline{azure}{(-\frac{\sqrt{2}}{2}-j\frac{\sqrt{2}}{2}) \cdot (a_{7i}+jb_{7i})} = \textcolor{red}{-\frac{\sqrt{2}}{2} \cdot a_{7i}}\textcolor{blue}{-j\frac{\sqrt{2}}{2} \cdot a_{7i} - j\frac{\sqrt{2}}{2} \cdot b_{7i}} \textcolor{red}{+\frac{\sqrt{2}}{2} \cdot b_{7i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=-\frac{\sqrt{2}}{2} \cdot a_{7i} +\frac{\sqrt{2}}{2} \cdot b_{7i}, \hspace{0.3cm} \Im=-\frac{\sqrt{2}}{2} \cdot a_{7i} - \frac{\sqrt{2}}{2} \cdot b_{7i}$\\
+
+
+\vspace{0.5cm}
+
+\noindent$\Rightarrow \Re_{3i} = a_{0i} -\frac{\sqrt{2}}{2} \cdot a_{1i} -\frac{\sqrt{2}}{2} \cdot b_{1i} -b_{2i} +\frac{\sqrt{2}}{2} \cdot a_{3i} -\frac{\sqrt{2}}{2} \cdot b_{3i} -a_{4i} +\frac{\sqrt{2}}{2} \cdot a_{5i} +\frac{\sqrt{2}}{2} \cdot b_{5i} + b_{6i} -\frac{\sqrt{2}}{2} \cdot a_{7i} +\frac{\sqrt{2}}{2} \cdot b_{7i}$\\
+
+\noindent$\Rightarrow \Im_{3i} = b_{0i} + \frac{\sqrt{2}}{2} \cdot a_{1i} - \frac{\sqrt{2}}{2} \cdot b_{1i} + a_{2i} + \frac{\sqrt{2}}{2} \cdot a_{3i} + \frac{\sqrt{2}}{2} \cdot b_{3i} -b_{4i} -\frac{\sqrt{2}}{2} \cdot a_{5i} + \frac{\sqrt{2}}{2} \cdot b_{5i} -a_{6i} -\frac{\sqrt{2}}{2} \cdot a_{7i} - \frac{\sqrt{2}}{2} \cdot b_{7i}$\\
+\vspace{1cm}
+
+
+\noindent\textcolor{cinnamon}{5. Zeile:}\\
+
+\noindent$(1+j0) \cdot (a_{0i}+jb_{0i}) + (-1+j0) \cdot (a_{1i}+jb_{1i}) + (1+j0) \cdot (a_{2i}+jb_{2i}) + (-1+j0) \cdot (a_{3i}+jb_{3i}) + (1+j0) \cdot (a_{4i}+jb_{4i}) + (-1+j0) \cdot (a_{5i}+jb_{5i}) + (1+j0) \cdot (a_{6i}+jb_{6i}) + (-1+j0) \cdot (a_{7i}+jb_{7i})$\\
+
+\noindent$= a_{0i}+jb_{0i} - a_{1i}-jb_{1i} + a_{2i}+jb_{2i} - a_{3i}-jb_{3i} + a_{4i}+jb_{4i} - a_{5i}-jb_{5i} + a_{6i}+jb_{6i} - a_{7i}-+jb_{7i}$\\
+
+\vspace{0.5cm}
+\indent$\Rightarrow \Re_{4i} = a_{0i} - a_{1i} + a_{2i} - a_{3i} + a_{4i} - a_{5i} + a_{6i} - a_{7i}$\\
+
+\indent$\Rightarrow \Im_{4i} = b_{0i} - b_{1i} + b_{2i} - b_{3i} + b_{4i} - b_{5i} + b_{6i} - b_{7i}$\\
+
+\vspace{1cm}
+
+\noindent\textcolor{mygreen}{6. Zeile:}\\
+
+\noindent$\mathunderline{red}{(1+j0) \cdot (a_{0i}+jb_{0i})} + \mathunderline{yellow}{(-\frac{\sqrt{2}}{2}-j\frac{\sqrt{2}}{2}) \cdot (a_{1i}+jb_{1i})} + \mathunderline{green}{(0+j1) \cdot (a_{2i}+jb_{2i})} + \mathunderline{cinnamon}{(\frac{\sqrt{2}}{2}-j\frac{\sqrt{2}}{2}) \cdot (a_{3i}+jb_{3i})} + \mathunderline{lila}{(-1+j0) \cdot (a_{4i}+jb_{4i})} + \mathunderline{pink}{(\frac{\sqrt{2}}{2}+j\frac{\sqrt{2}}{2}) \cdot (a_{5i}+jb_{5i})} + \mathunderline{mygreen}{(0-j1) \cdot (a_{6i}+jb_{6i})} + \mathunderline{azure}{(-\frac{\sqrt{2}}{2}+j\frac{\sqrt{2}}{2}) \cdot (a_{7i}+jb_{7i})}$\\
+
+
+$\mathunderline{red}{(1+j0) \cdot (a_{0i}+jb_{0i})} = a_{0i}+jb_{0i}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=a_{0i}, \hspace{0.3cm}\Im=b_{0i}$\\
+
+$\mathunderline{yellow}{(-\frac{\sqrt{2}}{2}-j\frac{\sqrt{2}}{2}) \cdot (a_{1i}+jb_{1i})} = \textcolor{red}{-\frac{\sqrt{2}}{2} \cdot a_{1i}} \textcolor{blue}{-j\frac{\sqrt{2}}{2} \cdot a_{1i} -j\frac{\sqrt{2}}{2} \cdot b_{1i}} \textcolor{red}{+\frac{\sqrt{2}}{2} \cdot b_{1i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=-\frac{\sqrt{2}}{2} \cdot a_{1i} +\frac{\sqrt{2}}{2} \cdot b_{1i}, \hspace{0.3cm} \Im=-\frac{\sqrt{2}}{2} \cdot a_{1i} - \frac{\sqrt{2}}{2} \cdot b_{1i}$\\
+
+$\mathunderline{green}{(0+j1) \cdot (a_{2i}+jb_{2i})} = \textcolor{red}{-b_{2i}}\textcolor{blue}{+ja_{2i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=-b_{2i}, \hspace{0.3cm}\Im=a_{2i}$\\
+
+$\mathunderline{cinnamon}{(\frac{\sqrt{2}}{2}-j\frac{\sqrt{2}}{2}) \cdot (a_{3i}+jb_{3i})} = \textcolor{red}{\frac{\sqrt{2}}{2} \cdot a_{3i}} \textcolor{blue}{-j\frac{\sqrt{2}}{2} \cdot a_{3i} +j\frac{\sqrt{2}}{2} \cdot b_{3i}} \textcolor{red}{+\frac{\sqrt{2}}{2} \cdot b_{3i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=\frac{\sqrt{2}}{2} \cdot a_{3i} +\frac{\sqrt{2}}{2} \cdot b_{3i}, \hspace{0.3cm} \Im=-\frac{\sqrt{2}}{2} \cdot a_{3i} + \frac{\sqrt{2}}{2} \cdot b_{3i}$\\
+
+$\mathunderline{lila}{(-1+j0) \cdot (a_{4i}+jb_{4i})} = \textcolor{red}{-a_{4i}}\textcolor{blue}{-jb_{4i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=-a_{4i}, \hspace{0.3cm}\Im=-b_{4i}$\\
+
+$\mathunderline{pink}{(\frac{\sqrt{2}}{2}+j\frac{\sqrt{2}}{2}) \cdot (a_{5i}+jb_{5i})} = \textcolor{red}{\frac{\sqrt{2}}{2} \cdot a_{5i}} \textcolor{blue}{+j\frac{\sqrt{2}}{2} \cdot a_{5i} + j\frac{\sqrt{2}}{2} \cdot b_{5i}} \textcolor{red}{-\frac{\sqrt{2}}{2} \cdot b_{5i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=\frac{\sqrt{2}}{2} \cdot a_{5i} -\frac{\sqrt{2}}{2} \cdot b_{5i}, \hspace{0.3cm} \Im=\frac{\sqrt{2}}{2} \cdot a_{5i} + \frac{\sqrt{2}}{2} \cdot b_{5i}$\\
+
+$\mathunderline{mygreen}{(0-j1) \cdot (a_{6i}+jb_{6i})} = \textcolor{red}{b_{6i}} \textcolor{blue}{-ja_{6i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=b_{6i}, \hspace{0.3cm}\Im=-a_{6i}$\\
+
+$\mathunderline{azure}{(-\frac{\sqrt{2}}{2}+j\frac{\sqrt{2}}{2}) \cdot (a_{7i}+jb_{7i})} = \textcolor{red}{-\frac{\sqrt{2}}{2} \cdot a_{7i}} \textcolor{blue}{+j\frac{\sqrt{2}}{2} \cdot a_{7i} -j\frac{\sqrt{2}}{2} \cdot b_{7i}} \textcolor{red}{-\frac{\sqrt{2}}{2} \cdot b_{7i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=-\frac{\sqrt{2}}{2} \cdot a_{7i} -\frac{\sqrt{2}}{2} \cdot b_{7i}, \hspace{0.3cm} \Im=\frac{\sqrt{2}}{2} \cdot a_{7i} - \frac{\sqrt{2}}{2} \cdot b_{7i}$\\
+
+\vspace{0.5cm}
+
+\indent$\Rightarrow \Re_{5i} = a_{0i} -\frac{\sqrt{2}}{2} \cdot a_{1i} +\frac{\sqrt{2}}{2} \cdot b_{1i} -b_{2i} +\frac{\sqrt{2}}{2} \cdot a_{3i} +\frac{\sqrt{2}}{2} \cdot b_{3i} -a_{4i} +\frac{\sqrt{2}}{2} \cdot a_{5i} -\frac{\sqrt{2}}{2} \cdot b_{5i} +b_{6i} -\frac{\sqrt{2}}{2} \cdot a_{7i} -\frac{\sqrt{2}}{2} \cdot b_{7i}$\\
+
+\indent$\Rightarrow \Im_{5i} = b_{0i} -\frac{\sqrt{2}}{2} \cdot a_{1i} - \frac{\sqrt{2}}{2} \cdot b_{1i} +a_{2i} -\frac{\sqrt{2}}{2} \cdot a_{3i} + \frac{\sqrt{2}}{2} \cdot b_{3i} -b_{4i} +\frac{\sqrt{2}}{2} \cdot a_{5i} + \frac{\sqrt{2}}{2} \cdot b_{5i} -a_{6i} +\frac{\sqrt{2}}{2} \cdot a_{7i} - \frac{\sqrt{2}}{2} \cdot b_{7i}$\\
+
+\vspace{1cm}
+
+\noindent\textcolor{mymauve}{7.Zeile:}\\
+
+\noindent$\mathunderline{red}{(1+j0) \cdot (a_{0i}+jb_{0i})} + \mathunderline{yellow}{(0-j1) \cdot (a_{1i}+jb_{1i})} + \mathunderline{green}{(-1+j0) \cdot (a_{2i}+jb_{2i})} + \mathunderline{cinnamon}{(0+j1) \cdot (a_{3i}+jb_{3i})} + \mathunderline{lila}{(1+j0) \cdot (a_{4i}+jb_{4i})} + \mathunderline{pink}{(0-j1) \cdot (a_{5i}+jb_{5i})} + \mathunderline{mygreen}{(-1+j0) \cdot (a_{6i}+jb_{6i})} + \mathunderline{azure}{(0+j1) \cdot (a_{7i}+jb_{7i})}$\\
+
+\vspace{1cm}
+
+$\mathunderline{red}{(1+j0) \cdot (a_{0i}+jb_{0i})} = a_{0i}+jb_{0i}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=a_{0i}, \hspace{0.3cm}\Im=b_{0i}$\\
+
+$\mathunderline{yellow}{(0-j1) \cdot (a_{1i}+jb_{1i})} = \textcolor{red}{b_{1i}}\textcolor{blue}{-ja_{1i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=b_{1i}, \hspace{0.3cm}\Im=-a_{1i}$\\
+
+$\mathunderline{green}{(-1+j0) \cdot (a_{2i}+jb_{2i})} = \textcolor{red}{-a_{2i}}\textcolor{blue}{-jb_{2i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=-a_{2i}, \hspace{0.3cm}\Im=-b_{2i}$\\
+
+$\mathunderline{cinnamon}{(0+j1) \cdot (a_{3i}+jb_{3i})} = \textcolor{red}{-b_{3i}}\textcolor{blue}{+ja_{3i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=-b_{3i}, \hspace{0.3cm}\Im=a_{3i}$\\
+
+$\mathunderline{lila}{(1+j0) \cdot (a_{4i}+jb_{4i})} = \textcolor{red}{a_{4i}} \textcolor{blue}{+jb_{4i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=a_{4i}, \hspace{0.3cm}\Im=b_{4i}$\\
+
+$\mathunderline{pink}{(0-j1) \cdot (a_{5i}+jb_{5i})} = \textcolor{red}{b_{5i}} \textcolor{blue}{-ja_{5i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=b_{5i}, \hspace{0.3cm}\Im=-a_{5i}$\\
+
+$\mathunderline{mygreen}{(-1+j0) \cdot (a_{6i}+jb_{6i})} = \textcolor{red}{-a_{6i}} \textcolor{blue}{-jb_{6i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=-a_{6i}, \hspace{0.3cm}\Im=-b_{6i}$\\
+
+$\mathunderline{azure}{(0+j1) \cdot (a_{7i}+jb_{7i})} = \textcolor{red}{-b_{7i}} \textcolor{blue}{+a_{7i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=-b_{7i}, \hspace{0.3cm}\Im=a_{7i}$\\
+
+\vspace{0.5cm}
+
+\indent$\Rightarrow \Re_{6i} = a_{0i} +b_{1i} -a_{2i} -b_{3i} +a_{4i} +b_{5i} -a_{6i} -b_{7i}$\\
+
+\indent$\Rightarrow \Im_{6i} = b_{0i} -a_{1i} -b_{2i} +a_{3i} +b_{4i} -a_{5i} -b_{6i} +a_{7i}$\\
+
+\vspace{1cm}
+
+\noindent\textcolor{azure}{8. Zeile}\\
+
+\noindent$\mathunderline{red}{(1+j0) \cdot (a_{0i}+jb_{0i})} + \mathunderline{yellow}{(\frac{\sqrt{2}}{2}-j\frac{\sqrt{2}}{2}) \cdot (a_{1i}+jb_{1i})} + \mathunderline{green}{(0-j1) \cdot (a_{2i}+jb_{2i})} + \mathunderline{cinnamon}{(-\frac{\sqrt{2}}{2}-j\frac{\sqrt{2}}{2}) \cdot (a_{3i}+jb_{3i})} + \mathunderline{lila}{(-1+j0) \cdot (a_{4i}+jb_{4i})} + \mathunderline{pink}{(-\frac{\sqrt{2}}{2}+j\frac{\sqrt{2}}{2}) \cdot (a_{5i}+jb_{5i})} + \mathunderline{mygreen}{(0+j1) \cdot (a_{6i}+jb_{6i})} + \mathunderline{azure}{(\frac{\sqrt{2}}{2}+j\frac{\sqrt{2}}{2}) \cdot (a_{7i}+jb_{7i})}$\\
+
+\vspace{1cm}
+
+$\mathunderline{red}{(1+j0) \cdot (a_{0i}+jb_{0i})} = \textcolor{red}{a_{0i}} \textcolor{blue}{+jb_{0i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=a_{0i}, \hspace{0.3cm}\Im=b_{0i}$\\
+
+$\mathunderline{yellow}{(\frac{\sqrt{2}}{2}-j\frac{\sqrt{2}}{2}) \cdot (a_{1i}+jb_{1i})} = \textcolor{red}{\frac{\sqrt{2}}{2} \cdot a_{1i}} \textcolor{blue}{-j\frac{\sqrt{2}}{2} \cdot a_{1i} +j\frac{\sqrt{2}}{2} \cdot b_{1i}} \textcolor{red}{+b_{1i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=\frac{\sqrt{2}}{2} \cdot a_{1i} + \frac{\sqrt{2}}{2} \cdot b_{1i}, \hspace{0.3cm} \Im=-\frac{\sqrt{2}}{2} \cdot a_{1i} +\frac{\sqrt{2}}{2} \cdot b_{1i}$\\
+
+$\mathunderline{green}{(0-j1) \cdot (a_{2i}+jb_{2i})} = \textcolor{red}{b_{2i}}\textcolor{blue}{-ja_{2i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=b_{2i}, \hspace{0.3cm}\Im=-a_{2i}$\\
+
+$\mathunderline{cinnamon}{(-\frac{\sqrt{2}}{2}-j\frac{\sqrt{2}}{2}) \cdot (a_{3i}+jb_{3i})} = \textcolor{red}{-\frac{\sqrt{2}}{2} \cdot a_{3i}} \textcolor{blue}{-j\frac{\sqrt{2}}{2} \cdot a_{3i} -j\frac{\sqrt{2}}{2} \cdot b_{3i}} \textcolor{red}{+\frac{\sqrt{2}}{2} \cdot b_{3i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=-\frac{\sqrt{2}}{2} \cdot a_{3i} +\frac{\sqrt{2}}{2} \cdot b_{3i}, \hspace{0.3cm} \Im=-\frac{\sqrt{2}}{2} \cdot a_{3i} -\frac{\sqrt{2}}{2} \cdot b_{3i}$\\
+
+$\mathunderline{lila}{(-1+j0) \cdot (a_{4i}+jb_{4i})} = \textcolor{red}{-a_{4i}} \textcolor{blue}{-jb_{4i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=-a_{4i}, \hspace{0.3cm}\Im=-b_{4i}$\\
+
+$\mathunderline{pink}{(-\frac{\sqrt{2}}{2}+j\frac{\sqrt{2}}{2}) \cdot (a_{5i}+jb_{5i})} = \textcolor{red}{-\frac{\sqrt{2}}{2} \cdot a_{5i}} \textcolor{blue}{+j\frac{\sqrt{2}}{2} \cdot a_{5i} -j\frac{\sqrt{2}}{2} \cdot b_{5i}} \textcolor{red}{-\frac{\sqrt{2}}{2} \cdot b_{5i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=-\frac{\sqrt{2}}{2} \cdot a_{5i} -\frac{\sqrt{2}}{2} \cdot b_{5i}, \hspace{0.3cm} \Im=\frac{\sqrt{2}}{2} \cdot a_{5i} -\frac{\sqrt{2}}{2} \cdot b_{5i}$\\
+
+$\mathunderline{mygreen}{(0+j1) \cdot (a_{6i}+jb_{6i})} = \textcolor{red}{-b_{6i}} \textcolor{blue}{+ja_{6i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=-b_{6i}, \hspace{0.3cm}\Im=a_{6i}$\\
+
+$\mathunderline{azure}{(\frac{\sqrt{2}}{2}+j\frac{\sqrt{2}}{2}) \cdot (a_{7i}+jb_{7i})} = \textcolor{red}{\frac{\sqrt{2}}{2} \cdot a_{7i}} \textcolor{blue}{+j\frac{\sqrt{2}}{2} \cdot a_{7i} +j\frac{\sqrt{2}}{2} \cdot b_{7i}} \textcolor{red}{-\frac{\sqrt{2}}{2} \cdot b_{7i}}$\\
+
+$\hspace{2.5cm}\rightarrow \hspace{0.5cm} \Re=\frac{\sqrt{2}}{2} \cdot a_{7i} -\frac{\sqrt{2}}{2} \cdot b_{7i}, \hspace{0.3cm} \Im=\frac{\sqrt{2}}{2} \cdot a_{7i} +\frac{\sqrt{2}}{2} \cdot b_{7i}$\\
+
+\vspace{0.5cm}
+
+\indent$\Rightarrow \Re_{7i} = a_{0i} +\frac{\sqrt{2}}{2} \cdot a_{1i} + \frac{\sqrt{2}}{2} \cdot b_{1i} +b_{2i} -\frac{\sqrt{2}}{2} \cdot a_{3i} +\frac{\sqrt{2}}{2} \cdot b_{3i} -a_{4i} -\frac{\sqrt{2}}{2} \cdot a_{5i} -\frac{\sqrt{2}}{2} \cdot b_{5i} -b_{6i} +\frac{\sqrt{2}}{2} \cdot a_{7i} -\frac{\sqrt{2}}{2} \cdot b_{7i}$\\
+
+\indent$\Rightarrow \Im_{7i} = b_{0i} -\frac{\sqrt{2}}{2} \cdot a_{1i} +\frac{\sqrt{2}}{2} \cdot b_{1i} -a_{2i} -\frac{\sqrt{2}}{2} \cdot a_{3i} -\frac{\sqrt{2}}{2} \cdot b_{3i} -b_{4i} +\frac{\sqrt{2}}{2} \cdot a_{5i} -\frac{\sqrt{2}}{2} \cdot b_{5i} +a_{6i} +\frac{\sqrt{2}}{2} \cdot a_{7i} +\frac{\sqrt{2}}{2} \cdot b_{7i}$\\
+
+\vspace{1cm}
+Umsortieren ergibt:\\
+
+
+\vspace{0.5cm}
+\noindent$\Re_{0i} = \underbrace{a_{0i} + a_{1i}}_{\texttt{sum0\_stage1\_1v4\_re}} + \underbrace{a_{2i} + a_{3i}}_{\texttt{sum0\_stage1\_2v4\_re}} + \underbrace{a_{4i} + a_{5i}}_{\texttt{sum0\_stage1\_3v4\_re}} + \underbrace{a_{6i} + a_{7i}}_{\texttt{sum0\_stage1\_4v4\_re}}$\\
+
+\vspace{0.5cm}
+\noindent$\Im_{0i} = \underbrace{b_{0i} + b_{1i}}_{\texttt{sum0\_stage1\_1v4\_im}} + \underbrace{b_{2i} + b_{3i}}_{\texttt{sum0\_stage1\_2v4\_im}} + \underbrace{b_{4i} + b_{5i}}_{\texttt{sum0\_stage1\_3v4\_im}} + \underbrace{b_{6i} + b_{7i}}_{\texttt{sum0\_stage1\_4v4\_im}}$\\
+
+\vspace{1cm}
+\noindent$\Re_{1i} = \underbrace{a_{0i} -\frac{\sqrt{2}}{2} \cdot b_{1i}}_{\texttt{sum1\_stage1\_1v6\_re}} + \underbrace{\frac{\sqrt{2}}{2} \cdot a_{1i} -b_{2i}}_{\texttt{sum1\_stage1\_2v6\_re}} + \underbrace{\frac{\sqrt{2}}{2} \cdot b_{5i} -\frac{\sqrt{2}}{2} \cdot a_{3i}}_{\texttt{sum1\_stage1\_3v6\_re}}$\\ 
+
+\vspace{0.4cm}
+\hspace{0.3cm} $+ \underbrace{b_{6i} -\frac{\sqrt{2}}{2} \cdot b_{3i}}_{\texttt{sum1\_stage1\_4v6\_re}} + \underbrace{\frac{\sqrt{2}}{2} \cdot a_{7i} -a_{4i}}_{\texttt{sum1\_stage1\_5v6\_re}} + \underbrace{\frac{\sqrt{2}}{2} \cdot b_{7i}-\frac{\sqrt{2}}{2} \cdot a_{5i}}_{\texttt{sum1\_stage1\_6v6\_re}}\\$
+
+\vspace{0.5cm}
+\noindent$\Im_{1i} = \underbrace{b_{0i} -\frac{\sqrt{2}}{2} \cdot b_{3i}}_{\texttt{sum1\_stage1\_1v6\_im}} + \underbrace{\frac{\sqrt{2}}{2} \cdot a_{1i} -b_{4i}}_{\texttt{sum1\_stage1\_2v6\_im}} + \underbrace{\frac{\sqrt{2}}{2} \cdot b_{1i} -\frac{\sqrt{2}}{2} \cdot a_{5i}}_{\texttt{sum1\_stage1\_3v6\_im}}$\\
+
+\vspace{0.4cm}
+\hspace{0.3cm} $+ \underbrace{a_{2i} -\frac{\sqrt{2}}{2} \cdot b_{5i}}_{\texttt{sum1\_stage1\_4v6\_im}} + \underbrace{\frac{\sqrt{2}}{2} \cdot a_{3i} -a_{6i}}_{\texttt{sum1\_stage1\_5v6\_im}} + \underbrace{\frac{\sqrt{2}}{2} \cdot b_{7i} -\frac{\sqrt{2}}{2} \cdot a_{7i}}_{\texttt{sum1\_stage1\_5v6\_im}}$\\
+
+
+\vspace{1cm}
+\noindent$\Re_{2i} = \underbrace{a_{0i} -b_{1i}}_{\texttt{sum2\_stage1\_1v4\_re}} + \underbrace{b_{3i} -a_{2i}}_{\texttt{sum2\_stage1\_2v4\_re}} + \underbrace{a_{4i} -b_{5i}}_{\texttt{sum2\_stage1\_3v4\_re}} + \underbrace{b_{7i} -a_{6i}}_{\texttt{sum2\_stage1\_4v4\_re}}$\\
+
+\vspace{0.5cm}
+\noindent$\Im_{2i} = \underbrace{b_{0i} -b_{2i}}_{\texttt{sum2\_stage1\_1v4\_im}} + \underbrace{a_{1i} -a_{3i}}_{\texttt{sum2\_stage1\_2v4\_im}} + \underbrace{b_{4i} -b_{6i}}_{\texttt{sum2\_stage1\_3v4\_im}} + \underbrace{a_{5i} -a_{7i}}_{\texttt{sum2\_stage1\_4v4\_im}}$\\
+
+\vspace{1cm}
+\noindent$\Re_{3i} = \underbrace{a_{0i} -\frac{\sqrt{2}}{2} \cdot a_{1i}}_{\texttt{sum3\_stage1\_1v6\_re}} + \underbrace{\frac{\sqrt{2}}{2} \cdot a_{3i} -\frac{\sqrt{2}}{2} \cdot b_{1i}}_{\texttt{sum3\_stage1\_2v6\_re}} + \underbrace{\frac{\sqrt{2}}{2} \cdot a_{5i} -b_{2i}}_{\texttt{sum3\_stage1\_3v6\_re}}$\\
+
+\vspace{0.4cm}
+\hspace{0.3cm}$+ \underbrace{\frac{\sqrt{2}}{2} \cdot b_{5i} -\frac{\sqrt{2}}{2} \cdot b_{3i}}_{\texttt{sum3\_stage1\_4v6\_re}} + \underbrace{b_{6i} -a_{4i}}_{\texttt{sum3\_stage1\_5v6\_re}} + \underbrace{\frac{\sqrt{2}}{2} \cdot b_{7i} -\frac{\sqrt{2}}{2} \cdot a_{7i}}_{\texttt{sum3\_stage1\_6v6\_re}}$\\
+
+\vspace{0.5cm}
+\noindent$\Im_{3i} = \underbrace{b_{0i} -\frac{\sqrt{2}}{2} \cdot b_{1i}}_{\texttt{sum3\_stage1\_1v6\_im}} + \underbrace{\frac{\sqrt{2}}{2} \cdot a_{1i} -b_{4i}}_{\texttt{sum3\_stage1\_2v6\_im}} + \underbrace{a_{2i} -\frac{\sqrt{2}}{2} \cdot a_{5i}}_{\texttt{sum3\_stage1\_3v6\_im}}$\\
+
+\vspace{0.4cm}
+\hspace{0.3cm}$+ \underbrace{\frac{\sqrt{2}}{2} \cdot a_{3i} -a_{6i}}_{\texttt{sum3\_stage1\_4v6\_im}} + \underbrace{\frac{\sqrt{2}}{2} \cdot b_{3i} -\frac{\sqrt{2}}{2} \cdot a_{7i}}_{\texttt{sum3\_stage1\_5v6\_im}} + \underbrace{\frac{\sqrt{2}}{2} \cdot b_{5i} -\frac{\sqrt{2}}{2} \cdot b_{7i}}_{\texttt{sum3\_stage1\_6v6\_im}}$\\
+
+\vspace{1cm}
+\noindent$\Re_{4i} = \underbrace{a_{0i} - a_{1i}}_{\texttt{sum4\_stage1\_1v4\_re}} + \underbrace{a_{2i} - a_{3i}}_{\texttt{sum4\_stage1\_2v4\_re}} + \underbrace{a_{4i} - a_{5i}}_{\texttt{sum4\_stage1\_3v4\_re}} + \underbrace{a_{6i} - a_{7i}}_{\texttt{sum4\_stage1\_4v4\_re}}$\\
+
+\vspace{0.5cm}
+\noindent$\Im_{4i} = \underbrace{b_{0i} - b_{1i}}_{\texttt{sum4\_stage1\_1v4\_im}} + \underbrace{b_{2i} - b_{3i}}_{\texttt{sum4\_stage1\_2v4\_im}} + \underbrace{b_{4i} - b_{5i}}_{\texttt{sum4\_stage1\_3v4\_im}} + \underbrace{b_{6i} - b_{7i}}_{\texttt{sum4\_stage1\_4v4\_im}}$\\
+
+\vspace{1cm}
+\noindent$\Re_{5i} = \underbrace{a_{0i} -\frac{\sqrt{2}}{2} \cdot a_{1i}}_{\texttt{sum5\_stage1\_1v6\_re}} + \underbrace{\frac{\sqrt{2}}{2} \cdot b_{1i} -b_{2i}}_{\texttt{sum5\_stage1\_2v6\_re}} + \underbrace{\frac{\sqrt{2}}{2} \cdot a_{3i} -a_{4i}}_{\texttt{sum5\_stage1\_3v6\_re}}$\\
+
+\vspace{0.4cm}
+\hspace{0.3cm}$+ \underbrace{\frac{\sqrt{2}}{2} \cdot b_{3i} -\frac{\sqrt{2}}{2} \cdot b_{5i}}_{\texttt{sum5\_stage1\_4v6\_re}} + \underbrace{\frac{\sqrt{2}}{2} \cdot a_{5i} -\frac{\sqrt{2}}{2} \cdot a_{7i}}_{\texttt{sum5\_stage1\_5v6\_re}} + \underbrace{b_{6i} -\frac{\sqrt{2}}{2} \cdot b_{7i}}_{\texttt{sum5\_stage1\_6v6\_re}}$\\
+
+\vspace{0.5cm}
+\noindent$\Im_{5i} = \underbrace{b_{0i} -\frac{\sqrt{2}}{2} \cdot a_{1i}}_{\texttt{sum5\_stage1\_1v6\_im}} + \underbrace{a_{2i} - \frac{\sqrt{2}}{2} \cdot b_{1i}}_{\texttt{sum5\_stage1\_2v6\_im}} + \underbrace{\frac{\sqrt{2}}{2} \cdot b_{3i} -\frac{\sqrt{2}}{2} \cdot a_{3i}}_{\texttt{sum5\_stage1\_3v6\_im}}$\\
+
+\vspace{0.4cm}
+\hspace{0.3cm}$ + \underbrace{\frac{\sqrt{2}}{2} \cdot a_{5i} -b_{4i}}_{\texttt{sum5\_stage1\_4v6\_im}} + \underbrace{\frac{\sqrt{2}}{2} \cdot b_{5i} -a_{6i}}_{\texttt{sum5\_stage1\_5v6\_im}} + \underbrace{\frac{\sqrt{2}}{2} \cdot a_{7i} -\frac{\sqrt{2}}{2} \cdot b_{7i}}_{\texttt{sum5\_stage1\_6v6\_im}}$\\
+
+\vspace{1cm}
+\noindent$ \Re_{6i} = \underbrace{a_{0i} -a_{2i}}_{\texttt{sum6\_stage1\_1v4\_re}} + \underbrace{b_{1i} -b_{3i}}_{\texttt{sum6\_stage1\_2v4\_re}} + \underbrace{a_{4i} -a_{6i}}_{\texttt{sum6\_stage1\_3v4\_re}} + \underbrace{b_{5i} -b_{7i}}_{\texttt{sum6\_stage1\_4v4\_re}}$\\
+
+\vspace{0.5cm}
+\noindent$ \Im_{6i} = \underbrace{b_{0i} -a_{1i}}_{\texttt{sum6\_stage1\_1v4\_im}} + \underbrace{a_{3i} -b_{2i}}_{\texttt{sum6\_stage1\_2v4\_im}} + \underbrace{b_{4i} -a_{5i}}_{\texttt{sum6\_stage1\_3v4\_im}} + \underbrace{a_{7i} -b_{6i}}_{\texttt{sum6\_stage1\_4v4\_im}}$\\
+
+\vspace{1cm}
+\noindent$\Re_{7i} = \underbrace{a_{0i} -\frac{\sqrt{2}}{2} \cdot a_{3i}}_{\texttt{sum7\_stage1\_1v6\_re}} + \underbrace{\frac{\sqrt{2}}{2} \cdot a_{1i} -a_{4i}}_{\texttt{sum7\_stage1\_2v6\_re}} + \underbrace{\frac{\sqrt{2}}{2} \cdot b_{1i} -\frac{\sqrt{2}}{2} \cdot a_{5i}}_{\texttt{sum7\_stage1\_3v6\_re}}$\\
+
+\vspace{0.4cm}
+\hspace{0.3cm}$ + \underbrace{b_{2i} -\frac{\sqrt{2}}{2} \cdot b_{5i}}_{\texttt{sum7\_stage1\_4v6\_re}} + \underbrace{\frac{\sqrt{2}}{2} \cdot b_{3i} -b_{6i}}_{\texttt{sum7\_stage1\_5v6\_re}} + \underbrace{\frac{\sqrt{2}}{2} \cdot a_{7i} -\frac{\sqrt{2}}{2} \cdot b_{7i}}_{\texttt{sum7\_stage1\_6v6\_re}}$\\
+
+\vspace{0.5cm}
+\noindent$\Im_{7i} = \underbrace{b_{0i} - \frac{\sqrt{2}}{2} \cdot a_{1i}}_{\texttt{sum7\_stage1\_1v6\_im}} + \underbrace{\frac{\sqrt{2}}{2} \cdot b_{1i} -a_{2i}}_{\texttt{sum7\_stage1\_2v6\_im}} + \underbrace{\frac{\sqrt{2}}{2} \cdot a_{5i} -\frac{\sqrt{2}}{2} \cdot a_{3i}}_{\texttt{sum7\_stage1\_3v6\_im}}$\\
+
+\vspace{0.4cm}
+\hspace{0.3cm}$ + \underbrace{a_{6i} -\frac{\sqrt{2}}{2} \cdot b_{3i}}_{\texttt{sum7\_stage1\_4v6\_im}} + \underbrace{\frac{\sqrt{2}}{2} \cdot a_{7i} -b_{4i}}_{\texttt{sum7\_stage1\_5v6\_im}} + \underbrace{\frac{\sqrt{2}}{2} \cdot b_{7i} -\frac{\sqrt{2}}{2} \cdot b_{5i}}_{\texttt{sum7\_stage1\_6v6\_im}}$\\

@@ -1,0 +1,64 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Author     : Thorben Schuethe        Date    : 08.06.2014                  %
+%  Filename   : main.tex               Version : 1.01                         %
+%  Information: Dies ist die Hauptdatei zur Einbindung aller Unterordner und  %
+%               Abschnitte.                                                   %
+%               ACHTUNG: ERSTE SEITE MUSS AM ENDE GEGEN DAS ORGINAL WORD-     %
+%               DOKUMENT GETAUSCHT WERDEN(PDF)                                %
+%-----------------------------------------------------------------------------%
+%  Changelog  :                                                               %
+%  08.06.2014 - Initial file                                                  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%        Laden der Praeambel fuer dieses     %
+%        Dokument und eigener Commands       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\include{PreambelCommands/preambelRep}
+\include{PreambelCommands/newCommands}
+\include{PreambelCommands/sourcecodeCommands} 	%Commands fuer Matlab/C Programme
+\include{PreambelCommands/hyphenation}
+\usepackage{blindtext}
+\usepackage{titling}
+\usepackage[printwatermark]{xwatermark}
+\includeonly{% 							  								getestet am:		Warnungen/Fehler?				DONE?
+%----------------------------------------------------------------------------------------------------------------------------------
+			content/Schriftstueck,						%   .  .201
+			}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%        Dokumentenbeginn                    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\newwatermark[allpages,color=[0.8196,0.9333,0.9333],angle=45,scale=3,xpos=0,ypos=0]{DRAFT}
+\hypersetup
+{
+    pdfauthor={Thorben Schüthe},
+    pdfsubject={ },
+    pdftitle={ },
+    pdfkeywords={ }
+}
+\author{Thomas Lattmann}
+\setlength\parindent{0pt}
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%        Schreiben von PDF-Informationen     %
+%        ueber dies Dokument                 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hypersetup{pdfinfo={
+			Title={ }, % title in newcommands aendern
+			Subject={},
+			Author={Thorben, Schüthe},
+			Keywords={keywords},
+			Trapped=false}
+			}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%        Begin des Dokuments                 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\frontmatterOwn
+%\tableofcontents
+%-------------------------------------------------------------------------------------------------------------------------------------------------------
+%\mainmatterOwn
+\include{content/Schriftstueck}						% 1.
+\end{document}% Dokumentenende

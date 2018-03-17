@@ -1,0 +1,208 @@
+% load the document class KOMA-Script Report
+\documentclass[	
+		a4paper,			% Papierformat waehlen
+		11pt,				% Schriftgroesse
+%		draft,				% Randueberschreitungen werden schwarz markiert
+%		DIV13,				% Unterteilung des Blatts in DIVxx - xx Teile              OBSOLETE
+						% Je kleiner die Zahl umso groesser die Raender
+						% Um Optimale Anpassung zu erhalten : DIVcalc + \typearea...
+%		BCOR5mm,			% Bindekorrektur BCORXmm - Xmm breit                       OBSOLETE
+		%pointlessnumbers,		% KEIN ZWEITER PUNKT IN DER NUMMERIERUNG DER ÜBERSCHRIFTET 2.2 statt 2.2.	
+%
+%      KOPF/FUSSZEILE
+%		headinclude,			% Head gehoert mit zum Textblock/auskommentiert im Seitenrand
+		headsepline,			% Trennlinie zwischen Kopf und Text, schaltet automatisch 
+						% headinclude mit ein
+%		footinclude,			% wie Head nur Foot
+%		footsepline,			% wie headsepline
+%
+%      LAYOUTPARAMETER
+%		twocolumn,			% Zweispaltige Texte
+		onecolumn,			% Einspaltig
+		twoside,			% Zweiseitiger Druck re -li sind gespiegelt vom Satzspiegel
+%		oneside,			% Einseitig
+%		openright,			% Sollte bei zweiseitigem Druck eignestellt werden
+%		cleardoublestandard		% Alles fuer 2Seitige mit openright: Kolumnentitel linke Seite
+%		cleardoubleplain		% nur Seitenzahlen linke Seite
+%		cleardoubleempty		% linke Seite ganz leer
+%		chapterprefix,			% Kapitel wir zu beginn eines Kapitels ausgegeben
+%		appendixprefix,			% Anhang wird vor Kapiteln im Anhang ausgegeben
+		headings=normal,		% kleine ueberschriften, oder small-, oder big-headings.
+						% Standard ist Big
+%
+%	TABELLENEIGENSCHAFTEN
+		captions=tableheading,		% Um richtigen Abstand fuer Ueberschrift zu erhalten, 
+						% Ueberschrift wird genommen
+%
+%	VERZEICHNISEINSTELLUNGEN
+%		tocleft,			% Setzt das Inhaltverzeichnis nicht eingerueckt nach links
+%		liststotoc,			% Abb.- und Tab.Verzeichnisse ins Inhaltsverzeichnis
+%		liststotocnumbered, 		% wie liststotoc nur mit Gliederungspunktangabe
+%		bibtotoc,			% Literaturverzeichnis ins Inhaltverzeichnis
+%		bibtotocnumbered,		% s.o. nur mit Gliederungsebene
+%		idxtotoc,			% Eintrag ins Inhaltsverzeichnis fue Index
+%		openbib,			% Veraendert aussehen des Lit.-Verzeichnisses
+%	Language
+%		ngerman,			% to pass as standard to all packages
+]{scrreprt}
+
+% load packages for european, espacially german users
+
+\usepackage[T1]{fontenc}			% Schriften fuer Europaeische Zeichen passend Kodiert
+\usepackage[utf8]{inputenc}        		% Eingabe von Umlauten, ss usw. - 
+						% utf8: kann nicht jeder Editor speicher, aber plattformuebergreifend
+						% latin1: Unix, VMS, Windows
+						% ansinew: Windows
+						% latin9: wie latin1, jedoch mit Eurozeichen
+						
+\usepackage[					% Passt Konventionen an Sprache an
+	     english, 
+	     ngerman				% ngerman: Neue Deutsche Rechtschreibung
+	    ]{babel}				% z.B. UKenglish, USenglish, canadian, german, austrian, naustrian
+	    
+%\hyphenation{}					% Trennung von Woertern falls nicht automatisch korrekt erkannt
+%\usepackage{icomma}				% Bei deutscher Schreibweise, damit keine
+
+%\usepackage[scaled=0.66]{luximono}		% Schrift fuer Typewriter - Quellcode ~8pt
+				
+
+% Fuer optimale Anpassung des Satzspiegels
+%\typearea[current]{calc}			% Bestimmt Rasterzahl aus Schriftgroesse und Anzahl der 		
+						% Zeichen/Woerter pro Zeile
+
+% FUSS UND KOPFZEILENANPASSUNG
+%\pagestyle{plain}				% empty: Keine Kopf/Fusszeile
+						% plain: Seitenzahl am Fussende
+						% headings: aktiviert lebende Kolumnentitel (Kapitel im Kopf)
+						% myheadings : eigene Kopf- fußzeilen
+						% fancy: Erlaubt die Verwendung der in dem Paket "fancyhdr" 
+						% definierten Befehle zur Erstellung eigener Kopf- und Fußzeilen
+
+%%error
+% scrpage2 ist obsolete!
+%\usepackage[
+%	    automark				% takes the chapter variant
+%	   ]{scrpage2}				% Fuer eigene Kopf/Fusszeilen, ermoeglicht. 
+% stattdessen scrlayer-scrpage:
+
+\usepackage{scrlayer-scrpage}
+\pagestyle{scrheadings} %, scrplain}
+\clearscrheadings				% clear old header style
+\clearscrplain					% clear plain header style
+\clearscrheadfoot				% clear foot style
+%\automark[section]{chapter}
+\automark[chapter]{chapter}
+\ohead{\pagemark}				% beide Außenseiten des Headers --Seitenzahl
+\ihead{\headmark}				% beide Innenseiten Headers -- Chapter
+%\chead						% zentriert 
+%\lehead					% left even
+%\cehead
+%\rehead
+%\lohead					% left odd
+%\cohead
+%\rohead
+%%
+
+
+%\lehead{\leftmark}
+%\lohead{\rightmark}
+%\ofoot[\pagemark]{}				% auf plain seiten Seitenzahl außen
+									
+% Schriftfamilien Laden
+\usepackage{lmodern}				% Laedt die Schriftart Latin-Modern fuer Text
+%\usepackage{courier}
+%\rmfamily
+%\sffamily
+%\ttfamily
+%\renewcommand{\rmdefault}{
+%			  pbk	% Bookman
+%			  phv	% Helvetica
+%			  cmr	% CM Roman
+%			  ppl	% Palatino
+%			  ptm	% Times Roman
+%			  pag	% Avant Garde
+%			  pcz	% Zapf Chancery
+%			 }
+%\renewcommand{\familydefault}{\sfdefault}
+
+% Alternativ Schriftart (Textshchrift) ändern über usepackage:
+\usepackage{
+%	    mathpazo	% Palatino
+%	    mathptmx	% Times
+%	    avant	% Avant Garde
+%	    courier	% Courier
+%	    chancery	% Zapf Chancery
+	    bookman	% Bookman
+%	    newcent	% New Century Schoolbook
+%	    charter	% Charter
+%	    helvet	% Helvetica
+} 
+%\usepackage[scaled=0.92]{helvet}		% Helvetica, ist größer als Times und sollte bei verwendung beider skaliert werden.
+
+% Im Dokument wechslen:
+%\fontfamily{pbk}\selectfont
+
+\usepackage[
+	    babel,
+%	    german=guillemets,  		% franz. <<  >>
+	    german= quotes,			% deutsche Anfuehrungszeichen "
+	   ]{csquotes}				% Laden der richtigen Anfuehrungszeicehn fuer deutsche sprache
+						% = quotes fuer englische sprache
+
+
+
+	   
+%\usepackage{setspace}				% Fuer Abstaende im Dokument
+%\onehalfspacing				% aendert Zeilenabstand auf 1 1/2
+									
+%\usepackage{microtype}				% optischer Randausgleich in PDF's
+									% ungeeignet fuer internettexte o.ae.	
+	   
+%\usepackage[					% Papierformate auf denen gedruckt werden soll
+%		a0,b0,
+%		a1,b1,
+%		a2,b2,
+%		a3,b3,
+%		a4,b4,
+%		a5,b5,
+%		a6,b6,
+%		letter,
+%		legal,
+%		executive,
+%		center,				% zentrierter druck
+%		landscape,			% querformat
+%		]{crop}
+	 
+									
+\usepackage[a4paper]{geometry}			% Anpassung von Seitenraender per Hand
+\geometry{					% Wenn Zweiseitig-> left->inner : right->outer	
+	    top=2cm, 				% Weitere Moeglichkeiten: height - Texthoehe, width - Textbreite
+	    bottom=5cm,
+	    inner=2cm,
+	    outer=3cm
+         }	
+
+\setlength{\headheight}{1.5cm}
+\setlength{\voffset}{0.5cm}
+
+
+\usepackage[					% To set Text at a specific 
+		absolute,			% absolute - absolute position on the page
+		overlay,			% overlay - if using absolute option text is placed below other things
+%		showboxes,			% showboxes - shows boxes around the text
+%		noshowtext,			% noshowtext - just show the box if it is on
+%		verbose,			% verbose - package writing things to output like calculations
+%		quiet,				% quiet turns this off : verbose = default
+	    ]{textpos}
+
+\usepackage[
+	    hyperref 	= false,		% switch off hyperref hack
+	    float 	= true,			% switch off float hack
+	    listings 	= true,  		% switch off listings hack
+	   ]{scrhack}				% to get rid off the warning @addtocbasic
+
+	   
+%\usepackage{anyfontsize} % hilft gegen font shape not available, was wegen \DeclareMathSizes auftreten kann
+\usepackage{relsize}                            % für größere und kleinere Gleichungen über den Befehl \mathlarger bzw. \mathsmaller, auch \textlarger und \textsmaller
+
+\usepackage{lscape}

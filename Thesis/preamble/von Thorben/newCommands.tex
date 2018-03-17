@@ -1,0 +1,252 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Author     : Thorben Schuethe        Date    : 18.07.2012                  %
+%  Filename   : newCommands.tex        Version : 2.24                         %
+%-----------------------------------------------------------------------------%
+%  Changelog  :                                                               %
+%  10.09.2011 : build date                                                    %
+%  09.08.2012 : Add more commands - for ref and cite                          %
+%  21.08.2012 : Renewcommand + new environment tabular10                      %
+%  01.09.2012 : Add Modulbezeichnung and proxy                                %
+%  02.09.2012 : Symbolverzeichnisbefehle hinzugefügt                     v2.1 %
+%  05.09.2012 : Symbolverzeichnisbefehle abgeändert                      v2.2 %
+%  07.09.2012 : Neuer Befehl zum darstellen von Gui's                    v2.21%
+%  12.09.2012 : Einfügen der Theoremumgebung Definition                  v2.22%
+%  11.10.2012 : Einfügen des Vektorbefehls                               v2.23%
+%  11.10.2012 : Einfügen neuer Befehle für Methoden                      v2.24%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% new Commands                         %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% COMMANDS FOR THE MASTERTHESIS
+\newcommand{\theLocation}{Hamburg}      				% Ort
+\newcommand{\theAuthor}{Thorben Schüthe}			% Name of the writer
+\newcommand{\theTitle}{ }
+\newcommand{\theTitleEn}{ }
+
+% COMMANDS FOR SOURCE CODE IN TEXT
+\newcommand{\defmethod}[1]{\textit{#1()}}			% Methoden
+\newcommand{\defmethodArg}[2]{\textit{#1(#2)}}		% Methoden
+\newcommand{\defstate}[1]{\textsc{#1}}				% State
+\newcommand{\module}[1]{\emph{#1}}					% Modulbezeichnung
+\newcommand{\proxy}[1]{\emph{#1}}					% Proxy
+\newcommand{\gui}[1]{\emph{#1}}						% GUI
+\newcommand{\variable}[1]{\emph{#1}}				% Variablen
+\newcommand{\opsys}[1]{\emph{#1}}					% Für OS Systeme
+
+% COMMANDS FOR A GOOD WRITING STYLE
+\newcommand{\zb}{z.\,B.\ }							% Sorgt für richtige Darstellung von z.B.
+\newcommand{\dH}{d.\,h.\ }							% d.h.
+\newcommand{\bzw}{bzw.\ } 							% beziehungsweise
+\newcommand{\ca}{ca.\ } 							% circa
+\newcommand{\dgl}{dgl.\ }							% dergleichen 
+\newcommand{\dsgl}{dsgl.\ }     					% desgleichen
+\newcommand{\etc}{etc.\ }  							% et cetera (= und so weiter)
+\newcommand{\evtl}{evtl.\ }							% eventuell f. folgende
+\newcommand{\ff}{ff.\ }								% fortfolgende ggf. gegebenenfalls
+\newcommand{\usw}{usw.\ }							% und so weiter 
+\newcommand{\zt}{z.\,T.\ } 							% zum Teil
+\newcommand{\points}{\ldots}						% besser als ..., da schrift dann anders ist
+\newcommand{\separator}{.}							% Dezimaltrennzeichen
+\newcommand{\vgl}{vgl.\ }							% vergleiche
+\newcommand{\ggf}{ggf.\ }
+\newcommand{\cplusplus}{C++}						% um C++ richtig darzustellen
+\newcommand{\writeJava}{Java}						% Um JAVA richtig darzustelen
+
+
+% Commands for Tables and Figures
+\newcommand{\printOpt}{tp}						% Option für die Grafikposition
+\newcommand{\stdWidth}{0.7\textwidth}				% Einstellen der Breite von Bildern um einheitliches Bild zu schaffen
+\newcommand{\picref}[1]{Abbildung~\ref{fig:#1}}		% Verweis zu einer Abbildung ohne Seitenzahl oder ähnliches
+\newcommand{\citepic}[1]{\autocite{#1}}				% Für Bilder aus anderen Quellen - So kann dies verändert werden
+\newcommand{\pathOf}[1]{#1}							% Gibt den aktuellen Path zur Datei an, muss mit renewcommand für Dateien überschrieben werden
+
+% Commands for Typesetting and Layout
+\newcommand{\frontmatterOwn}{\pagenumbering{Roman}}%\renewcommand{\thepage}{\Roman{page}}}
+\newcommand{\mainmatterOwn}{\setcounter{page}{1} \pagenumbering{arabic}}%\renewcommand{\thepage}{\arabic{page}}}
+\newcommand{\chapterNumless}[1]{%
+	\chapter*{#1}\addcontentsline{toc}{chapter}{#1}%
+}
+% To get the following in the table of content:
+%
+% Anhang
+% A. erster eintrag
+% B. zweiter Eintrag
+%
+% Im dokument selbst wird folgendes ausgegeben (auf einer Seite)
+% Anhang
+%
+%
+% A. erster eintrag
+\newcommand{\firstAppendixEntry}[1]{%
+	\addcontentslinetoeachtocfile{chapter}{{\large \appendixname}}
+	\stepcounter{chapter}
+	\addcontentslinetoeachtocfile{chapter}{\thechapter \autodot\ #1}
+	\chapter*{{\Huge\appendixname} \linebreak \linebreak \thechapter\autodot\ #1}%
+}
+% Glossry - Symbolverzeichnis
+%\newcommand{\symbolentryGreek}[4]{\glossary{sort=a#4, name={#1},description={#2}}}
+%\newcommand{\symbolentryRoman}[4]{\glossary{sort=b#4, name={#1},description={#2}}}
+% Nomencl - Symbolverzeichnis
+%\newcommand{\symbolentryGreek}[4]{\nomenclature[a#4]{#1}{#2}}
+%\newcommand{\symbolentryRoman}[4]{\nomenclature[b#4]{#1}{#2}}
+% Glossries - Symbolverzeichnis
+\newcommand{\symbolentryGreek}[4]{\newglossaryentry{#4}{name={#1}, parent=greekletter, description={#2}, symbol={#3} ,sort={a#4}, type=symbols}}
+\newcommand{\symbolentryRoman}[4]{\newglossaryentry{#4}{name={#1}, description={#2}, symbol={#3} ,sort={b#4}, type=symbols, parent=latinletter}}
+
+% Others
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{#1}}}
+\newcommand{\company}[1]{\textsf{#1}}		% Zum Hervorheben von Firmennamen bei Großschreibung
+\newcommand{\ST}{ \textsf{STILL\ }}			% STILL - mit guter Schreibweise
+\newcommand{\tramark}[1]{\textsl{#1}}					% trademark
+%\newcommand{\bigLetter}[1]{\emph{#1}}				% Zum Hervorheben von Großgeschriebenen - wie FM-X
+\newcommand{\myCaptionEnd}{.}						% Wird am Ende jeder Bildunterschrift/Tabellenüberschrift gesetzt
+\newcommand{\subfigref}[2]{Abbildung~\ref{fig:#1}\subref{fig:#2}} % Um auf Subfigures richtig zu verweisen
+\newcommand{\tvec}[3]{\ensuremath{\left(#1, #2, #3 \right)}}
+\newcommand{\okmarker}{\textcolor{green}{\Checkmark}}% Um den Haken grün zu färben
+\newcommand{\nokmarker}{\textcolor{red}{\XSolidBrush}}% Um den Haken grün zu färben
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% new Environments 	                   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newenvironment{tabularx10}{%
+  \fontsize{10}{12}\selectfont\tabularx
+}{%
+  \endtabularx
+}													% Tabellen in kleinerer Schrift als der Normaltext, laut Bachelor-,
+													% Master- und Doktorarbeit auf Seite 137 - Tabellensatz -
+
+%%%%%%%%%%%%%%%%%%%%%%%% Das hier verwenden%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newtheorem{definitionDe}{Definition}[chapter]			% Für Definitionsumgebung													
+\newenvironment{fshaded}{%
+\def\FrameCommand{\fcolorbox{framecolor}{shadecolor}}%
+\MakeFramed {\FrameRestore}}%
+{\endMakeFramed}
+\newenvironment{definit}[1][]{\definecolor{shadecolor}{rgb}{0.95,0.95,0.95}%
+\definecolor{framecolor}{rgb}{0,0,0}%
+\begin{fshaded}\begin{definitionDe}[#1]}{\end{definitionDe}\end{fshaded}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%						%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%						%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	 ODER   DAS			%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%						%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%						%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\newtheorem{definit}{Definition}[chapter]			% Für Definitionsumgebung
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% overwrite Commands                   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\mkcitation}[1]{ \autocite{#1}}		% Not to have the () brackets around the [] brackets of the quotation!
+\renewcommand{\mktextquote}[6]{#1#2#3#6#4#5}
+%Den Punkt am Ende jeder Beschreibung deaktivieren
+\renewcommand*{\glspostdescription}{}
+%Style Symbolverzeichnis definieren 
+\newglossarystyle{symbver}{ % put the glossary in a longtable environment: 
+\renewenvironment{theglossary} 
+{\begin{longtable}{lp{\glsdescwidth}ccp{\glspagelistwidth}}} 
+{\end{longtable}} 
+\renewcommand*{\glossaryheader}{} 
+\renewcommand*{\glossaryentryfield}[4]{ 
+\glstarget{##1}\\[0.1cm]{##2}&{##3} {##4}}% \\[0.5cm] Zeilenabstand zwischen Einträgen 
+\renewcommand*{\glossarysubentryfield}[6]{ 
+\glossaryentryfield{##2}{##3}{##4}{##5}} 
+\renewcommand*{\glsgroupskip}{}}
+
+\makeatletter
+\newglossarystyle{myindex}{%
+  \renewenvironment{theglossary}%
+    {\setlength{\parindent}{0pt}%
+     \setlength{\parskip}{0pt plus 0.3pt}%
+     \let\item\@idxitem}%
+    {}%
+  \renewcommand*{\glossaryheader}{}%
+  \renewcommand*{\glsgroupheading}[1]{}%
+\renewcommand*{\glossaryentryfield}[5]{%
+\item\glstarget{##1}{##2}% ##1 ?? ##2 = obergruppe
+  \ifx\relax##4\relax% ##4 ist ne breite
+  \else
+    \space(##4)%
+  \fi
+  ##3\glspostdescription \space ##5}%
+  \renewcommand*{\glossarysubentryfield}[6]{%
+    \ifcase##1\relax
+      % level 0
+      \item
+    \or
+      % level 1
+      \subitem
+    \else
+      % all other levels
+      \subsubitem
+    \fi
+    \glstarget{##2}{##3}%
+    \ifx\relax##5\relax
+    \else
+      \space(##5)%
+    \fi
+    \space##4\glspostdescription\space ##6}%
+  \renewcommand*{\glsgroupskip}{\indexspace}
+    \renewcommand*{\glsgroupheading}[1]{%
+    \item\textbf{\glsgetgrouptitle{##1}}\indexspace}%
+  }
+  
+\newglossarystyle{mylist}{%  
+ % put the glossary in the itemize environment:  
+ \renewenvironment{theglossary}%  
+   {\begin{itemize}}{\end{itemize}}%  
+ % have nothing after \begin{theglossary}:  
+ \renewcommand*{\glossaryheader}{}%  
+ % have nothing between glossary groups:  
+ \renewcommand*{\glsgroupheading}[1]{}%  
+ \renewcommand*{\glsgroupskip}{}%  
+ % set how each entry should appear:  
+ \renewcommand*{\glossaryentryfield}[5]{%  
+ \item % bullet point  
+ \glstarget{##1}{##2}% the entry name  
+ \space (##4)% the symbol in brackets  
+ \space ##3% the description  
+ \space [##5]% the number list in square brackets  
+ }%  
+ % set how sub-entries appear:  
+ \renewcommand*{\glossarysubentryfield}[6]{%  
+   \glossaryentryfield{##2}{##3}{##4}{##5}{##6}}%  
+ } 
+
+\newglossarystyle{mysuper}{%
+  \renewenvironment{theglossary}%
+    {\tablehead{}\tabletail{}%
+     \begin{supertabular}{lp{0.5\glsdescwidth}}}%
+    {\end{supertabular}}%
+  \renewcommand*{\glossaryheader}{}%
+  \renewcommand*{\glsgroupheading}[1]{}%
+  \renewcommand*{\glossaryentryfield}[5]{%
+    \glsentryitem{##1}\glstarget{##1}{##2} & ##3\glspostdescription\space ##5\\}%
+  \renewcommand*{\glossarysubentryfield}[6]{%
+     &
+     \glssubentryitem{##2}%
+     \glstarget{##2}{\strut}##4\glspostdescription\space ##6\\}%
+  \renewcommand*{\glsgroupskip}{ & \\}%
+}  
+  
+\makeatother
+
+\newcommand{\abstractentry}[2]{
+%	\textbf{\large#1}\\ 
+	\subsubsection*{#1}
+	\nobreakspace 
+	\begin{tabular}{lp{142mm}}
+		\hspace*{3mm} & #2 \\
+	\end{tabular}
+	\vfill%
+}
+
+%C++
+\newcommand\Cpp{C\nolinebreak[4]\hspace{-.05em}\raisebox{.4ex}{\relsize{-3}{\textbf{++}}}}
+
+%\usepackage{etoolbox}% http://ctan.org/pkg/etoolbox
+%\makeatletter
+%\patchcmd{\lst@GLI@}% <command>
+%  {\def\lst@firstline{#1\relax}}% <search>
+%  {\def\lst@firstline{#1\relax}\def\lst@firstnumber{#1\relax}}% <replace>
+%  {\typeout{listings firstnumber=firstline}}% <success>
+%  {\typeout{listings firstnumber not set}}% <failure>
+%\makeatother

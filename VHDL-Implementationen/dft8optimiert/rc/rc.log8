@@ -1,0 +1,77 @@
+Finished loading tool scripts (5 seconds elapsed)
+                                                Cadence Encounter(R) RTL Compiler
+                                   Version RC14.25 - v14.20-s046_1 (64-bit), built Aug 11 2015
+
+
+Usage: rc [-bg] [-cmdfile <string>] [-ctos] [-db <string>] [-db_script <string>] [-del_scale 10] [-dft] [-display 
+          <display>] [-E] [-execute <string>]+ [-files <string>]+ [-gui] [-logfile <string>] [-lsf_cpus <integer>] [-lsf_queue 
+          <string>] [-N <integer>] [-no_custom] [-nogui] [-overwrite] [-post <string>]+ [-queue] [-rcl] [-rcp] [-use_license 
+          <string>] [-vdi] [-vdi_xl] [-verbose] [-version] [-wait <integer>] 
+
+    [-bg]:
+        enable background mode (disables command line editor)
+    [-cmdfile <string>]:
+        specify command logfile
+    [-ctos]:
+        start with a C_to_Silicon_Compiler_L license
+    [-db]:
+        database file to automatically read
+    [-db_script]:
+        database script file to automatically read
+    [-del_scale 10]:
+        for low frequency designs (below 5kHz)
+    [-dft]:
+        reserve an Encounter_Test_Architect or Test_Design_Verification license
+    [-display <string>]:
+        set the DISPLAY environment variable
+    [-E]:
+        exit on script error ('-files' processing)
+    [-execute <string>]:
+        command string to execute before '-files' processing
+    [-files <string>]:
+        execute command file or files
+    [-gui]:
+        start with GUI visible
+    [-logfile <string>]:
+        specify stdout logfile
+    [-lsf_cpus <integer>]:
+        number of LSF CPUs to use for super-threading
+    [-lsf_queue <string>]:
+        name of LSF queue
+    [-N <integer>]:
+        specify number of licenses for VDIO and RC-L
+    [-no_custom]:
+        only read master .synth_init file
+    [-nogui]:
+        start with GUI disabled
+    [-overwrite]:
+        overwrite default logfiles
+    [-post <string>]:
+       command string to execute after '-files' processing
+    [-queue]:
+        queues license
+    [-rcl]:
+        start in RC-L mode with an RTL_Compiler_L license
+    [-rcp]:
+        check out an RTL_Compiler_Adv_Phys_Option license at startup
+    [-use_license <string>]:
+        specifies one of the following licenses
+            C_to_Silicon_Compiler_L
+            RTL_Compiler_L
+            RTL_Compiler_Physical
+            RTL_Compiler_Ultra
+            RTL_Compiler_Verification
+            Virtuoso_Digital_Implem
+            Virtuoso_Digital_Implem_XL
+    [-vdi]:
+        start in VDIO mode
+    [-vdi_xl]:
+        start in VDI-XL mode
+    [-verbose]:
+        enable source verbose mode while processing options
+    [-version]:
+        return program version information
+    [-wait <integer>]:
+        queue wait timeout (default: 600s)
+
+Normal exit.

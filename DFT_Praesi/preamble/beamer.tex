@@ -1,0 +1,77 @@
+\documentclass{beamer}
+
+% \usepackage[utf8]{inputenc}        		% Eingabe von Umlauten, ss usw. - 
+% 						% utf8: kann nicht jeder Editor speicher, aber plattformuebergreifend
+% 						% latin1: Unix, VMS, Windows
+% 						% ansinew: Windows
+% 						% latin9: wie latin1, jedoch mit Eurozeichen
+% 						
+% \usepackage[					% Passt Konventionen an Sprache an
+% 	     %english, 
+% 	     ngerman				% ngerman: Neue Deutsche Rechtschreibung
+% 	    ]{babel}				% z.B. UKenglish, USenglish, canadian, german, austrian, naustrian
+% 
+% \geometry{paperwidth=150mm,paperheight=105mm}
+
+\setbeamercolor*{structure}{fg=DOGGY, bg=brightgray} 
+\setbeamercolor*{palette primary}{use=structure,fg=structure.fg,bg=lightgray}
+\setbeamercolor*{palette secondary}{use=structure,fg=structure.fg,bg=lgray!90!black}
+\setbeamercolor*{palette tertiary}{use=structure,fg=structure.fg,bg=lgray}
+\setbeamercolor*{palette quaternary}{fg=structure.fg,bg=lgray}
+\setbeamercolor*{block title}{use=structure,fg=structure.fg,bg=lgray}
+
+
+\setbeamertemplate{navigation symbols}{} % No navigation symbols
+\setbeamercolor{navigation symbols}{use=structure, fg=structure.bg,
+bg=structure.bg}
+% New footline
+\defbeamertemplate{footline}{rownav}{%
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.08\paperwidth,ht=2.5ex,dp=1ex,center]{author in
+  head/foot}% only put the author and dont use the institute name - width 1/4
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.64\paperwidth,ht=2.5ex,dp=1ex,center]{title in
+  head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.08\paperwidth,ht=2.5ex,dp=1ex,right]{date in
+  head/foot}%
+    \usebeamercolor[fg]{navigation symbols}% 
+    \insertslidenavigationsymbol\hspace*{1ex}%
+    \vspace*{-0.5ex}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.5ex,dp=1ex,center]{date in
+  head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+    \textbf{\insertframenumber{}}% 
+  \end{beamercolorbox}%
+    }%
+  \vskip0pt%
+}
+\setbeamertemplate{footline}[rownav]{}
+
+\defbeamertemplate*{title page}{myPage}[1][]
+{
+  \vbox{}
+  \vfill
+  \begin{centering}
+    \begin{beamercolorbox}[sep=8pt,center,#1]{author}
+      \usebeamerfont{title}\inserttitle
+    \end{beamercolorbox}%
+    \vskip1em\par
+    \begin{beamercolorbox}[sep=8pt,center,#1]{author}
+      \usebeamerfont{author}\insertauthor
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[sep=8pt,center,#1]{institute}
+      \usebeamerfont{institute}\insertinstitute
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[sep=8pt,center,#1]{date}
+      \usebeamerfont{date}\insertdate
+    \end{beamercolorbox}
+  \end{centering}
+  \vfill
+}
+ 
+\setbeamertemplate{title page}[myPage]{}

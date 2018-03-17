@@ -1,0 +1,136 @@
+\input{Einstellungen/Einstellungen.tex}
+%=====================================================================================%
+%	Titel und Authoren auf der ersten Seite
+%=====================================================================================%
+\title[Diskretisierungsfehler der Twiddlefaktoren]{\textbf{ISAR -- Projektmeeting}\\ 
+\medskip Abweichungen von Twiddlefaktoren\\ als duale Festkommazahlen im SQ12-Format \\ von ihrer dezimalen Darstellung}  
+
+\author[TL]{Thomas Lattmann}
+\date[\today]{\today} 
+%-----------------------------------------------------------------------------------------------
+\renewcommand*{\thesubfigure}{}
+\newcommand{\vid}[2]{\movie[width=.9\textwidth,height=0.9\textheight,loop,showcontrols]{\includegraphics[width=.9\textwidth,height=0.9\textheight]{#1}}{#2}}
+\newcommand{\mytitle}[1]{\begin{block}{}\begin{center}#1\end{center}\end{block}}
+\newcommand{\figh}[2]{\begin{figure}\centering \includegraphics[height=#1\textheight]{#2}\end{figure}}
+\newcommand{\figw}[2]{\begin{figure}\centering \includegraphics[width=#1\textwidth]{#2}\end{figure}}
+\newcommand{\fighw}[4]{\begin{figure}\centering\caption{#4} \includegraphics[height=#1\textheight,width=#2\textwidth]{#3}\end{figure}}
+\newcommand{\fig}[1]{\begin{figure}\centering \includegraphics[scale=1]{#1}\end{figure}}
+\newcommand{\bull}[1]{\begin{itemize}\item #1 \end{itemize}}
+\usepackage{nameref} 
+\newcommand{\cmk}{\textcolor{green}{\large\checkmark}}
+\newcommand{\mtx}[1]{\ensuremath{\boldsymbol{{\mathrm{#1}}}}}
+\newcommand*\colvec[3][]{\begin{pmatrix}\ifx\relax#1\relax\else#1\\\fi#2\\#3\end{pmatrix}}
+%-----------------------------------------------------------------------------------------------
+% 	Coloums 
+%-----------------------------------------------------------------------------------------------
+\newcommand{\cols}[4]{ \begin{columns} \column[T]{#1\textwidth} #3 \column[T]{#2\textwidth} #4 \end{columns}}
+\newcommand{\colss}[4]{ \begin{columns} \column{#1\textwidth} #3 \column{#2\textwidth} #4 \end{columns}}
+%-----------------------------------------------------------------------------------------------
+\begin{document}
+
+%==================================================================================================================================
+% 	Titelseite mit Thema der Arbeit, Author und Einleitung geben, was das Hautziel ist! 
+%==================================================================================================================================
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Define a background image for the first page
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usebackgroundtemplate{\includegraphics[]{backT.pdf}}
+\usebackgroundtemplate{}
+\begin{frame}[plain]
+	\titlepage
+	\hfill
+	\begin{center}
+		\figw{.3}{Einstellungen/hawlogo.pdf}
+	\end{center}
+\end{frame}
+
+\usebackgroundtemplate{\includegraphics[scale=1]{Einstellungen/back.pdf}}
+%=============================================================================
+	%\begin{frame}\frametitle{Inhalt}
+	%	\tableofcontents
+	%\end{frame}	
+
+%=============================================================================
+	\begin{frame}\frametitle{Matrizenvergleich}
+
+	\begin{table}\caption{Vergleich von verschiedenen DFT-Matrizen}
+	  \begin{tabular}{ccccl}
+	    \toprule
+	    N & NxN $\cdot$ 2 & ``gute'' Werte & ``schlechte'' Werte & Verhältnis\\
+	    \midrule
+	    4  & 32  & 32  &   0 & Inf\\
+	    8  & 128 & 96  &  32 & 3\\
+	    9  & 162 & 66  &  96 & 0.6875\\
+	    12 & 288 & 224 &  64 & 3.5\\
+	    15 & 450 & 126 & 324 & 0.389\\
+	    16 & 512 & 256 & 256 & 1\\
+	    \bottomrule
+	  \end{tabular}
+	 \end{table}
+
+	 
+	\end{frame}
+	
+%=============================================================================
+	\begin{frame}\frametitle{8x8 Matrix}
+		\begin{table}[ht]\caption{``schlechte'' Twiddlefaktoren der 8x8 Matrix, real \& imag}
+		 \begin{tabular}{rrr}
+		  \toprule
+		  Dezimalzahl & dezimale Darstellung der Binärzahl & prozentuale Abweichung\\
+		  \midrule
+		  -0.707110   & -0.707520  & 0.057916\\
+		   0.707110   &  0.707031  & 0.011137\\
+		   \bottomrule
+		 \end{tabular}\label{8x8Matrix}
+		\end{table}
+
+			
+		%\figw{0.7}{IMG/AnwendungISAR.pdf}{\tiny Darstellung von Schüthe}	
+	\end{frame}
+%=============================================================================
+	\begin{frame}[t]\frametitle{9x9 Matrix}
+	
+		\begin{table}[ht]\caption{``schlechte'' Twiddlefaktoren der 9x9 Matrix, real \& imag}
+		 \begin{tabular}{rrr}
+		 \toprule
+		  Dezimalzahl & dezimale Darstellung der Binärzahl & prozentuale Abweichung\\
+		  \midrule
+		  -0.9848100  & -0.9853516  & 0.0549916\\
+		  -0.9396900  & -0.9399414  & 0.0267542\\
+		  -0.8660300  & -0.8662109  & 0.0208928\\
+		  -0.6427900  & -0.6430664  & 0.0430010\\
+		  -0.3420200  & -0.3422852  & 0.0775265\\
+		   0.1736500  &  0.1733398  & 0.1786100\\
+		   0.3420200  &  0.3417969  & 0.0652374\\
+		   0.6427900  &  0.6425781  & 0.0329618\\
+		   0.7660400  &  0.7661133  & 0.0095662\\
+		   0.8660300  &  0.8657227  & 0.0354888\\
+		   0.9848100  &  0.9848633  & 0.0054103\\\bottomrule
+		 \end{tabular}\label{9x9Matrix}
+		\end{table}
+		
+	\end{frame}
+
+%=============================================================================
+	\begin{frame}\frametitle{12x12 Matrix}
+		\begin{table}[ht]\caption{``schlechte'' Twiddlefaktoren der 12x12 Matrix, real \& imag}
+		 \begin{tabular}{rrr}
+		  \toprule
+		  Dezimalzahl & dezimale Darstellung der Binärzahl & prozentuale Abweichung\\
+		  \midrule
+		  -0.866030   & -0.866211  & 0.020893\\
+		   0.866030   &  0.865723  & 0.035489\\
+		   \bottomrule
+		 \end{tabular}\label{12x12Matrix}
+		\end{table}
+	\end{frame}
+	
+	\begin{frame}\frametitle{Berechnung der Binärzahl und ihrer Abweichung}
+	 
+	 \lstinputlisting[language=Matlab, caption=Festkommazahl-Berechnung]{sourcecodes/sq12_part.m}
+	 \lstinputlisting[language=Matlab, caption=Berechnung der prozentualen Abweichung]{sourcecodes/perc_diff.m}
+
+	\end{frame}
+
+ 
+\end{document}

@@ -1,0 +1,84 @@
+*** Message Type: info ***
+When: Do Jan 04 16:20:08 CET 2018
+SimVision started.
+Version: TOOL:  simvision       15.10-s002
+User: tlattmann
+Host: r1006a-cdl.etech.haw-hamburg.de
+Platform: Linux/x86_64/2.6.32-642.15.1.el6.x86_64
+Started: Do Jan 04 16:20:08 CET 2018
+Command: /home/cdsmgr/cds_ic_new/INCISIVE_15.10.002/tools.lnx86/simvision/bin/simvision.exe -connect dc:r1006a-cdl.etech.haw-hamburg.de:50940
+Work Directory: /home/tlattmann/cadence/mat_mult
+ 
+*** Message Type: info ***
+When: Do Jan 04 16:20:09 CET 2018
+Create browser window: "Design Browser 1"
+ 
+*** Message Type: info ***
+When: Do Jan 04 16:20:12 CET 2018
+Create console window: "Console"
+ 
+*** Message Type: info ***
+When: Do Jan 04 16:20:14 CET 2018
+Connect to Simulator
+      Design: worklib.dft8optimiert_top:arch
+   Languages: vhdl
+   Simulator: NC-Sim
+     Version: TOOL:        ncsim   15.10-s002
+        User: tlattmann
+        Host: r1006a-cdl.etech.haw-hamburg.de
+Time Started: Do Jan 04 16:20:07 CET 2018
+  Process ID: 12667
+   Directory: /home/tlattmann/cadence/mat_mult
+     Command: ncsim -gui -cdslib /home/tlattmann/cadence/mat_mult/cds.lib -logfile ncsim.log -errormax 15 -status worklib.dft8optimiert_top:arch
+
+ 
+*** Message Type: info ***
+When: Do Jan 04 16:20:15 CET 2018
+Create utility window: "Properties"
+ 
+*** Message Type: info ***
+When: Do Jan 04 16:21:04 CET 2018
+Exit NC-Sim: user
+      Design: worklib.dft8optimiert_top:arch
+   Languages: vhdl
+   Simulator: NC-Sim
+     Version: TOOL:        ncsim   15.10-s002
+        User: tlattmann
+        Host: r1006a-cdl.etech.haw-hamburg.de
+Time Started: Do Jan 04 16:20:07 CET 2018
+  Process ID: 12667
+   Directory: /home/tlattmann/cadence/mat_mult
+     Command: ncsim -gui -cdslib /home/tlattmann/cadence/mat_mult/cds.lib -logfile ncsim.log -errormax 15 -status worklib.dft8optimiert_top:arch
+
+ 
+*** Message Type: error ***
+When: Do Jan 04 16:21:04 CET 2018
+NC-Sim Crashed:
+      Design: worklib.dft8optimiert_top:arch
+   Languages: vhdl
+   Simulator: NC-Sim
+     Version: TOOL:        ncsim   15.10-s002
+        User: tlattmann
+        Host: r1006a-cdl.etech.haw-hamburg.de
+Time Started: Do Jan 04 16:20:07 CET 2018
+  Process ID: 12667
+   Directory: /home/tlattmann/cadence/mat_mult
+     Command: ncsim -gui -cdslib /home/tlattmann/cadence/mat_mult/cds.lib -logfile ncsim.log -errormax 15 -status worklib.dft8optimiert_top:arch
+      Design: worklib.dft8optimiert_top:arch
+   Languages: vhdl
+   Simulator: NC-Sim
+     Version: TOOL: ncsim   15.10-s002
+        User: tlattmann
+        Host: r1006a-cdl.etech.haw-hamburg.de
+Time Started: Do Jan 04 16:20:07 CET 2018
+  Process ID: 12667
+   Directory: /home/tlattmann/cadence/mat_mult
+     Command: ncsim -gui -cdslib /home/tlattmann/cadence/mat_mult/cds.lib -logfile ncsim.log -errormax 15 -status worklib.dft8optimiert_top:arch
+
+Outstanding STRAP Requests:
+        strap::report enable out
+ 
+*** Message Type: info ***
+When: Do Jan 04 16:21:07 CET 2018
+SimVision Exit.
+ 

@@ -1,0 +1,595 @@
+\section{Entwickeln der 2D-DFT }
+
+\section{Direkte Weiterverarbeitung der Zwischenergebnisse}
+Um die Anzahl an Gattern und somit den Flächenbedarf zu reduzieren ist es das Ziel, die Ergebnisse der \gls{1d-dft} aus der 1. Berechnungsstufe im nächsten Schritt direkt als 
+Eingangswerte für die \gls{2d-dft} zu verwenden. Auf diese Weise würden 64$\cdot$2$\cdot$12 Bit = 1536 Bit = 1,5kBit = 192 Byte an Speicher eingespart werden.
+
+\subsection{Matrizenmultiplikation}
+
+Um die nachfolgenden Abschnitte besser erörten zu können, soll zunächst die Matrizenmultiplikation besprochen werden.
+Wie in Abbildung \ref{eq:grafikMatrizenmultiplikation} verdeutlicht, wird Element$(i,j)$ der Ergebnismatrix dadurch berechnet, dass die Elemente$(i,k)$ einer Zeile der 1. Matrix
+mit den Elementn$(k,j)$ aus der zweiten Matrix multipliziert und die Werte aufsummiert werden. $i$ und $j$ sind für die Berechnung eines Elements konstant, während $k$ über alle
+Elemente einer Zeile bzw. Spalte läuft.
+
+\begin{center}
+ 
+\begin{minipage}{0.2\textwidth}
+ \begingroup
+ \renewcommand*{\arraystretch}{1.1} % Zeilenabstand
+ \renewcommand*{\arraycolsep}{0.0pt} % Spaltenabstand
+
+ \[
+    \begin{bmatrix}
+    \tikzmark{varrowtopleft} \myBlackBox  	& \myBlackBox 		& \myBlackBox 		& \tikzmark{varrowtopright} \myBlackBox \\
+                             \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+                             \myLightgrayBox 	& \myLightgrayBox	& \myLightgrayBox	& \myLightgrayBox \\
+    \tikzmark{varrowbottom}  \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
+   \end{bmatrix}
+ \]
+ \endgroup
+  \tikz[overlay,remember picture] {
+  \draw[->] ([yshift=1.5ex,xshift=-2ex]varrowtopleft) -- ([xshift=-2ex]varrowbottom)
+            node[midway,left] {$i$};
+  \draw[->] ([xshift=2ex,yshift=4ex]varrowtopleft) -- ([yshift=4ex]varrowtopright)
+            node[midway,above] {$k$};
+}
+\end{minipage}
+\begin{minipage}{0.1\textwidth}
+ \hspace{-.5cm}
+ \[
+  \cdot
+ \]
+\end{minipage}
+\begin{minipage}{0.2\textwidth}
+ \begingroup
+ \renewcommand*{\arraystretch}{0.0} % Zeilenabstand
+ \renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
+ \[
+   \begin{bmatrix}
+    \tikzmark{varrowtopleft} \myLightgrayBoxHigh & \myBlackBoxHigh & \myLightgrayBoxHigh & \tikzmark{varrowtopright} \myLightgrayBoxHigh \\
+                             \myLightgrayBoxHigh & \myBlackBoxHigh & \myLightgrayBoxHigh & \myLightgrayBoxHigh \\
+                             \myLightgrayBoxHigh & \myBlackBoxHigh & \myLightgrayBoxHigh & \myLightgrayBoxHigh \\
+    \tikzmark{varrowbottom}  \myLightgrayBoxHigh & \myBlackBoxHigh & \myLightgrayBoxHigh & \myLightgrayBoxHigh 
+   \end{bmatrix}
+ \]
+ \endgroup
+   \tikz[overlay,remember picture] {
+  \draw[->] ([yshift=1.5ex,xshift=-2ex]varrowtopleft) -- ([xshift=-2ex]varrowbottom)
+            node[midway,left] {$k$};
+  \draw[->] ([xshift=2ex,yshift=4ex]varrowtopleft) -- ([yshift=4ex]varrowtopright)
+            node[midway,above] {$j$};
+}
+\end{minipage}
+\begin{minipage}{0.05\textwidth}
+ \[
+  =
+ \]
+\end{minipage}
+\begin{minipage}{0.3\textwidth}
+\begingroup
+\renewcommand*{\arraystretch}{1.1} % Zeilenabstand
+\renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
+\begin{align}\label{eq:grafikMatrizenmultiplikation}
+   \begin{bmatrix}
+    \tikzmark{varrowtopleft} \myLightgrayBox 	& \myBlackBox		& \myLightgrayBox 	& \tikzmark{varrowtopright} \myLightgrayBox \\
+                             \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+                             \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+    \tikzmark{varrowbottom}  \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
+   \end{bmatrix}
+ \end{align} 
+ \endgroup
+    \tikz[overlay,remember picture] {
+  \draw[->] ([yshift=1.5ex,xshift=-2ex]varrowtopleft) -- ([xshift=-2ex]varrowbottom)
+            node[midway,left] {$i$};
+  \draw[->] ([xshift=2ex,yshift=4ex]varrowtopleft) -- ([yshift=4ex]varrowtopright)
+            node[midway,above] {$j$};
+}
+\end{minipage}
+\end{center}
+
+
+\subsection{Veranschaulichung 2D-DFT als Matrizenmultiplikation}
+
+Mathematisch wird die 2D-DFT als
+
+\begin{align}
+ F_2 &= W \cdot S \cdot W \\
+     &= F_1 \cdot W
+\end{align}
+
+beschrieben. Es wird also erst die 1D-DFT berechnet und die sich daraus ergebende Matrix $F_1$ (Abb. \ref{eq:matrix_F1}) wird anschließend mit der Twiddlefaktor-Matrix $W$ 
+multipliziert. Man könnte es auch als zweite 1D-DFT betrachten, bei der Twiddlefaktor-Matrix und Eingangsmatrix vertauscht sind.
+
+Veranschaulicht wird dies in den Abbildungen \ref{eq:matrix_F1} und \ref{eq:matrix_F2}.
+
+
+\begin{center}
+ 
+\begin{minipage}{0.2\textwidth}
+ \begingroup
+ \renewcommand*{\arraystretch}{1.1} % Zeilenabstand
+ \renewcommand*{\arraycolsep}{0.0pt} % Spaltenabstand
+
+ \[
+  \stackrel{\mbox{$W$}}{
+   \begin{bmatrix}
+    \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox	& \myLightgrayBox	& \myLightgrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
+   \end{bmatrix}
+  }
+ \]
+ \endgroup
+\end{minipage}
+\begin{minipage}{0.05\textwidth}
+ \[
+  \cdot
+ \]
+\end{minipage}
+\begin{minipage}{0.2\textwidth}
+ \begingroup
+ \renewcommand*{\arraystretch}{0.0} % Zeilenabstand
+ \renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
+
+ \[
+  \stackrel{\mbox{$S$}}{
+   \begin{bmatrix}
+    \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh \\
+    \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh \\
+    \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh \\
+    \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 
+   \end{bmatrix}
+  }
+ \]
+ \endgroup
+\end{minipage}
+\begin{minipage}{0.05\textwidth}
+ \[
+  =
+ \]
+\end{minipage}
+\begin{minipage}{0.3\textwidth}
+\begingroup
+\renewcommand*{\arraystretch}{1.1} % Zeilenabstand
+\renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
+\begin{align}\label{eq:matrix_F1}
+  \stackrel{\mbox{$F_1$}}{
+   \begin{bmatrix}
+    \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
+   \end{bmatrix}
+  }
+\end{align}
+
+ 
+ \endgroup
+\end{minipage}
+\end{center}
+
+
+\begin{center}
+ 
+\begin{minipage}{0.2\textwidth}
+ \begingroup
+ \renewcommand*{\arraystretch}{1.1} % Zeilenabstand
+ \renewcommand*{\arraycolsep}{0.0pt} % Spaltenabstand
+
+ \[
+  \stackrel{\mbox{$F_1$}}{
+   \begin{bmatrix}
+    \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox	& \myLightgrayBox	& \myLightgrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
+   \end{bmatrix}
+  }
+ \]
+ \endgroup
+\end{minipage}
+\begin{minipage}{0.05\textwidth}
+ \[
+  \cdot
+ \]
+\end{minipage}
+\begin{minipage}{0.2\textwidth}
+ \begingroup
+ \renewcommand*{\arraystretch}{0.0} % Zeilenabstand
+ \renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
+
+ \[
+  \stackrel{\mbox{$W$}}{
+   \begin{bmatrix}
+    \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh \\
+    \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh \\
+    \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh \\
+    \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 
+   \end{bmatrix}
+  }
+ \]
+ \endgroup
+\end{minipage}
+\begin{minipage}{0.05\textwidth}
+ \[
+  =
+ \]
+\end{minipage}
+\begin{minipage}{0.3\textwidth}
+\begingroup
+\renewcommand*{\arraystretch}{1.1} % Zeilenabstand
+\renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
+\begin{align}\label{eq:matrix_F2}
+  \stackrel{\mbox{$F_2$}}{
+   \begin{bmatrix}
+    \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
+   \end{bmatrix}
+  }
+ \end{align}
+ \endgroup
+\end{minipage}
+\end{center}
+
+
+\section{Optimieren der 8x8-DFT}
+
+Aus der anfänglichen Implementation bei der alle Werte einer Berechnung die entweder mit $+\frac{\sqrt{2}}{2}$ oder $-\frac{\sqrt{2}}{2}$ multipliziert werden müssen 
+einzelnd berechnet werden, wird sinngemäß der gemeinsame Faktor ausgeklammert, sodass nur noch jeweils eine Multiplikation erforderlich ist.
+
+
+
+
+
+\section{Ungleiche Bitbreiten bei gerader / ungerader Zeile}
+
+Berechnung ungerader Zeilen am Beispiel der ersten:
+\begin{center}
+$a_{k0} + a_{k1} + a_{k2} + a_{k3} + a_{k4} + a_{k5} + a_{k6} + a_{k7}$\\
+\end{center}
+%\hrule
+\vspace{0.5cm}
+
+\begin{tabular}{ccccccccc}
+Takt&\multicolumn{6}{l}{ } & & Bit\\
+&$\underbrace{a_{k0} + a_{k1}}$ &  &$ \underbrace{a_{k2} + a_{k3}}$ &  &$\underbrace{a_{k4} + a_{k5}}$ &  &$\underbrace{a_{k6} + a_{k7}}$ & 12\\
+2&\multicolumn{7}{l}{$\hspace{0.65cm} \Downarrow \hspace{2.3cm} \Downarrow \hspace{2.3cm} \Downarrow \hspace{2.3cm}\Downarrow$}&\\
+&\multicolumn{3}{c}{$\underbrace{sum\_s1\_1 \quad + \quad sum\_s1\_2}$} & & \multicolumn{3}{c}{$\underbrace{sum\_s1\_3 \quad + \quad sum\_s1\_4}$} & 13\\
+3&\multicolumn{3}{c}{$\Downarrow$} & & \multicolumn{3}{c}{$\Downarrow$}&\\
+&\multicolumn{7}{c}{$\underbrace{sum\_s2\_1 \quad  \quad \quad \quad + \quad \quad \quad  \quad sum\_s2\_2}$} & 14\\
+4&\multicolumn{7}{c}{$\Downarrow$}&\\
+&\multicolumn{7}{c}{$sum\_s3\_1$} & 15\\
+&\end{tabular}
+
+\vspace{0.5cm}
+
+$\Rightarrow$ 3 Takte, 1. und 5. Leerlauf
+
+\vspace{1cm}
+
+Berechnung gerader Zeilen am Beispiel der zweiten:
+ \begin{center} 
+ $a_0 - x_1 + x_0 - b_2 + x_2 - x_3 + a_4 - x_5 + x_4 - b_6 + x_6 - x_7$\\
+ \end{center}
+ %\hrule
+ 
+ \vspace{0.3cm}
+
+\begin{tabular}{ccccccccccccc}
+Takt&\multicolumn{11}{c}{}&Bit\\
+&$\underbrace{a_0 - x_1}$ &  &$ \underbrace{x_0 - b_2}$ &  &$\underbrace{x_2 - x_3}$ &  &$\underbrace{a_4 - x_5}$ &  &$\underbrace{x_4 - b_6}$ &  &$\underbrace{x_6 - x_7}$&12\\
+2&\multicolumn{11}{l}{$\hspace{0.5cm} \Downarrow \hspace{1.75cm} \Downarrow \hspace{1.8cm} \Downarrow \hspace{1.75cm}\Downarrow \hspace{1.75cm}\Downarrow \hspace{1.8cm}\Downarrow$}&\\
+&\multicolumn{3}{c}{$\underbrace{s1\_1 \quad + \quad s1\_2}$} & & \multicolumn{3}{c}{$\underbrace{s1\_3 \quad + \quad s1\_4}$} & & \multicolumn{3}{c}{$\underbrace{s1\_5 \quad + \quad s1\_6}$}&13\\
+3&\multicolumn{3}{c}{$\Downarrow$} & & \multicolumn{3}{c}{$\Downarrow$} & & \multicolumn{3}{c}{$\Downarrow$}&\\
+&\multicolumn{7}{c}{$\underbrace{s2\_1 \quad  \quad \quad \quad + \quad \quad \quad  \quad s2\_2}$} & & \multicolumn{3}{c}{$s2\_3$}&14\\
+4&\multicolumn{7}{c}{$\Downarrow$}& & \multicolumn{3}{c}{$\Downarrow$}&\\
+&\multicolumn{7}{c}{$s3\_1$}& & \multicolumn{3}{c}{$\Downarrow$}&15\\
+&\multicolumn{2}{c}{}& \multicolumn{9}{c}{$\underbrace{\quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad}$}&\\
+5&\multicolumn{2}{c}{}& \multicolumn{9}{c}{$\Downarrow$}&\\
+&\multicolumn{2}{c}{}& \multicolumn{9}{c}{$s4\_1$}&16
+\end{tabular}
+
+
+$\Rightarrow$ 5 Takte, 1. Multiplikationen, 2.-5. Additionen
+
+ 
+
+\section{Struktogramm}
+
+\includepdf{content/Struktogramm.pdf}
+
+\section{Automatengraf}
+
+\begin{center}
+ 
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=4.5cm,
+                    semithick,initial text=nReset, initial where=above]
+  \tikzstyle{every state}=[fill=white, text=black]
+  %\tikzstyle{every initial where}=[above]
+  
+
+  \node[initial,state, circle split,minimum size=70pt] (A)                   {Idle};
+  \node[state, circle split, minimum size=70pt]         (B) [below right of=A]{Twiddle\_Calc};
+  \node[state, circle split, minimum size=70pt]         (C) [below right of=B]      {Additions\_1};
+  \node[state, circle split, minimum size=70pt]         (D) [below of=C] {Additions\_2};
+  \node[state, circle split, minimum size=70pt]         (E) [below left of=D] {Const\_mult};
+  \node[state, circle split, minimum size=70pt]         (F) [above left of=E]      {Additions\_3};
+  \node[state, circle split, minimum size=70pt]         (G) [above of=F]      {set\_ready\_bit};
+
+  
+   \path (A) edge (B) 
+         (A) [loop left] edge(A)
+         (B) [bend left=10] edge (C)
+         (C) edge (D)
+         (D) edge (B)
+         (D) edge (E)
+         (E) edge (F)
+         (F) [bend right=10] edge (B)
+         (F) [bend left=10] edge (G)
+         (G) edge (B);
+\end{tikzpicture}
+\end{center}
+
+
+
+
+%\begin{landscape}
+ 
+
+
+% Define block styles
+\tikzstyle{decision} = [diamond,                    draw, fill=blue!20, text width=6em, text badly centered, node distance=4cm, inner sep=0pt]
+\tikzstyle{block} =    [rectangle, rounded corners, draw, fill=blue!20, text width=5em, text centered,       node distance=4cm, minimum height=5em, minimum width=7em]
+\tikzstyle{smallblock} =    [rectangle, rounded corners, draw, fill=blue!20, text width=5em, text centered,       node distance=4cm, minimum height=2em, minimum width=3.5em]
+\tikzstyle{wideblock} =    [rectangle, rounded corners, draw, fill=blue!20, text width=7em, text centered,       node distance=4cm, minimum height=5em, minimum width=7em]
+\tikzstyle{verywideblock} =    [rectangle, rounded corners, draw, fill=blue!20, text width=15em, text centered,       node distance=4cm, minimum height=4em, minimum width=15em]
+\tikzstyle{textblock} =    [rectangle, rounded corners, draw, fill=blue!20, text width=12em, text centered,       node distance=4cm, minimum height=4em, minimum width=10em]
+\tikzstyle{dot}=[draw,shape=circle]
+
+\tikzstyle{arrowline} = [draw, -latex']
+
+
+    
+\begin{tikzpicture}[auto, node distance = 1cm and 1cm, initial text=POR, initial where=above]
+    % Place nodes
+    \node [initial, smallblock] (start) {Idle};
+    \node [decision, below of=start, node distance=3cm] (init) {IDFT?};
+    \node [block, below right of=init, node distance=3cm] (Zeilenindex) {Zeilenindex tauschen};
+    \coordinate[below of=init, node distance=3.5cm](Punkt_0);
+    \node [decision, below of=Punkt_0, node distance=2cm] (Element_1) {Berechnung 1. Element?};
+    \coordinate [right of=Element_1, node distance=4cm](c1);
+    \node [decision, below of=c1, node distance=2cm] (Berechnung_1D_1) {Berechnung 1D-DFT?};
+    
+    \node [block, below of=Berechnung_1D_1, node distance=3cm] (überschreiben_mit_eingangswerten) {Zwischen- werte := 1D-DFT-Werten};
+    \node [block, right of=überschreiben_mit_eingangswerten, node distance=4cm] (überschreiben_mit_1D_Werten) {Zwischen- werte := Eingangswerte};
+    \node [block, left of=überschreiben_mit_eingangswerten, node distance=4cm] (Werte_beibehalten) {Zwischen- werte := Zwischen- werte};
+    
+    \node [dot, fill, inner sep=1pt, below of=überschreiben_mit_eingangswerten,node distance=1.5cm] (Punkt_1){};
+    \node [decision,                 below of=Punkt_1,node distance=2cm] (Zustandsabfrage) {Zeilen- abfrage};
+    
+    \node [dot, fill, inner sep=1pt, below of=Zustandsabfrage,node distance=2cm] (Punkt_2){};
+    \coordinate[below of=Punkt_2, node distance=0.5cm](Punkt_3);
+    
+    \node [textblock, right of=Punkt_2, node distance=3cm] (Zeile_1){Berechnungen entsprechend Zeile 1 der Twiddlefaktor-Matrix};
+      
+    \coordinate[below of=Punkt_3](Punkt_4);
+    \coordinate[below of=Punkt_4,node distance=0.5cm] (Punkt_5);
+    \node [textblock, right of=Punkt_5, node distance=3cm] (Zeile_8){Berechnungen entsprechend Zeile 8 der Twiddlefaktor-Matrix};
+    
+    \coordinate[right of=Zeile_1, node distance=3cm](Punkt_6);
+    \coordinate[below of=Punkt_6, node distance=0.5cm] (Punkt_7);
+    \node [dot, fill, inner sep=0.01pt, right of=Zeile_8, node distance=3cm](Punkt_9){};
+    \coordinate[above of=Punkt_9, node distance=0.5cm] (Punkt_8);
+    \coordinate[below of=Punkt_9, node distance=2cm](Punkt_10);
+    \coordinate[left of=Punkt_10, node distance=12cm](Punkt_return_1);
+    
+    \coordinate[right of=init, node distance=8cm](textfeld);
+    \node [draw, text, fill=white, above of=textfeld, node distance=1.3cm](tf){Zustand 2: Twiddle\_Calc};
+    \coordinate[right of=start, node distance=7.1cm](textfeld2);
+    \node [draw, text, fill=white, above of=textfeld2, node distance=1cm](tf2){Zustand 1: Idle};
+    \node [dot, fill, inner sep=1pt, above of=init, node distance=1.7cm](Knoten_init){};
+    
+   % Koordinaten für Hintergrund
+   \coordinate [above of=start, node distance=1.5cm](b11);
+   \coordinate [right of=start, node distance=13.6cm](b12);
+   \coordinate [below of=start, node distance=1cm](b13);
+   \coordinate [left of=start, node distance=1.5cm](b14);
+    
+    % Draw edges
+    \draw (start) -- (Knoten_init);
+    \path [arrowline] (Knoten_init) -- (init);
+    \path [arrowline] (init) -| node [near start] {ja} (Zeilenindex);
+    \draw (Zeilenindex) |- (Punkt_0);    
+    \draw (init) -- node [left, near start] {nein} (Punkt_0);
+    \path [arrowline] (Punkt_0) -- (Element_1);
+    \path [arrowline] (Element_1) -| node [near start] {ja} (Berechnung_1D_1);
+    \path [arrowline] (Berechnung_1D_1) -- node [near start] {nein} (überschreiben_mit_eingangswerten);
+    \path [arrowline] (Berechnung_1D_1) -| node [near start] {ja} (überschreiben_mit_1D_Werten);
+    \path [arrowline] (Element_1) -- node [left, near start] {nein} (Werte_beibehalten);
+    
+    \draw (Werte_beibehalten) |- (Punkt_1);
+    \draw (überschreiben_mit_eingangswerten) -- (Punkt_1);
+    \draw (überschreiben_mit_1D_Werten) |- (Punkt_1);
+    \path [arrowline] (Punkt_1) -- (Zustandsabfrage);
+    \draw (Zustandsabfrage) -- (Punkt_2);
+    
+    \path [arrowline] (Punkt_2) -- (Zeile_1);
+    \draw (Punkt_2) -- (Punkt_3);
+    \draw [loosely dotted] (Punkt_3) -- (Punkt_4);
+    \draw (Punkt_4) -- (Punkt_5);
+    \path [arrowline](Punkt_5) -- (Zeile_8);
+    
+    \draw (Zeile_1) -- (Punkt_6);
+    \draw (Punkt_6) -- (Punkt_7);
+    \draw [loosely dotted] (Punkt_7) -- (Punkt_8);
+    \draw (Punkt_8) -- (Punkt_9);
+    \draw (Zeile_8) -- (Punkt_9);
+    \draw (Punkt_9) -- (Punkt_10);
+    \draw (Punkt_return_1) |- (Knoten_init);
+    \path (start) [loop right] edge (start);
+    
+     \begin{pgfonlayer}{background}
+      \filldraw [fill=gray!20, draw=gray!15]
+        (b11.north -| b12.west)  rectangle (b13.south -| b14.east);
+     \end{pgfonlayer}
+
+    
+\end{tikzpicture}
+
+\begin{tikzpicture}[auto, node distance = 1cm and 1cm, initial text="", initial where=above]
+
+
+
+\node [initial, decision] (gerade_Zeile_1) {gerade Zeile?};
+\node [wideblock, below left of=gerade_Zeile_1] (gerade_Zeile_1_aufsummieren) {Zwischenwerte paarweise aufsummieren};
+\node [wideblock, below right of=gerade_Zeile_1] (ungerade_Zeile_1_aufsummieren) {Zwischenwerte paarweise aufsummieren, zu multiplizierende getrennt};
+\node [dot, fill, inner sep=1pt, below of=gerade_Zeile_1, node distance=5cm](Punkt_1){};
+
+
+\node [decision, below of=Punkt_1, node distance=4cm] (gerade_Zeile_2) {gerade Zeile?};
+\coordinate [left of=gerade_Zeile_2, node distance=3.5cm] (Punkt_gerade_Zeile_2);
+\coordinate [right of=gerade_Zeile_2, node distance=3.5cm] (Punkt_gerade_Zeile_2_2);
+
+\node [block, below of=Punkt_gerade_Zeile_2, node distance=3cm] (ungerade_Zeile_2_aufsummieren) {Letztes Paar aufsummieren};
+\node [block, below of=Punkt_gerade_Zeile_2_2, node distance=3cm] (gerade_Zeile_2_aufsummieren) {Letztes Multiplikationspaar aufsummieren};
+\node [decision, below of=ungerade_Zeile_2_aufsummieren, node distance=3cm] (Berechnung_1D_2) {Berechnung 1D-DFT?};
+
+\node [block, below left of=Berechnung_1D_2, node distance=3.2cm] (Werte_extern_speichern_1) {Werte in (externe) 2D-DFT-Matrix speichern};
+\node [block, below right of=Berechnung_1D_2, node distance=3.2cm] (Werte_intern_speichern_1) {Werte in (interne) 1D-DFT-Matrix speichern};
+\coordinate [below of=Werte_extern_speichern_1, node distance=2cm](Punkt_3);
+\coordinate [below of=Werte_intern_speichern_1, node distance=2cm](Punkt_4);
+
+\coordinate (Middle_2) at ($(Punkt_3)!0.5!(Punkt_4)$);
+\node [dot, fill, inner sep=1pt,  above of=Middle_2, node distance=0cm] (Middle_2_dot){};
+\node [block, below of=Middle_2, node distance=1.5cm] (Matrix_Element_plus_1_1) {Matrix-Element += 1};
+\coordinate [below=of Matrix_Element_plus_1_1](Punkt_5);
+
+\coordinate [left of=Punkt_5, node distance=6cm] (Punkt_unten_links);
+\node [dot, fill, inner sep=1pt, above of=Punkt_unten_links, node distance=0.5cm](Knoten_unten_links){};
+\coordinate [below of=gerade_Zeile_2_aufsummieren, node distance=10.8cm] (Punkt_unten_rechts);
+\coordinate [above of=Punkt_unten_links, node distance=25cm] (Punkt_oben_links);
+
+ % Koordinaten für Hintergrund
+ \coordinate [above of=gerade_Zeile_1, node distance=2.1cm](b11);
+ \coordinate [right of=ungerade_Zeile_1_aufsummieren, node distance=3.3cm](b12);
+ \coordinate [above of=gerade_Zeile_2, node distance=3cm](b13);
+ \coordinate [left of=gerade_Zeile_1_aufsummieren, node distance=6cm](b14);
+ 
+ % Text
+ \coordinate[left of=gerade_Zeile_1, node distance=5.5cm](textfeld);
+ \node [draw, text, fill=white, above of=textfeld, node distance=1.2cm](tf){Zustand 3: Summation\_1};
+ 
+ \node [draw, text, below of=textfeld, node distance=7cm](tf2){Zustand 4: Summation\_2}; 
+
+
+\path [arrowline] (gerade_Zeile_1) -| node [above, near start] {nein} (gerade_Zeile_1_aufsummieren);
+\path [arrowline] (gerade_Zeile_1) -| node [near start] {ja} (ungerade_Zeile_1_aufsummieren);
+\draw (gerade_Zeile_1_aufsummieren) |- (Punkt_1);
+\draw (ungerade_Zeile_1_aufsummieren) |- (Punkt_1); 
+\path [arrowline] (Punkt_1) -- (gerade_Zeile_2);
+
+\draw (gerade_Zeile_2) -- node [above, near start] {nein} (Punkt_gerade_Zeile_2);
+\path [arrowline] (Punkt_gerade_Zeile_2) -| (ungerade_Zeile_2_aufsummieren);
+\draw (gerade_Zeile_2) -- node [near start] {ja} (Punkt_gerade_Zeile_2_2);
+
+\path [arrowline] (Punkt_gerade_Zeile_2_2) -| (gerade_Zeile_2_aufsummieren);
+\path [arrowline] (ungerade_Zeile_2_aufsummieren) -- (Berechnung_1D_2);
+\path [arrowline] (Berechnung_1D_2) -| node [above] {nein} (Werte_extern_speichern_1);
+\path [arrowline] (Berechnung_1D_2) -| node [above] {ja} (Werte_intern_speichern_1);
+\draw (Werte_extern_speichern_1) -- (Punkt_3);
+\draw (Werte_intern_speichern_1) -- (Punkt_4);
+\draw (Punkt_3) -- (Middle_2);
+\draw (Punkt_4) -- (Middle_2);
+\path [arrowline] (Middle_2) -- (Matrix_Element_plus_1_1);
+\draw (Matrix_Element_plus_1_1) |- (Knoten_unten_links);
+\draw (Punkt_unten_links) -- (Knoten_unten_links);
+\path [arrowline] (Knoten_unten_links) -- (Punkt_oben_links);
+\path [arrowline](gerade_Zeile_2_aufsummieren) -- (Punkt_unten_rechts);
+
+ \begin{pgfonlayer}{background}
+  \filldraw [fill=gray!20, draw=gray!5]
+  (b11.north -| b12.west)  rectangle (b13.south -| b14.east);
+ \end{pgfonlayer}
+
+
+\end{tikzpicture}
+
+
+\begin{tikzpicture}[auto, node distance = 1cm and 1cm, initial text="", initial where=above]
+ \node [initial, verywideblock] (Multiplikation) {Multiplikation durchführen};
+ \node [verywideblock, below of=Multiplikation, node distance=2.5cm] (letzte_Summation){Additionskomponente und Multiplikationskompnente aufsummieren};
+ \node [decision, below of=letzte_Summation, node distance=3cm] (Berechnung_1D_3) {Berechnung 1D-DFT?};
+ \node [block, below left of=Berechnung_1D_3, node distance=3.5cm] (Werte_extern_speichern_2) {Werte in (externe) 2D-DFT-Matrix speichern};
+ \node [block, below right of=Berechnung_1D_3, node distance=3.5cm] (Werte_intern_speichern_2) {Werte in (interne) 1D-DFT-Matrix speichern};
+ 
+ \node [dot, fill, inner sep=1pt, below of=Berechnung_1D_3, node distance=4cm](Knoten_berechnung_dft2){};
+ \node [decision, below of=Knoten_berechnung_dft2, node distance=2cm] (Element_63) {Berechnung 63. Element};
+ 
+ \coordinate [left of=Element_63, node distance=3cm] (links_neben_element_63);
+ \node [dot, fill, inner sep=1pt, below of=links_neben_element_63, node distance=5.5cm] (Knoten_über_matrix_element_plus1_2) {};
+ \node [block, below of=Knoten_über_matrix_element_plus1_2, node distance=1.6cm] (Matrix_Element_plus_1_2){Matrix-Element += 1};
+ 
+ \node [decision, below right of=Element_63, node distance=3cm] (Berechnung_1D_4) {Berechnung 1D-DFT?};
+ \node [block, below left of=Berechnung_1D_4, node distance=3cm] (dft_1d_2d_2) {DFT\_1D\_2D := 2D};
+ \node [block, below right of=Berechnung_1D_4, node distance=3cm] (dft_1d_2d_1) {DFT\_1D\_2D := 1D};
+ \node [block, below of=dft_1d_2d_1, node distance=3cm] (Matrix_Element_plus_1_3){Matrix-Element += 1};
+ \node [block, below of=Matrix_Element_plus_1_3, node distance=3cm] (set_ready_bit) {Ready-Bit setzen};
+ \coordinate [below of=set_ready_bit, node distance=1.5cm](unter_set_ready_bit);
+ \coordinate [left of=unter_set_ready_bit, node distance=14cm](Punkt_unten_links);
+ \node [dot, fill, inner sep=1pt, above of=Punkt_unten_links, node distance=3cm](knoten_für_plus_1){};
+ \coordinate [above of=knoten_für_plus_1, node distance=21.5cm] (Punkt_oben_links);
+ 
+ % Koordinaten für Hintergrund
+ \coordinate [above of=Multiplikation, node distance=1.3cm](b11);
+ \coordinate [right of=Multiplikation, node distance=5.8cm](b12);
+ \coordinate [below of=Multiplikation, node distance=1.3cm](b13);
+ \coordinate [left of=Multiplikation, node distance=9cm](b14);
+ 
+ \coordinate [above of=set_ready_bit, node distance=1.3cm](b21);
+ \coordinate [right of=set_ready_bit, node distance=1.6cm](b22);
+ \coordinate [below of=set_ready_bit, node distance=1.3cm](b23);
+ \coordinate [left of=set_ready_bit, node distance=13.2cm](b24);
+ 
+  % Text
+ \coordinate[left of=Multiplikation, node distance=6cm](textfeld);
+ \node [draw, text, fill=white, above of=textfeld, node distance=0.5cm](tf){Zustand 5: Const\_Mult};
+ \node [draw, text, fill=white, below of=textfeld, node distance=2cm](tf){Zustand 6: Summation\_3};
+ \node [draw, text, fill=white, below of=textfeld, node distance=21.2cm](tf){Zustand 7: Set\_Ready\_Bit};
+ 
+ 
+ \path [arrowline] (Multiplikation) -- (letzte_Summation);
+ \path [arrowline] (letzte_Summation) -- (Berechnung_1D_3);
+ \path [arrowline] (Berechnung_1D_3) -| node [above] {nein} (Werte_extern_speichern_2);
+ \path [arrowline] (Berechnung_1D_3) -| node [above] {ja} (Werte_intern_speichern_2);
+ \draw (Werte_extern_speichern_2) |- (Knoten_berechnung_dft2);
+ \draw (Werte_intern_speichern_2) |- (Knoten_berechnung_dft2);
+ \path [arrowline] (Knoten_berechnung_dft2) -- (Element_63);
+ \draw (Element_63) -- node [above] {nein} (links_neben_element_63);
+ \draw (links_neben_element_63) -- (Knoten_über_matrix_element_plus1_2);
+ \draw (dft_1d_2d_2) |- (Knoten_über_matrix_element_plus1_2);
+ \path [arrowline] (Knoten_über_matrix_element_plus1_2) -- (Matrix_Element_plus_1_2);
+ \path [arrowline] (Berechnung_1D_4) -| node [above] {ja} (dft_1d_2d_2);
+ 
+ \path [arrowline] (Element_63) -| node [above] {ja} (Berechnung_1D_4);
+ \path [arrowline] (Berechnung_1D_4) -| node [above] {nein} (dft_1d_2d_1);
+ \path [arrowline] (dft_1d_2d_1) -- (Matrix_Element_plus_1_3);
+ \path [arrowline] (Matrix_Element_plus_1_3) -- (set_ready_bit);
+ 
+ \draw (set_ready_bit) -- (unter_set_ready_bit);
+ \draw (unter_set_ready_bit) -- (Punkt_unten_links);
+ \path [arrowline] (Punkt_unten_links) -- (Punkt_oben_links);
+ \draw (Matrix_Element_plus_1_2) |- (knoten_für_plus_1);
+ 
+ \begin{pgfonlayer}{background}
+  \filldraw [fill=gray!20, draw=gray!15]
+  (b11.north -| b12.west)  rectangle (b13.south -| b14.east)
+  (b21.north -| b22.west)  rectangle (b23.south -| b24.east);
+ \end{pgfonlayer}
+
+ 
+\end{tikzpicture}
+
+%\end{landscape}
