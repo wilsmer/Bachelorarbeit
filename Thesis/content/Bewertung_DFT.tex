@@ -1,6 +1,4 @@
-\section{Wahl einer geeigneten DFT-Größe}
-
-\subsection{Bewertung verschiedener Twiddlefaktor-Matrizen}\label{sec:AnalyseBewertungTwiddlefaktornMatrizen}
+\section{Bewertung verschiedener DFT-Größen}\label{sec:AnalyseBewertungTwiddlefaktornMatrizen}
 
 In diesem Abschnitt werden verschiedene Größen von Twiddlefaktor-Matrizen auf ihre Werte untersucht und bewertet.
 Ziel ist es aus den in Frage kommenden jene zu ermitteln, die die trivialsten Berechnungen bei einer 
@@ -45,12 +43,12 @@ Die Beurteilung basiert auf dem Octave-Skript \ref{src:dft_bewertung}
  tauchen nicht auf. Alle übrigen Werte werden als nicht trivial betrachtet, da eine Multiplikation mit ihnen
  eine komplexere Berechnung bedeutet.
  
- Bei der 8$\times$8 Matrix gibt es, wie in Grafik \ref{pic:Einheitskreis} zu sehen, als nicht trivialen Wert mit $\abs{\nicefrac{\sqrt{2}}{2}}$ für Real- und 
+ Bei der 8$\times$8 Matrix gibt es, wie in Grafik \ref{pic:Einheitskreis_Faktoren} zu sehen, als nicht trivialen Wert mit $\abs{\nicefrac{\sqrt{2}}{2}}$ für Real- und 
  Imaginärteil nur einen einzigen Wert, welche dazu noch gemeinsam auftreten. Dies liegt daran, dass
  der Einheitskreis geachtelt wird und für beispielsweise $\frac{2\cdot\pi}{8}=\frac{\pi}{4}$ Sinus und Cosinus identisch sind. Darüberhinaus ist dies auch 
  der einzige Wert, der sowohl einen Real- aus auch einen Imaginärteil besitzt. Alle anderen Faktoren haben in einem von beiden Teilen $\abs{1}$ und somit im anderen Teil 0.
  
- In der bereits erwähnten Grafik \ref{pic:Einheitskreis} sind zur Veranschaulichung alle möglichen Zeiger der Twiddlefaktoren ($W_{m,n}$) für die 8$\times$8 Matrix dargestellt. 
+ In der bereits erwähnten Grafik \ref{pic:Einheitskreis_Faktoren} sind zur Veranschaulichung alle möglichen Zeiger der Twiddlefaktoren ($W_{m,n}$) für die 8$\times$8 Matrix dargestellt. 
  Berechnet werden diese mit der
  Gleichung \ref{eq:Twiddlefaktorenberechnung}, wobei es sich bei $N$ um die Anzahl der Elemente im Vektor bzw. der Spalte einer Matrix von Werten im Zeitbereich 
  handelt. $n$ ist der Laufindex über die einzelnen Elemente, $m$ das Äquivalent für den zu berechnenden Vektor (Matrixspalte) im Frequenzbereich. Beide 
@@ -83,7 +81,7 @@ Die Beurteilung basiert auf dem Octave-Skript \ref{src:dft_bewertung}
   \centering
   \includegraphics[width=0.3\textwidth]{img/Einheitskreis-crop.pdf}
   \captionof{figure}{Einheitskreis mit relevanten Werten}
-  \label{pic:Einheitskreis}
+  \label{pic:Einheitskreis_Faktoren}
 \end{figure}
   
   

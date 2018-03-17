@@ -1,2 +1,31 @@
- \section{Überlegungen DCT vs. DFT}
- Die \gls{2d-dft} findet häufig in der Bildverarbeitung Anwendung und lässt sich gut auf unser Problem übertragen.
+ \section{Entscheidung DCT vs. DFT}
+ Sowohl die \gls{dct} als auch die \gls{dft} finden häufig in der Bildverarbeitung Anwendung. Der Vorteil der \gls{dct} gegenüber der \gls{dft} ist,
+ dass sie rein reelle Ergebniswerte liefert. Ihr großer Nachteil zeigt sich u.a. insbesondere deutlich bei den 8x8-Matrizen, da sich hier x 
+ nicht trivial darstellbare Zahlen der DCT einem einzigen bei der DFT gegenüber stehen.
+ 
+ Auch wenn bei der DFT mit der Berechnung des imaginären Teils zusätzlicher Implementierungsaufwamd hinzukommt, wird davon ausgegangen, dass dieser geringer ist, 
+ als alle x Multiplikationen umzusetzen. Ebenso ist die Annahme, dass der Platzbedarf auf einem Chip in einer ähnlichen Größenordnung liegt, da auf der einen Seite
+ der zusätzliche Speicherbedarf für eine weitere Matrix den x Konstantenmultiplizierer-Schaltnetzen gegenüber stehen.
+ 
+ Es ist nicht geklärt, welche Berechnung für eine Weiterverarbeitung sinnvoller ist. Dies heraus zu finden ist jedoch nicht Bestandteil der Aufgabenstellung dieser Arbeit.
+ An dieser Stelle sollen lediglich Vor- und Nachteile zusammengetragen werden, die eine Entscheidung rechtfertigen.
+ 
+ Ein Einsatzszenario der Transformationen ist die Filterung von Rauschen und anderen Störgrößen. Hierfür ist die DFT gut geeignet. 
+ 
+ 
+ Da es bei dieser Arbeit vor allem um eine erste Aufwandsabschätzung einer optimierten Matrizenmultiplikation geht, welche als Ausgangspunkt für eine finale Implementation 
+ dient, und es sich hier um keine endgültige Entscheidung handelt, kann mit Wahl der DFT kein grundlegender Fehler gemacht werden.
+ 
+ 
+ \begin{table}[ht]
+ \centering
+  \caption{Gegenüberstellung der Vor- und Nachteile von DCT und DFT}
+  \begin{tabular}{lcc}
+      Eigenschaft          & Vorteil   & Nachteil\\
+\hline
+   Imaginärteil Vorhanden  & DCT       & DFT \\
+   Anzahl Multiplikationen & DFT       & DCT\\
+   Platzbedarf             &  -        &  - \\
+  \end{tabular}
+  \label{tab:gegenüberstellung_dct_dft}
+ \end{table}
