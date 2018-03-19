@@ -1,0 +1,24 @@
+\section{Diskrete Kosinus Transformation (DCT)}
+\subsection{Verwendung}
+
+
+\subsection{Berechnung}
+Für die Berechnung der DCT gibt es verschiedene Varianten, welche sich in der Symmetrie der Ergebnismatrix unterscheiden. (Stimmt das wirklich? was sonst?)
+
+Darüber hinaus wird in der Bildverarbeitung häufig die 1. Zeile der Twiddlefaktormatrix mit dem Faktor $\frac{1}{\sqrt2}$, sowie die gesamte Matrix mit 
+$\sqrt{\frac{2}{N}}$, $N =$ Anzahl Elemente in einer Zeile bzw. Spalte, multipliziert.
+
+Da es hier um eine Aufwandsabschätzung geht, wird sich auf die in der Bildverarbeitung gängigste Variante jedoch ohne die skalierenden Faktoren beschränkt.
+Diese berechnet sich zu
+
+\begin{equation}
+X_k = \sum_{n=0}^{N-1} x_n \cos\left[\frac{\pi k}{N} \left(n+\frac{1}{2}\right) \right] \quad \textrm{für} \quad  k=0,\dots,N-1
+\end{equation}
+
+Die Twiddlefaktormatrix kann in Matlab mit
+ %\lstinputlisting[language=matlab, caption={}, frame=no, numbers=none, label=src:dct_faktoren]{Skripte/Matlab/DCT_Faktoren.m}
+ \begin{equation}\label{eq:matlab_dct_faktoren}
+  W = \cos\left(\frac{\pi}{N}\cdot \left([0:N-1]')*([0:N-1]+\frac{1}{2}\right)\right)
+ \end{equation}
+
+berechnet werden.

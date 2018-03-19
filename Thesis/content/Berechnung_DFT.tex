@@ -21,17 +21,24 @@ Die \gls{1d-dft} findet wie bereits erwähnt üblicherweise Anwendung, um vom Ze
 
 Gleichung \ref{eq:1D-DFT_MatrixMult} zeigt die obige Summenformel umgeschrieben zu einer Matrixmultiplikation.
 
-Mit Gleichung \ref{eq:Twiddlefaktorenberechnung} werden zunächst alle Twiddlefaktoren in Matrixform berechnetet, wobei n der Index des zu Berechnenden Elements des Vektors im Zeitbereich und
+Mit Gleichung \ref{eq:Twiddlefaktorenberechnung} werden zunächst alle Twiddlefaktoren in Matrixform berechnet, wobei n der Index des zu Berechnenden Elements des Vektors im Zeitbereich und
 m das Äquivalent im Frequenzbereich ist.
 \begin{equation}\label{eq:Twiddlefaktorenberechnung}
 \sum^{N-1 }_{m=0} \sum^{N-1 }_{n=0} e^{-\frac{j 2 \pi m n}{N}} = W
 \end{equation}
+
 
 Somit gilt:
 
 \begin{equation}\label{eq:1D-DFT_MatrixMult}
 X^* = W \cdot x
 \end{equation}
+
+In Matlab kann die Twiddlefaktormatrix mit
+\begin{equation}\label{eq:matlab_dft_faktoren}
+ W = e^{-\frac{i 2 \pi}{N}\cdot[0:N-1]'\cdot[0:N-1]}
+\end{equation}
+berechnet werden.
 
 
 \subsubsection{2D-DFT}
