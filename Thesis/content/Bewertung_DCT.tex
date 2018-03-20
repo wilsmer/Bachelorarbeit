@@ -1,1 +1,23 @@
 \section{Bewertung verschiedener DCT-Größen}
+
+\begingroup
+  \renewcommand*{\arraystretch}{1.2} % Zeilenabstand der Tabelle
+\begin{table}[ht]
+ \centering
+ \caption{Bewertung der DCT-Twiddlefaktor-Matrizen}
+ \begin{tabular}{lccccc}
+   \hline  
+   N                                                 & 8     & 9      & 12     & 15    & 16\\
+   \hline
+   N$\times$N                                        & 64    & 81     & 144    & 225   & 256\\
+   \rowcolor{lightgray}
+   $\sum$ trivialer Werte                            & 8     & 33     & 28     & 63    & 16\\
+   \rowcolor{lightgray}
+   $\sum$ nicht trivialer Werte                      & 56    & 48     & 116    & 162   & 240\\
+   Anzahl verschiedener nicht trivialer Werte        & 7     & 7      & 10     & 13    & 15\\
+   Verhältnis $\sum$ trivial / $\sum$ nicht trivial  & 0.143 & 0.6875 & 0.2414 & 0.389 & 0.067\\
+   \hline
+ \end{tabular}
+ \label{tab:DCT-TwiddlefaktorMatrizenBewertung}  
+\end{table}
+\endgroup

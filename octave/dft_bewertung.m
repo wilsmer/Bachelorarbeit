@@ -13,26 +13,40 @@
 function dft_bewertung(N)
 
   % Twiddlefaktor-Matrix erzeugen  
-  tw_cmplx = exp(-i*2*pi*[0:N-1]'*[0:N-1]/N);
+  W = exp(-i*2*pi*[0:N-1]'*[0:N-1]/N);
+  W = round(W*1000000)/1000000;
   
   % Matrix nach Im und Re trennen und Werte runden
-  tw_real = round(real(tw_cmplx)*100000)/100000;
-  tw_imag = round(imag(tw_cmplx)*100000)/100000;
+  W_r = real(W);
+  W_i = imag(W);
   
   % Werte kleiner 0,000001 auf 0 setzen (arithmetische Ungenauigkeiten)
-  tw_real(abs(tw_real) < 0.000001) = 0;
-  tw_imag(abs(tw_imag) < 0.000001) = 0;
+  W_r(abs(W_r) < 0.000001) = 0;
+  W_i(abs(W_i) < 0.000001) = 0;
   
-  %% Anzahl verschiedener Werte ermitteln
-  different_nums_real = unique(tw_real);
-  different_nums_imag = unique(tw_imag);
+  
+  
+  % Anzahl verschiedener Werte ermitteln
+  different_nums_real = unique(W_r);
+  different_nums_imag = unique(W_i);
+  
+  different_nums = [different_nums_real; different_nums_imag];
+  different_nums = unique(different_nums);
+  different_non_trivial_nums = different_nums(find(different_nums ~= 1));
+  different_non_trivial_nums = different_non_trivial_nums(find(different_non_trivial_nums ~= -1));
+  different_non_trivial_nums = different_non_trivial_nums(find(different_non_trivial_nums ~= 0.5));
+  different_non_trivial_nums = different_non_trivial_nums(find(different_non_trivial_nums ~= -0.5));
+  different_non_trivial_nums = different_non_trivial_nums(find(different_non_trivial_nums ~= 0));
+  
+  different_non_trivial_nums = unique(abs(different_non_trivial_nums));
+  non_trivial = length(abs(different_non_trivial_nums))
   
   % Jeweils die Menge der verschiedenen Werte ermitteln (hier Re)
   num_count_real = zeros(1, length(different_nums_real));
   for k = 1:length(different_nums_real)
     for n = 1:N
       for m = 1:N
-        if different_nums_real(k) == tw_real(m,n)
+        if different_nums_real(k) == W_r(m,n)
           num_count_real(k) = num_count_real(k) +1;
         end
       end
@@ -45,7 +59,7 @@ function dft_bewertung(N)
   for k = 1:length(different_nums_imag)
     for n = 1:N
       for m = 1:N
-        if different_nums_imag(k) == tw_imag(m,n)
+        if different_nums_imag(k) == W_i(m,n)
           num_count_imag(k) = num_count_imag(k) +1;
         end
       end

@@ -6,7 +6,7 @@ Multiplikation erfordert. Von Interesse sind aufgrund des dualen Zahlensystems M
 mit wenigen Bits darstellen lassen und andererseits nur Bit-shifting zur Folge haben. Beide Anforderungen bedingen 
 sich in der Regel gegenseitig.
 
-In der folgenden Tabelle \ref{tab:TwiddlefaktorMatrizenBewertung} werden die 8$\times$8, 9$\times$9, 12$\times$12, 15$\times$15 sowie 16$\times$16-Matrix einander gegenüber gestellt.
+In der folgenden Tabelle \ref{tab:DFT-TwiddlefaktorMatrizenBewertung} werden die 8$\times$8, 9$\times$9, 12$\times$12, 15$\times$15 sowie 16$\times$16-Matrix einander gegenüber gestellt.
 Da die Sensormatrix aus 8$\times$8 Sensoren aufgebaut ist, besteht ein Interesse an einer ungeraden Matrix. Dies hätte den Vorteil, dass
 sich über dem Mittelpunkt der Sensormatrix kein Element der Twiddlefaktormatrix befindet. Auf diese Weise ließe sich die ... einfacher ermitteln.
 Bekannt ist jedoch auch,
@@ -20,23 +20,62 @@ Die Beurteilung basiert auf dem Octave-Skript \ref{src:dft_bewertung}
   \renewcommand*{\arraystretch}{1.2} % Zeilenabstand der Tabelle
   \begin{table}[!ht]
   \centering
-  \caption{Bewertung der Twiddlefaktor-Matrizen}
-   \begin{tabular}{l|ccccc}   
-    N					& 8	& 9	& 12	& 15		& 16 \\
+  \caption{Bewertung der DFT-Twiddlefaktor-Matrizen}
+   \begin{tabular}{lccccc}
+   \hline
+    N							& 8	& 9	& 12	& 15		& 16 \\
     \hline
-    N$\times$N				& 64	& 81	& 144	& 225		& 256 \\
-    trivial $\Re$ 			& 48	& 45	& 128	& 81		& 128 \\
-    nicht triv. $\Re$			& 16	& 36	& 16	& 144		& 128 \\
-    triv. $\Im$ 			& 48	& 21	& 96	& 45		& 128 \\
-    nicht triv. $\Im$ 			& 16	& 60	& 48	& 180		& 128 \\
-    $\sum$ triv. 			& 96	& 66	& 224	& 126		& 256 \\
-    $\sum$ nicht triv. 			& 32	& 96	& 64	& 324		& 256 \\
-    Verhältnis 				& 3*	& 0,6875& 3,5	& 0,3889	& 1
+    N$\times$N						& 64	& 81	& 144	& 225		& 256 \\
+    \rowcolor{lightgray}
+    trivial $\Re$ 					& 48	& 45	& 128	& 81		& 128 \\
+    \rowcolor{lightgray}
+    nicht triv. $\Re$					& 16	& 36	& 16	& 144		& 128 \\
+    triv. $\Im$ 					& 48	& 21	& 96	& 45		& 128 \\
+    nicht triv. $\Im$ 					& 16	& 60	& 48	& 180		& 128 \\
+    \rowcolor{lightgray}
+    $\sum$ triv. 					& 96	& 66	& 224	& 126		& 256 \\
+    \rowcolor{lightgray}
+    $\sum$ nicht triv. 					& 32	& 96	& 64	& 324		& 256 \\
+    Anzahl verschiedener nicht trivialer Werte          & 1     & 7     & 1     & 13            & 3 \\
+    Verhältnis  $\sum$ trivial / $\sum$ nicht trivial	& 3	& 0,6875& 3,5	& 0,3889	& 1\\
+    \hline
    \end{tabular}
-   \label{tab:TwiddlefaktorMatrizenBewertung}
+   \label{tab:DFT-TwiddlefaktorMatrizenBewertung}
   \end{table}
  \endgroup
  \vspace{1cm}
+ 
+ 
+%   \vspace{1cm}
+%  \begingroup
+%   \renewcommand*{\arraystretch}{1.2} % Zeilenabstand der Tabelle
+%   \begin{table}[!ht]
+%   \centering
+%   \caption{Bewertung der DFT-Twiddlefaktor-Matrizen}
+%    \begin{tabular}{lccccc}
+%    \hline
+%     N					& 8	& 9	& 12	& 15		& 16 \\
+%     \hline
+%     \rowcolor{lightgray}
+%     N$\times$N				& 64	& 81	& 144	& 225		& 256 \\
+%     trivial $\Re$ 			& 48	& 45	& 128	& 81		& 128 \\
+%     nicht triv. $\Re$			& 16	& 36	& 16	& 144		& 128 \\
+%     \rowcolor{lightgray}
+%     triv. $\Im$ 			& 48	& 21	& 96	& 45		& 128 \\
+%     \rowcolor{lightgray}
+%     nicht triv. $\Im$ 			& 16	& 60	& 48	& 180		& 128 \\
+%     $\sum$ triv. 			& 96	& 66	& 224	& 126		& 256 \\
+%     $\sum$ nicht triv. 			& 32	& 96	& 64	& 324		& 256 \\
+%     \rowcolor{lightgray}
+%     Verhältnis 				& 3*	& 0,6875& 3,5	& 0,3889	& 1\\
+%     \hline
+%    \end{tabular}
+%    \label{tab:DFT-TwiddlefaktorMatrizenBewertung}
+%   \end{table}
+%  \endgroup
+%  \vspace{1cm}
+%  
+ 
  
  Als triviale Werte werden 0, $\pm$0,5 sowie $\pm$1 aufgefasst.
  Andere Werte die sich gut binär darstellen lassen
@@ -60,7 +99,7 @@ Die Beurteilung basiert auf dem Octave-Skript \ref{src:dft_bewertung}
  Hieraus resultiert, dass die Hälfte der Berechnungen der nicht trivialen Werte, die für die reelle Matrix gemacht werden müssen,
  direkt für den imaginären Anteil übernommen werden können. Die andere Hälfte muss über die Bildung des 2er-Komplements lediglich negiert werden, was ein 
  bedeutend geringerer Aufwand ist, als eine Multiplikation. 
- Deshlab ist das berechnete Verhältnis von 3 in Tabelle \ref{tab:TwiddlefaktorMatrizenBewertung} in Wirklichkeit deutlich höher und übertrifft mit 7 die 12$\times$12
+ Deshlab ist das berechnete Verhältnis von 3 in Tabelle \ref{tab:DFT-TwiddlefaktorMatrizenBewertung} in Wirklichkeit deutlich höher und übertrifft mit 7 die 12$\times$12
  Matrix um den Faktor 2. Dies gilt unter der Annahme, dass die Bildung des 2er-Komplements nicht berücksichtigt wird, was zumindest einer besseren Näherung 
  entspricht, als es als eine volle Multiplikation zu werten.
  
