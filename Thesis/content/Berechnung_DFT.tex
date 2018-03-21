@@ -61,6 +61,60 @@ Auch hier lässt sich die Berechnung in Matrizenschreibweise darstellen:
 \end{align}
 
 
+\subsection{Rein reelle 2D-DFT}
+Bei der oben beschriebenen Berechnung können die Eingangssignale auch komplex sein. Da das Ausgnagssignal der 1D-DFT unabhängig von den Eingangssignalen in jedem Fall 
+komplex ist, kann es dort direkt als Eingangssignal für die komplexe 2D-DFT genutzt werden. 
+Es wäre jedoch auch möglich, das komplexe Ausgnagssignal der 1D-DFT als zwei von einander unabhängige rein relle Eingangssignale der 2D-DFTs zu betrachten und später 
+wieder zusammen zu setzen. Hierbei können aus Symmetriegründen Multiplikationen eingespart werden. Allerdings ist es erforderlich, dass die gespiegelten Werte 
+negiert werden.
+Interessant ist dieser Ansatz dann, wenn die Recheneinheit so klein wie irgend möglich gehalten werden soll. Zu bedenken gilt es dann, dass zusätzlicher Speicher für 
+Zwischenwerte vorhanden sein muss. Da der Platzbedarf hierfür nicht zu unterschätzen ist, relativiert sich die Ersparnis in gewissen Umfang. Auf eine Gegenüberstellung
+wird an dieser Stelle verzichtet, die Berechnung als rein relles Signal wird nachfolgend gezeigt.
+
+\begin{equation}
+ x = cos(a) + j \cdot sin(b) 
+\end{equation}
+
+
+\begin{equation}
+\begin{align}
+ X1_{1D} = W \cdot cos(a)\\
+ X2_{1D} = W \cdot sin(b)
+\end{align}
+\end{equation}
+
+% \begin{equation}
+% \begin{split}
+%  X1_{1D,real} = \Re(X1_{1D}\\
+%  X1_{1D,imag} = \Im(X1_{1D}\\
+%  X2_{1D,real} = \Re(X2_{1D}\\
+%  X2_{1D,imag} = \Im(X2_{1D}
+% \end{split}
+% \end{equation}
+% 
+% \begin{equation}
+%  \begin{split}
+%   X31_{2D} = X1_{1D,real} \cdot W\\
+%   X32_{2D} = X1_{1D,imag} \cdot W\\
+%   X41_{2D} = X2_{1D,real} \cdot W\\
+%   X42_{2D} = X2_{1D,imag} \cdot W
+%  \end{split}
+% \end{equation}
+
+% \begin{equation}
+%  \begin{split}
+%   
+%  \end{split}
+% \end{equation}
+
+
+
+
+Da die gegebenen Eingangssignale aus einer Sinus- und einer Kosinuskomponente bestehen und es sich auf diese Weise als ein komplexes Signal auffassen lässt, kann die 
+komplexe Berechnung sowohl bei der 1D-DFT als auch bei der 2D-DFT genutzt werden. 
+Da hierdurch in beiden Fällen eine vollständige Auslastung einer komplexen Berechnung gegeben ist und wie bereits erwähnt bei der reellen Berechnung zusätzlicher Speicher 
+erforderlich wäre, wird dieses Verfahren angewandt.
+
 
 \subsection{Inverse DFT}
 

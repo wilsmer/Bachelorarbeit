@@ -46,41 +46,7 @@
  
   
  \chapter{Evaluation}
- \section{Simulation}
- \subsection{NC Sim - positive Zahlendarstellung}
- 
- \subsection{Anzahl benötigter Takte}
- Anhand der Simulation kann die Anzahl der vorausgesagten benötigten Takte verifiziert werden. 
- 
- Nachdem \texttt{nReset} auf '1' gesetzt wird, werden die Eingangswerte
- eingelesen. Wenn dieser Vorgang abgeschlossen ist, geht \texttt{loaded} auf '1'. Mit der nächsten steigenden Taktflanke, in Bild \ref{pic:Simulationsdauer} bei 
- \SI{340}{ns}, beginnt die Berechnung
- der \gls{2d-dft}. Beendet ist sie, nachdem die Matrizenmultiplikation auf die Eingangswerte und anschließend auf die \gls{1d-dft}-Werte angewandt wurde. Also nach $2 \cdot 64$
- einzelnen Berechnungen. Wenn dies erfolgt ist, wird \texttt{result\_ready} auf '1' gesetzt. Dies geschieht bei \SI{20\,820}{ns}. Bei einer Taktfrequenz von $(\SI{40}{ns})^{-1}$
- (siehe \ref{src:dft8_optimiert_top}) ergeben sich so 512 Takte. Dies bestätigt auch der Edge Count, ebenfalls auf dem Bild zu sehen, welcher die Flanken des \texttt{clk}-Signals 
- zählt. In der Simulation ist zu erkennen, dass die Berechnung der Elemente 
- unterschiedlich viele Takte beansprucht. Hieran lässt sich ebenfalls sehen, dass die 1. (ungerade) Zeile weniger Takte gegenüber der 2. (geraden) Zeile benötigt. 
- 
- %Auch in der Abbildung \ref{pic:Simulationsdauer} zu sehen ist, dass \texttt{element\_out} für 0 bis 7 weniger Takte einnimmt, als in den darauf folgenden 8. Dieses Muster
- %wiederholt sich und hat, wie in Abschnitt \ref{sec:berechnung_anzahl_takte} erläutert, damit zu tun, dass für die geraden
- 
- \begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.58\textwidth]{img/Simulationsdauer_Anfang.png}
-  \hfill
-  \includegraphics[width=0.161\textwidth]{img/Simulationsdauer_Mitte.png}
-  \hfill
-  \includegraphics[width=0.241\textwidth]{img/Simulationsdauer_Ende.png}
-  \caption{Simulations der 2D-DFT mit \texttt{NC Launch}}
-  \label{pic:Simulationsdauer}
- \end{figure}
-
- \begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.6\textwidth]{img/Simulation_edge_count_clk.png}
-  \caption{Edge Count für eine 2D-DFT}
- \end{figure}
-
+ \input{content/Simulation.tex}
 
  \subsection{Akkumulation von Fehlern}
  Durch die Begrenzung der Bitbreite ist es nötig nach jeder Addition den Wert zu halbieren. Hierbei steigt die Abweichung gegenüber einer verlustfreien Berechnung immer dann, 
