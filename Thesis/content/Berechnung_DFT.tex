@@ -62,14 +62,17 @@ Auch hier lässt sich die Berechnung in Matrizenschreibweise darstellen:
 
 
 \subsection{Rein reelle 2D-DFT}
-Bei der oben beschriebenen Berechnung können die Eingangssignale auch komplex sein. Da das Ausgnagssignal der 1D-DFT unabhängig von den Eingangssignalen in jedem Fall 
+Bei der oben beschriebenen Berechnung können die Eingangssignale auch komplex sein. Da das Ausgangssignal der 1D-DFT unabhängig von den Eingangssignalen in jedem Fall 
 komplex ist, kann es dort direkt als Eingangssignal für die komplexe 2D-DFT genutzt werden. 
-Es wäre jedoch auch möglich, das komplexe Ausgnagssignal der 1D-DFT als zwei von einander unabhängige rein relle Eingangssignale der 2D-DFTs zu betrachten und später 
-wieder zusammen zu setzen. Hierbei können aus Symmetriegründen Multiplikationen eingespart werden. Allerdings ist es erforderlich, dass die gespiegelten Werte 
-negiert werden.
+Es wäre jedoch auch möglich, das komplexe Ausgangssignal der 1D-DFT als zwei von einander unabhängige rein relle Eingangssignale der 2D-DFTs zu betrachten und später 
+wieder zusammen zu setzen. 
+Diese Umsetzung hat ihren Vorteil darin, dass aus Symmetriegründen die Hälfte der Multiplikationen eingespart werden können. Allerdings ist es erforderlich, dass die 
+Hälfte der gespiegelten Werte, nämlich der Imaginärteil, negiert werden muss. Da wie in Abschnitt \ref{sec:Konstantenmultiplizierer} gezeigt wird, die Multiplikation
+mit einer Konstanten innerhalb eines Taktes mit einem Schaltnetz erfolgen kann und auch die Negation einen Takt benötigt, ist hier zeitlich kein Gewinn zu erzielen.
 Interessant ist dieser Ansatz dann, wenn die Recheneinheit so klein wie irgend möglich gehalten werden soll. Zu bedenken gilt es dann, dass zusätzlicher Speicher für 
 Zwischenwerte vorhanden sein muss. Da der Platzbedarf hierfür nicht zu unterschätzen ist, relativiert sich die Ersparnis in gewissen Umfang. Auf eine Gegenüberstellung
 wird an dieser Stelle verzichtet, die Berechnung als rein relles Signal wird nachfolgend gezeigt.
+Darüber hinaus kann an dieser Stelle bereits gesagt werden, dass aufgrund der zusätzlichen Matrixmultiplikationen mehr Takte für die Berechnung der 2D-DFT benötigt werden.
 
 \begin{equation}
  x = cos(a) + j \cdot sin(b) 
