@@ -1,0 +1,107 @@
+\section{Simulation}
+ \subsection{NC Sim - positive Zahlendarstellung}
+ 
+ \subsection{Anzahl benötigter Takte}
+ Anhand der Simulation kann die Anzahl der vorausgesagten benötigten Takte verifiziert werden. 
+ 
+ Nachdem \texttt{nReset} auf '1' gesetzt wird, werden die Eingangswerte
+ eingelesen. Wenn dieser Vorgang abgeschlossen ist, geht \texttt{loaded} auf '1'. Mit der nächsten steigenden Taktflanke, in Bild \ref{pic:Simulationsdauer} bei 
+ \SI{340}{ns}, beginnt die Berechnung
+ der \gls{2d-dft}. Beendet ist sie, nachdem die Matrizenmultiplikation auf die Eingangswerte und anschließend auf die \gls{1d-dft}-Werte angewandt wurde. Also nach $2 \cdot 64$
+ einzelnen Berechnungen. Wenn dies erfolgt ist, wird \texttt{result\_ready} auf '1' gesetzt. Dies geschieht bei \SI{20\,820}{ns}. Bei einer Taktfrequenz von $(\SI{40}{ns})^{-1}$
+ (siehe \ref{src:dft8_optimiert_top}) ergeben sich so 512 Takte. Dies bestätigt auch der Edge Count, ebenfalls auf dem Bild zu sehen, welcher die Flanken des \texttt{clk}-Signals 
+ zählt. In der Simulation ist zu erkennen, dass die Berechnung der Elemente 
+ unterschiedlich viele Takte beansprucht. Hieran lässt sich ebenfalls sehen, dass die 1. (ungerade) Zeile weniger Takte gegenüber der 2. (geraden) Zeile benötigt. 
+ 
+ %Auch in der Abbildung \ref{pic:Simulationsdauer} zu sehen ist, dass \texttt{element\_out} für 0 bis 7 weniger Takte einnimmt, als in den darauf folgenden 8. Dieses Muster
+ %wiederholt sich und hat, wie in Abschnitt \ref{sec:berechnung_anzahl_takte} erläutert, damit zu tun, dass für die geraden
+ 
+ \begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.58\textwidth]{img/Simulationsdauer_Anfang.png}
+  \hfill
+  \includegraphics[width=0.161\textwidth]{img/Simulationsdauer_Mitte.png}
+  \hfill
+  \includegraphics[width=0.241\textwidth]{img/Simulationsdauer_Ende.png}
+  \caption{Simulations der 2D-DFT mit \texttt{NC Launch}}
+  \label{pic:Simulationsdauer}
+ \end{figure}
+
+ \begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.6\textwidth]{img/Simulation_edge_count_clk.png}
+  \caption{Edge Count für eine 2D-DFT}
+ \end{figure}
+
+ \subsection{Zeitabschätzung im Einsatz als ABS-Sensor}
+ Anhand der nun bekannten Größe von 512 Takten kann ermittelt werden, ob diese Implemenatation vom zeitlichen Aspekt her akzeptabel ist.
+ Da ein Einsatzszenario der ABS-Sensor ist, wird an dieser Stelle ein Blick hierauf geworfen. Da der ABS-Sensor an der Radnabe sitzt, wird 
+ hierfür die Raddrehzahl benötigt. Um diese zu ermitteln, wird von einer maximalen Geschwindikeit von $v_{max}$ = 250\,KM/h ausgegangen. 
+ Weiter wird ein realtiv kleiner Reifenumfang von ca. 1\,m angenommen. Als maximale Taktfrequenz des Sensors ist 1\,MHz vorgegeben.
+ 
+ Der Reifen hat eine Breite von 175 cm, eine Flankenhöhe von 75\,$\%$ der Breite und die Felge einen Durchmesser von 14 Zoll. Somit errechnet sich der Reifenumfang
+ gemäß (\ref{eq:Reifenumfang})
+ 
+ \begin{align}\label{eq:Reifenumfang}
+ \begin{split}
+  U &= (\SI{175}{cm} \cdot 75\% \cdot 2 + 14 \cdot \SI{2.54}{cm})\cdot \pi\\
+    &\simeq \SI{0,94}{m}
+ \end{split}
+ \end{align}
+
+ In Gleichung \ref{eq:Umdrehungen} wird die Anzahl der Radumdrehungen bei maximaler Geschwindigkeit berechnet
+ 
+ \begin{equation}\label{eq:Umdrehungen}
+  \begin{split}
+   RPM &= \dfrac{\dfrac{\SI{250}{Km/h}}{\SI{0,94}{m}}}{\SI{60}{sec}}\\
+       &= \SI{4386}{\frac{U}{min}}\\
+       &= \SI{73}{\frac{U}{sec}}
+  \end{split}
+ \end{equation}
+
+ Durch die Taktfrequenz und die benötigten Takte kann in (\ref{eq:dft_sekunde}) die maximale Anzahl der 2D-DFTs pro Sekunde errechnet werden.
+ 
+ \begin{equation}\label{eq:dft_sekunde}
+  \begin{split}
+   N_{DFT, sec} &= \frac{\SI{100}{MHz}}{\SI{512}{Takte}}\\
+                &= 195312
+  \end{split}
+ \end{equation}
+
+ Somit ist es nun möglich die unter diesen Voraussetzungen maximale Zahl der 2D-DFTs während einer Umdrehung zu bestimmen (\ref{eq:max_dft_umdrehung})
+ 
+ \begin{equation}\label{eq:max_dft_umdrehung}
+  \begin{split}
+   N_{DFT,U}  &= \frac{\SI{195312}{\frac{2D-DFT}{sec}}}{\SI{73}{\frac{U}{sec}}}\\
+              &= \SI{2675}{\frac{2D-DFT}{U}}
+  \end{split} 
+ \end{equation}
+
+ Nun kann in (\ref{eq:max_dft_winkel}) gezeigt werden, dass bei einer Winkelauflösung von $1^\circ$ knapp 7,5 2D-DFTs berechnet werden könnten. Die Dauer liegt somit 
+ gut im zeitlichen Rahmen, der vorganden ist. Darüber hinaus kann an dieser Stelle bereits gesagt werden, dass noch reichlich Zeit für andere Berechnungen vorhanden ist.
+ 
+ \begin{equation}\label{eq:max_dft_winkel}
+  \begin{split}
+   N_{DFT,1^\circ} &= \frac{\SI{2675}{\dfrac{2D-DFT}{U}}}{360^\circ}\\
+                   &= \SI{7,43}{\dfrac{2D-DFT}{1^\circ}}
+  \end{split}
+ \end{equation}
+
+ 
+ Um eine Aussage über die restliche zur Verfügung stehenden Zeit bzw. Takte machen zu können, wird in Gleichung (\ref{eq:takte_pro_winkel}) gezeigt, dass pro Winkel 
+ etwa 3800 Takte für Berechnungen zu Verfügung stehen. Somit ist gezeigt, dass für andere Aufgaben ausreichen Zeit vorhanden ist und die Implemenatation 
+ erfolgreich ist.
+ 
+ \begin{equation}\label{eq:takte_pro_winkel}
+  \begin{split}
+   N_{Takte, U} &= \frac{\SI{100}{MHz}}{73\dfrac{U}{sec}}\\
+                &= 1,37\cdot 10^6 \frac{Takte}{Umdrehung}\\
+   N_{Takte, 1^\circ} &= \frac{1,37\cdot 10^6 \dfrac{Takte}{Umdrehung}}{360^\circ}\\
+                      &\simeq 3800 \ \textrm{Takte}
+  \end{split}
+ \end{equation}
+
+ Da 512 etwa 13,5$\%$ von 3800 sind, resultiert hieraus, dass noch etwa 86,5$\%$ bzw. knapp 3300 Takte nutzbar sind.
+
+ 
+ 
