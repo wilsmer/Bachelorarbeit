@@ -93,11 +93,11 @@ Elemente einer Zeile bzw. Spalte läuft.
 Mathematisch wird die 2D-DFT als
 
 \begin{align}
- F_2 &= W \cdot S \cdot W \\
-     &= F_1 \cdot W
+ X &= W \cdot x \cdot W \\
+     &= X^* \cdot W
 \end{align}
 
-beschrieben. Es wird also erst die 1D-DFT berechnet und die sich daraus ergebende Matrix $F_1$ (Abb. \ref{eq:matrix_F1}) wird anschließend mit der Twiddlefaktor-Matrix $W$ 
+beschrieben. Es wird also erst die 1D-DFT berechnet und die sich daraus ergebende Matrix $X^*$ (Abb. \ref{eq:matrix_F1}) wird anschließend mit der Twiddlefaktor-Matrix $W$ 
 multipliziert. Man könnte es auch als zweite 1D-DFT betrachten, bei der Twiddlefaktor-Matrix und Eingangsmatrix vertauscht sind.
 
 Veranschaulicht wird dies in den Abbildungen \ref{eq:matrix_F1} und \ref{eq:matrix_F2}.
@@ -133,7 +133,7 @@ Veranschaulicht wird dies in den Abbildungen \ref{eq:matrix_F1} und \ref{eq:matr
  \renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
 
  \[
-  \stackrel{\mbox{$S$}}{
+  \stackrel{\mbox{$x$}}{
    \begin{bmatrix}
     \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh \\
     \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh \\
@@ -154,7 +154,7 @@ Veranschaulicht wird dies in den Abbildungen \ref{eq:matrix_F1} und \ref{eq:matr
 \renewcommand*{\arraystretch}{1.1} % Zeilenabstand
 \renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
 \begin{align}\label{eq:matrix_F1}
-  \stackrel{\mbox{$F_1$}}{
+  \stackrel{\mbox{$X^*$}}{
    \begin{bmatrix}
     \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
     \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
@@ -178,7 +178,7 @@ Veranschaulicht wird dies in den Abbildungen \ref{eq:matrix_F1} und \ref{eq:matr
  \renewcommand*{\arraycolsep}{0.0pt} % Spaltenabstand
 
  \[
-  \stackrel{\mbox{$F_1$}}{
+  \stackrel{\mbox{$X^*$}}{
    \begin{bmatrix}
     \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
     \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
@@ -221,7 +221,7 @@ Veranschaulicht wird dies in den Abbildungen \ref{eq:matrix_F1} und \ref{eq:matr
 \renewcommand*{\arraystretch}{1.1} % Zeilenabstand
 \renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
 \begin{align}\label{eq:matrix_F2}
-  \stackrel{\mbox{$F_2$}}{
+  \stackrel{\mbox{$X$}}{
    \begin{bmatrix}
     \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
     \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\

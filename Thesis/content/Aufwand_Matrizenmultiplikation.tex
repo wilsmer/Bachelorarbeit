@@ -1,84 +1,55 @@
 \section{Abschätzung des Rechenaufwandes}\label{sec:abschaetzung_Rechenaufwand}
-\subsection{Komplexe Multiplikation}
-
-Im allgemeinen Fall müssen gemäß Gl. \ref{eq:komplexe_Multiplikation} bei der komplexen Multiplikation vier einfache Multiplikation sowie zwei Additionen durchgeführt werden.
-
-\begin{align}\label{eq:komplexe_Multiplikation}
-\begin{split}
- e + jf &= (a + jb) \cdot (c + jd)\\
-        &= a \cdot c + j(a \cdot d) + j(b \cdot c) + j^2(b \cdot d)\\
-        &= a \cdot c + b \cdot d + j(a \cdot d + b \cdot c)
-\end{split}
-\end{align}
-
-
-Da das Signal $x_{sens}(t)$ der Sensoren rein reell ist, reduziert sich der Aufwand wie in Gl. \ref{eq:halb_komplexe_Multiplikation} zu sehen auf zwei Multiplikationen und eine Addition.
-
-\begin{align}\label{eq:halb_komplexe_Multiplikation}
-\begin{split}
- e + jf &= a \cdot (c + jd)\\
-        &= a \cdot c + j(a \cdot d)\\
-\end{split}
-\end{align}
-
-Wie bereits unter \ref{sec:AnalyseBewertungTwiddlefaktornMatrizen} auf Seite \pageref{sec:AnalyseBewertungTwiddlefaktornMatrizen} erörtert, kann sogar die komplexe 
-Twiddlefaktor-Matrix in diesem speziellen Fall als rein reell betrachtet werden. Somit bleibt von der anfangs komplexen Multiplikation nur eine rein reelle Multiplikation und
-in 50$\percent$ der Fälle die Bildung des 2er-Komplements übrig, was erheblich Rechenaufwand erspart.
-
-\begin{equation}
- X_{Sens}(f) = W \cdot x_{Sens}(t) \quad \textnormal{: ``rein reell''}
-\end{equation}
-  
 
 \subsection{Matrizenmultiplikation}
+
 Die \gls{dft} kann als Summation oder als Matrixmultiplikation geschrieben werden, wobei sich letzteres auf einem \gls{asic} bedeutend besser implementieren lässt. 
 Gleichung \ref{eq:dft_matrixmultiplication} stellt die \gls{dft} als Matrizenmultiplikation dar, wobei $x(t)$ der Eingangsvektor (bzw. -matrix) im Zeitbereich und $W$ 
 die Twiddlefaktormatrix ist.
 
 \begin{align}\label{eq:dft_matrixmultiplication}
- X(f) = F(k) = W \cdot x(t) = W \cdot f(m)
+ X = W \cdot x \cdot W = X^* \cdot W
 \end{align}
 
-
-Betrachtet wird zunächst die Multiplikation eines Vektors mit einer Matrix. 
-
-\begingroup
-\renewcommand*{\arraystretch}{1.0}
-
- \[
-  \stackrel{\mbox{$X(f) = \mathcal{F}\{x(t)\}$}}{
-  \begin{bmatrix}%
-   \myBlackBox \\
-   \myLightgrayBox \\
-   \myLightgrayBox \\
-   \myLightgrayBox
-  \end{bmatrix}
-  }
-  =
-  \stackrel{\mbox{$W$}}{
-   \begin{bmatrix}
-    \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
-    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
-    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
-    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox
-   \end{bmatrix}
-  }
-  \cdot
-  \stackrel{\mbox{$x(t)$}}{
-   \begin{bmatrix}
-    \myBlackBox \\
-    \myBlackBox \\
-    \myBlackBox \\
-    \myBlackBox
-   \end{bmatrix}
-  }
- \]
-\endgroup
-
- \vspace{1cm}  
+% 
+% Betrachtet wird zunächst die Multiplikation eines Vektors mit einer Matrix. 
+% 
+% \begingroup
+% \renewcommand*{\arraystretch}{1.0}
+% 
+%  \[
+%   \stackrel{\mbox{$X^*$}}{
+%   \begin{bmatrix}%
+%    \myBlackBox \\
+%    \myLightgrayBox \\
+%    \myLightgrayBox \\
+%    \myLightgrayBox
+%   \end{bmatrix}
+%   }
+%   =
+%   \stackrel{\mbox{$W$}}{
+%    \begin{bmatrix}
+%     \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
+%     \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+%     \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+%     \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox
+%    \end{bmatrix}
+%   }
+%   \cdot
+%   \stackrel{\mbox{$x$}}{
+%    \begin{bmatrix}
+%     \myBlackBox \\
+%     \myBlackBox \\
+%     \myBlackBox \\
+%     \myBlackBox
+%    \end{bmatrix}
+%   }
+%  \]
+% \endgroup
+% 
+%  \vspace{1cm}  
   
  \[
-  \stackrel{\mbox{$X(f) = \mathcal{F}\{x(t)\}$}}{
+  \stackrel{\mbox{$X^*$}}{
    \begin{bmatrix}
     \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
     \myDarkgrayBox 	& \myDarkgrayBox 	& \myDarkgrayBox 	& \myDarkgrayBox \\
@@ -96,7 +67,7 @@ Betrachtet wird zunächst die Multiplikation eines Vektors mit einer Matrix.
    \end{bmatrix}
   }
   \cdot
-  \stackrel{\mbox{$x(t)$}}{
+  \stackrel{\mbox{$x$}}{
    \begin{bmatrix}
     \myBlackBox & \myBlackBox & \myBlackBox & \myBlackBox \\
     \myBlackBox & \myBlackBox & \myBlackBox & \myBlackBox \\
@@ -106,12 +77,9 @@ Betrachtet wird zunächst die Multiplikation eines Vektors mit einer Matrix.
   }
  \]
 
- \[
-  X(f)' = F(k,l) = W \cdot F(k) = W \cdot x(t) \cdot W
- \]
  
  \[
-  \stackrel{\mbox{$X(f)' = \mathcal{F}\{X(f)\}'$}}{
+  \stackrel{\mbox{$X$}}{
    \begin{bmatrix}
     \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
     \myDarkgrayBox 	& \myDarkgrayBox 	& \myDarkgrayBox 	& \myDarkgrayBox \\
@@ -120,7 +88,7 @@ Betrachtet wird zunächst die Multiplikation eines Vektors mit einer Matrix.
    \end{bmatrix}
   }
   =
-  \stackrel{\mbox{$X(f)$}}{
+  \stackrel{\mbox{$X^*$}}{
    \begin{bmatrix}
     \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
     \myDarkgrayBox 	& \myDarkgrayBox 	& \myDarkgrayBox 	& \myDarkgrayBox \\
