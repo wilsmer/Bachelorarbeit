@@ -1,0 +1,21 @@
+\section{Komplexe Multiplikation}
+
+Im allgemeinen Fall müssen gemäß Gl. \ref{eq:komplexe_Multiplikation} bei der komplexen Multiplikation vier einfache Multiplikation sowie zwei Additionen durchgeführt werden.
+
+\begin{align}\label{eq:komplexe_Multiplikation}
+\begin{split}
+ e + jf &= (a + jb) \cdot (c + jd)\\
+        &= a \cdot c + j(a \cdot d) + j(b \cdot c) + j^2(b \cdot d)\\
+        &= a \cdot c + b \cdot d + j(a \cdot d + b \cdot c)
+\end{split}
+\end{align}
+
+
+Da das Signal $x_{sens}(t)$ der Sensoren rein reell ist, reduziert sich der Aufwand wie in Gl. \ref{eq:halb_komplexe_Multiplikation} zu sehen auf zwei Multiplikationen und eine Addition.
+
+\begin{align}\label{eq:halb_komplexe_Multiplikation}
+\begin{split}
+ e + jf &= a \cdot (c + jd)\\
+        &= a \cdot c + j(a \cdot d)\\
+\end{split}
+\end{align}
