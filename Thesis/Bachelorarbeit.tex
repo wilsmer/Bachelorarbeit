@@ -7,8 +7,6 @@
  \pagenumbering{Roman} 
  \tableofcontents
  
-
- \printglossary[title={Abkürzungsverzeichnis}] 
  %\setcounter{page}{1}
  
  
@@ -19,6 +17,7 @@
  \chapter{Grundlagen}
  \input{content/Zahlendarstellung.tex}
  \input{content/Komplexe_Multiplikation.tex}
+ \input{content/Matrixmultiplikation.tex}
  \input{content/Fouriertransformation.tex}
  \input{content/Berechnung_DFT.tex} 
  \input{content/Berechnung_FFT.tex}
@@ -66,19 +65,20 @@
  \subsection{Struktogramm des Testablaufs}
  \subsection{Reale Eingangswerte}
  
- \section{Anzahl Standardzellen}
- %\subsection{Beschreibung}
- \subsection{1D / 2D}
- \subsection{3 Lagen / 4 Lagen}
- \section{Visualisierung der Netzliste}
- \section{Floorplan, Padring}
+ \section{Chipdesign}
+ \subsection{Anzahl Standardzellen}
+ \subsubsection{Benötigte Standardzellen für 1D / 2D}
+ \subsubsection{Benötigte Standardzellen bei 3 Lagen / 4 Lagen}
+ \subsection{Visualisierung der Netzliste}
+ \subsection{Floorplan, Padring}
  
  \chapter{Schlussfolgerungen}
  \section{Zusammenfassung}
  \section{Bewertung und Fazit}
- 
  \section{Ausblick}
  
+ 
+ \printglossary[title={Abkürzungsverzeichnis}] 
  
  \listoffigures
  \addcontentsline{toc}{chapter}{\listfigurename}

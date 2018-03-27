@@ -3,101 +3,19 @@
 \section{Direkte Weiterverarbeitung der Zwischenergebnisse}
 Um die Anzahl an Gattern und somit den Flächenbedarf zu reduzieren ist es das Ziel, die Ergebnisse der \gls{1d-dft} aus der 1. Berechnungsstufe im nächsten Schritt direkt als 
 Eingangswerte für die \gls{2d-dft} zu verwenden. Auf diese Weise würden 64$\cdot$2$\cdot$12 Bit = 1536 Bit = 1,5kBit = 192 Byte an Speicher eingespart werden.
+Wie sich im Laufe der Entwicklung gezeigt hat, lässt sich das nicht nutzen. Das liegt daran, dass dazu übergegangen wurde, immer nur ein Element zur Zeit berechnet wird und die 
+bereits errechneten demnach zwischengespeichert werden müssen. Dieser Ansatz wurde verfolgt, da der Entwicklungsaufwand in VHDL für die spaltenweise Berechnung der Ausgangswerte 
+einfacher umzusetzen war und es zunächst nur um die mathematische Umsetzung und nicht um die Platzeffizienz auf einem Chip ging.
 
-\subsection{Matrizenmultiplikation}
+Unklar war zu diesem Zeitpunkt noch, wie der Speicher realisiert werden soll. In der finalen Variante des Chips soll es einen \gls{ram} geben, der als zentraler
+Speicher von allen Komponenten genutzt wird. Da die Entwicklung im Projekt noch nicht soweit fortgeschritten ist und dies nicht zu den Aufgaben der vorliegenden Arbeit gehört,
+wurde auf das Speichern in lokalen Speicherzellen ausgewichen, welche als Variable oder Signal im VHDL-Code definiert und von der Software als Flip-Flop synthetisiert werden.
 
-Um die nachfolgenden Abschnitte besser erörten zu können, soll zunächst die Matrizenmultiplikation besprochen werden.
-Wie in Abbildung \ref{eq:grafikMatrizenmultiplikation} verdeutlicht, wird Element$(i,j)$ der Ergebnismatrix dadurch berechnet, dass die Elemente$(i,k)$ einer Zeile der 1. Matrix
-mit den Elementn$(k,j)$ aus der zweiten Matrix multipliziert und die Werte aufsummiert werden. $i$ und $j$ sind für die Berechnung eines Elements konstant, während $k$ über alle
-Elemente einer Zeile bzw. Spalte läuft.
-
-\begin{center}
- 
-\begin{minipage}{0.2\textwidth}
- \begingroup
- \renewcommand*{\arraystretch}{1.1} % Zeilenabstand
- \renewcommand*{\arraycolsep}{0.0pt} % Spaltenabstand
-
- \[
-    \begin{bmatrix}
-    \tikzmark{varrowtopleft} \myBlackBox  	& \myBlackBox 		& \myBlackBox 		& \tikzmark{varrowtopright} \myBlackBox \\
-                             \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
-                             \myLightgrayBox 	& \myLightgrayBox	& \myLightgrayBox	& \myLightgrayBox \\
-    \tikzmark{varrowbottom}  \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
-   \end{bmatrix}
- \]
- \endgroup
-  \tikz[overlay,remember picture] {
-  \draw[->] ([yshift=1.5ex,xshift=-2ex]varrowtopleft) -- ([xshift=-2ex]varrowbottom)
-            node[midway,left] {$i$};
-  \draw[->] ([xshift=2ex,yshift=4ex]varrowtopleft) -- ([yshift=4ex]varrowtopright)
-            node[midway,above] {$k$};
-}
-\end{minipage}
-\begin{minipage}{0.1\textwidth}
- \hspace{-.5cm}
- \[
-  \cdot
- \]
-\end{minipage}
-\begin{minipage}{0.2\textwidth}
- \begingroup
- \renewcommand*{\arraystretch}{0.0} % Zeilenabstand
- \renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
- \[
-   \begin{bmatrix}
-    \tikzmark{varrowtopleft} \myLightgrayBoxHigh & \myBlackBoxHigh & \myLightgrayBoxHigh & \tikzmark{varrowtopright} \myLightgrayBoxHigh \\
-                             \myLightgrayBoxHigh & \myBlackBoxHigh & \myLightgrayBoxHigh & \myLightgrayBoxHigh \\
-                             \myLightgrayBoxHigh & \myBlackBoxHigh & \myLightgrayBoxHigh & \myLightgrayBoxHigh \\
-    \tikzmark{varrowbottom}  \myLightgrayBoxHigh & \myBlackBoxHigh & \myLightgrayBoxHigh & \myLightgrayBoxHigh 
-   \end{bmatrix}
- \]
- \endgroup
-   \tikz[overlay,remember picture] {
-  \draw[->] ([yshift=1.5ex,xshift=-2ex]varrowtopleft) -- ([xshift=-2ex]varrowbottom)
-            node[midway,left] {$k$};
-  \draw[->] ([xshift=2ex,yshift=4ex]varrowtopleft) -- ([yshift=4ex]varrowtopright)
-            node[midway,above] {$j$};
-}
-\end{minipage}
-\begin{minipage}{0.05\textwidth}
- \[
-  =
- \]
-\end{minipage}
-\begin{minipage}{0.3\textwidth}
-\begingroup
-\renewcommand*{\arraystretch}{1.1} % Zeilenabstand
-\renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
-\begin{align}\label{eq:grafikMatrizenmultiplikation}
-   \begin{bmatrix}
-    \tikzmark{varrowtopleft} \myLightgrayBox 	& \myBlackBox		& \myLightgrayBox 	& \tikzmark{varrowtopright} \myLightgrayBox \\
-                             \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
-                             \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
-    \tikzmark{varrowbottom}  \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
-   \end{bmatrix}
- \end{align} 
- \endgroup
-    \tikz[overlay,remember picture] {
-  \draw[->] ([yshift=1.5ex,xshift=-2ex]varrowtopleft) -- ([xshift=-2ex]varrowbottom)
-            node[midway,left] {$i$};
-  \draw[->] ([xshift=2ex,yshift=4ex]varrowtopleft) -- ([yshift=4ex]varrowtopright)
-            node[midway,above] {$j$};
-}
-\end{minipage}
-\end{center}
 
 
 \subsection{Veranschaulichung 2D-DFT als Matrizenmultiplikation}
-
-Mathematisch wird die 2D-DFT als
-
-\begin{align}
- X &= W \cdot x \cdot W \\
-     &= X^* \cdot W
-\end{align}
-
-beschrieben. Es wird also erst die 1D-DFT berechnet und die sich daraus ergebende Matrix $X^*$ (Abb. \ref{eq:matrix_F1}) wird anschließend mit der Twiddlefaktor-Matrix $W$ 
+Wie in Gleichung (\ref{eq:2D-DFT_MatrixMult}) beschrieben, kann die 2D-DFT als ``doppelte'' Matrizenmultiplikation geschrieben werden.
+Es wird also erst die 1D-DFT berechnet und die sich daraus ergebende Matrix $X^*$ (Abb. \ref{eq:matrix_F1}) wird anschließend mit der Twiddlefaktor-Matrix $W$ 
 multipliziert. Man könnte es auch als zweite 1D-DFT betrachten, bei der Twiddlefaktor-Matrix und Eingangsmatrix vertauscht sind.
 
 Veranschaulicht wird dies in den Abbildungen \ref{eq:matrix_F1} und \ref{eq:matrix_F2}.
@@ -244,7 +162,7 @@ einzelnd berechnet werden, wird sinngemäß der gemeinsame Faktor ausgeklammert,
 
 
 
-\section{Ungleiche Bitbreiten bei gerader / ungerader Zeile}
+\section{Berechnungsschema der geraden und ungeraden Zeilen}
 
 Berechnung ungerader Zeilen am Beispiel der ersten:
 \begin{center}
@@ -255,19 +173,19 @@ $a_{k0} + a_{k1} + a_{k2} + a_{k3} + a_{k4} + a_{k5} + a_{k6} + a_{k7}$\\
 
 \begin{tabular}{ccccccccc}
 Takt&\multicolumn{6}{l}{ } & & Bit\\
-&$\underbrace{a_{k0} + a_{k1}}$ &  &$ \underbrace{a_{k2} + a_{k3}}$ &  &$\underbrace{a_{k4} + a_{k5}}$ &  &$\underbrace{a_{k6} + a_{k7}}$ & 12\\
-2&\multicolumn{7}{l}{$\hspace{0.65cm} \Downarrow \hspace{2.3cm} \Downarrow \hspace{2.3cm} \Downarrow \hspace{2.3cm}\Downarrow$}&\\
-&\multicolumn{3}{c}{$\underbrace{sum\_s1\_1 \quad + \quad sum\_s1\_2}$} & & \multicolumn{3}{c}{$\underbrace{sum\_s1\_3 \quad + \quad sum\_s1\_4}$} & 13\\
-3&\multicolumn{3}{c}{$\Downarrow$} & & \multicolumn{3}{c}{$\Downarrow$}&\\
-&\multicolumn{7}{c}{$\underbrace{sum\_s2\_1 \quad  \quad \quad \quad + \quad \quad \quad  \quad sum\_s2\_2}$} & 14\\
-4&\multicolumn{7}{c}{$\Downarrow$}&\\
-&\multicolumn{7}{c}{$sum\_s3\_1$} & 15\\
+1&$\underbrace{a_{k0} + a_{k1}}$ &  &$ \underbrace{a_{k2} + a_{k3}}$ &  &$\underbrace{a_{k4} + a_{k5}}$ &  &$\underbrace{a_{k6} + a_{k7}}$ & 12\\
+&\multicolumn{7}{l}{$\hspace{0.65cm} \Downarrow \hspace{2.5cm} \Downarrow \hspace{2.5cm} \Downarrow \hspace{2.5cm}\Downarrow$}&13\\
+2&\multicolumn{3}{c}{$\underbrace{sum\_s1\_1 \quad + \quad sum\_s1\_2}$} & & \multicolumn{3}{c}{$\underbrace{sum\_s1\_3 \quad + \quad sum\_s1\_4}$} & 12\\
+&\multicolumn{3}{c}{$\Downarrow$} & & \multicolumn{3}{c}{$\Downarrow$}&13\\
+3&\multicolumn{7}{c}{$\underbrace{sum\_s2\_1 \quad  \quad \quad \quad + \quad \quad \quad  \quad sum\_s2\_2}$} & 12\\
+&\multicolumn{7}{c}{$\Downarrow$}&13\\
+&\multicolumn{7}{c}{$sum\_s3\_1$} & 12\\
 &\end{tabular}
 
 \vspace{0.5cm}
 
-$\Rightarrow$ 3 Takte, 1. und 5. Leerlauf
-
+Wie der linken Spalte zu entnehmen ist, werden 3 Takte für die Berechnungen der Werte aus den ungeraden Spalten der Eingangsmatrix bzw. ungeraden Zeilen der 1D-DFT-Matrix benötigt.
+1. Takt für Additionen bzw. Subtraktionen und 2. sowie 3. Takt für das Aufsummieren.
 \vspace{1cm}
 
 Berechnung gerader Zeilen am Beispiel der zweiten:
@@ -280,22 +198,29 @@ Berechnung gerader Zeilen am Beispiel der zweiten:
 
 \begin{tabular}{ccccccccccccc}
 Takt&\multicolumn{11}{c}{}&Bit\\
-&$\underbrace{a_0 - x_1}$ &  &$ \underbrace{x_0 - b_2}$ &  &$\underbrace{x_2 - x_3}$ &  &$\underbrace{a_4 - x_5}$ &  &$\underbrace{x_4 - b_6}$ &  &$\underbrace{x_6 - x_7}$&12\\
-2&\multicolumn{11}{l}{$\hspace{0.5cm} \Downarrow \hspace{1.75cm} \Downarrow \hspace{1.8cm} \Downarrow \hspace{1.75cm}\Downarrow \hspace{1.75cm}\Downarrow \hspace{1.8cm}\Downarrow$}&\\
-&\multicolumn{3}{c}{$\underbrace{s1\_1 \quad + \quad s1\_2}$} & & \multicolumn{3}{c}{$\underbrace{s1\_3 \quad + \quad s1\_4}$} & & \multicolumn{3}{c}{$\underbrace{s1\_5 \quad + \quad s1\_6}$}&13\\
-3&\multicolumn{3}{c}{$\Downarrow$} & & \multicolumn{3}{c}{$\Downarrow$} & & \multicolumn{3}{c}{$\Downarrow$}&\\
-&\multicolumn{7}{c}{$\underbrace{s2\_1 \quad  \quad \quad \quad + \quad \quad \quad  \quad s2\_2}$} & & \multicolumn{3}{c}{$s2\_3$}&14\\
-4&\multicolumn{7}{c}{$\Downarrow$}& & \multicolumn{3}{c}{$\Downarrow$}&\\
-&\multicolumn{7}{c}{$s3\_1$}& & \multicolumn{3}{c}{$\Downarrow$}&15\\
-&\multicolumn{2}{c}{}& \multicolumn{9}{c}{$\underbrace{\quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad}$}&\\
-5&\multicolumn{2}{c}{}& \multicolumn{9}{c}{$\Downarrow$}&\\
-&\multicolumn{2}{c}{}& \multicolumn{9}{c}{$s4\_1$}&16
+1 &$\underbrace{a_0 - x_1}$ &        &$ \underbrace{x_0 - b_2}$ &  &$\underbrace{x_2 - x_3}$ &  &$\underbrace{a_4 - x_5}$ &  &$\underbrace{x_4 - b_6}$ &$\underbrace{x_6 - x_7}$& &12\\
+  &\multicolumn{11}{l}{$\hspace{0.5cm} \Downarrow \hspace{1.75cm} \Downarrow \hspace{2.4cm} \Downarrow \hspace{1.8cm}\Downarrow \hspace{1.8cm}\Downarrow \hspace{1.4cm}\Downarrow$}&13\\
+2 &\multicolumn{3}{c}{$\underbrace{s1\_1 \quad + \quad s1\_2}$} & & \multicolumn{3}{c}{$\underbrace{s1\_3 \quad + \quad s1\_4}$} &\multicolumn{3}{c}{$\quad \underbrace{s1\_5 \quad + \quad s1\_6}$}& &12\\
+  &\multicolumn{3}{c}{$\Downarrow$}  & & \multicolumn{3}{c}{$\Downarrow$} & & \multicolumn{2}{c}{$\Downarrow$}& &13\\
+3 &\multicolumn{7}{c}{$\underbrace{s2\_1 \quad  \quad \quad \quad + \quad \quad \quad  \quad s2\_2}$} & & & & &12\\
+  &\multicolumn{7}{c}{$\Downarrow$}& & \multicolumn{2}{c}{$\Downarrow$}& &13\\
+  &\multicolumn{7}{c}{$s3\_1$}& & & & &13\\
+  & & & & $\Downarrow$& & & & & \multicolumn{2}{c}{$\Downarrow$} & & 13\\
+4 & & & & $\frac{\sqrt{2}}{2}$&\multicolumn{5}{c}{}& & &13\\
+  & & & & $\Downarrow$& & & & & \multicolumn{2}{c}{$\Downarrow$ }& & 26\\
+5 & & & \multicolumn{9}{c}{$\underbrace{s4\_1 \:  \quad \quad \quad \quad \quad \quad + \quad \quad \quad \quad \quad \quad   s2\_3}$} &12\\
+  & & & \multicolumn{9}{c}{$\Downarrow$}&13\\
+  & & & \multicolumn{9}{c}{$s5\_1$}&12\\
 \end{tabular}
 
+\vspace{1cm}
+Auch hier ist der linken Spalte die Anzahl der benötigten Takte zu entnehmen. In diesem Fall werden 5 Takte für die Berechnungen benötigt. Diese setzen sich zusammen aus
+1 Takt für Additionen bzw. Subtraktionen, 2.-3. sowie 5. Takt für das Aufsummieren und der 4. Takt für die Multiplikationen.
 
-$\Rightarrow$ 5 Takte, 1. Multiplikationen, 2.-5. Additionen
-
- 
+Wie rechts am Rand zu sehen, ergibt sich durch die Addition eine Bitbreitenerweiterung um 1 bzw. bei der Multiplikation eine Verdoppelung. Bei einer früheren 
+Implementierung, die nur die 1D-DFT beherrschte, wurde zumindest die Erweiterung bei der Addition umgesetzt. Da bei der 2D-DFT die selbe Recheneinheit genutzt 
+werden soll, wurde in Absprache mit dem ISAR-Team entschieden, dass die Summanden vor jeder Summation durch einen Bitshift nach rechts halbiert werden. Auf diese
+Weise hat ein Additionsergebnis immer 13 Bit Breite. Durch den Bitshift kann das Resultat der 1D-DFT direkt als Eingang für die 2D-DFT verwendet werden. 
 
 \section{Struktogramm}
 

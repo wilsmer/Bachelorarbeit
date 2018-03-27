@@ -1,114 +1,35 @@
 \section{Abschätzung des Rechenaufwandes}\label{sec:abschaetzung_Rechenaufwand}
 
-\subsection{Matrizenmultiplikation}
+\subsection{Gegenüberstellung reelle / komplexe Eingangswerte}
+Die Sensormatrix liefert für jedes Sensorelement einen Sinus- und einen Kosinuswert. Diese können für die Berechnung der DFT zu einer komplexen Zahl zusammengefasst werden. 
+Auf diese Weise lässt sich die Berechnung mathematisch kompakter schreiben. Dadurch, dass eine komplexe Multiplikation, wie in Gleichung (\ref{eq:komplexe_Multiplikation}) 
+gezeigt wurde, auf vier reellen Multiplikationen basiert,
+ist es jedoch so, dass die Anzahl reeller Multiplikationen hierdurch derer bei der getrennten Berechnung und anschließenden Zusammenführung übersteigt.
 
-Die \gls{dft} kann als Summation oder als Matrixmultiplikation geschrieben werden, wobei sich letzteres auf einem \gls{asic} bedeutend besser implementieren lässt. 
-Gleichung \ref{eq:dft_matrixmultiplication} stellt die \gls{dft} als Matrizenmultiplikation dar, wobei $x(t)$ der Eingangsvektor (bzw. -matrix) im Zeitbereich und $W$ 
-die Twiddlefaktormatrix ist.
+Beweisen!
 
-\begin{align}\label{eq:dft_matrixmultiplication}
- X = W \cdot x \cdot W = X^* \cdot W
+
+
+Wenn das Signal der Sensoren als von einander unabhängige Sinus- und Kosinuswerte  und somit als rein reell aufgefasst wird, reduziert sich der Aufwand wie 
+bei dieser Betrachtung wie in Gl. (\ref{eq:halb_komplexe_Multiplikation}) zu sehen auf zwei Multiplikationen und eine Addition. 
+
+\begin{align}\label{eq:halb_komplexe_Multiplikation}
+\begin{split}
+ e + jf &= a \cdot (c + jd)\\
+        &= a \cdot c + j(a \cdot d)\\
+\end{split}
 \end{align}
 
-% 
-% Betrachtet wird zunächst die Multiplikation eines Vektors mit einer Matrix. 
-% 
-% \begingroup
-% \renewcommand*{\arraystretch}{1.0}
-% 
-%  \[
-%   \stackrel{\mbox{$X^*$}}{
-%   \begin{bmatrix}%
-%    \myBlackBox \\
-%    \myLightgrayBox \\
-%    \myLightgrayBox \\
-%    \myLightgrayBox
-%   \end{bmatrix}
-%   }
-%   =
-%   \stackrel{\mbox{$W$}}{
-%    \begin{bmatrix}
-%     \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
-%     \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
-%     \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
-%     \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox
-%    \end{bmatrix}
-%   }
-%   \cdot
-%   \stackrel{\mbox{$x$}}{
-%    \begin{bmatrix}
-%     \myBlackBox \\
-%     \myBlackBox \\
-%     \myBlackBox \\
-%     \myBlackBox
-%    \end{bmatrix}
-%   }
-%  \]
-% \endgroup
-% 
-%  \vspace{1cm}  
-  
- \[
-  \stackrel{\mbox{$X^*$}}{
-   \begin{bmatrix}
-    \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
-    \myDarkgrayBox 	& \myDarkgrayBox 	& \myDarkgrayBox 	& \myDarkgrayBox \\
-    \myGrayBox 		& \myGrayBox 		& \myGrayBox 		& \myGrayBox \\
-    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
-   \end{bmatrix}
-  }
-  =
-  \stackrel{\mbox{$W$}}{
-   \begin{bmatrix}
-    \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
-    \myDarkgrayBox 	& \myDarkgrayBox 	& \myDarkgrayBox 	& \myDarkgrayBox \\
-    \myGrayBox 		& \myGrayBox 		& \myGrayBox 		& \myGrayBox \\
-    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
-   \end{bmatrix}
-  }
-  \cdot
-  \stackrel{\mbox{$x$}}{
-   \begin{bmatrix}
-    \myBlackBox & \myBlackBox & \myBlackBox & \myBlackBox \\
-    \myBlackBox & \myBlackBox & \myBlackBox & \myBlackBox \\
-    \myBlackBox & \myBlackBox & \myBlackBox & \myBlackBox \\
-    \myBlackBox & \myBlackBox & \myBlackBox & \myBlackBox 
-   \end{bmatrix}
-  }
- \]
+Es ist somit auch an dieser Stelle noch einmal gezeigt worden, dass keine imaginären Anteile des Eingangssignals in die Berechnung mit einfließen.
+Das ließe sich ausnutzen, um durch expliziet einprogrammierte Multiplikationen den Aufwand deutlich zu verringern. Wie in Abschnitt (\ref{sec:rein_reelle_dft})
+%sowie Grafik (\ref{pic:reelleDFT}) 
+erläutert wurde, können zudem noch weitere Multiplikationen durch symmetrische Spiegelung der Hälfte der Werte eingespart werden.
 
- 
- \[
-  \stackrel{\mbox{$X$}}{
-   \begin{bmatrix}
-    \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
-    \myDarkgrayBox 	& \myDarkgrayBox 	& \myDarkgrayBox 	& \myDarkgrayBox \\
-    \myGrayBox 		& \myGrayBox 		& \myGrayBox 		& \myGrayBox \\
-    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
-   \end{bmatrix}
-  }
-  =
-  \stackrel{\mbox{$X^*$}}{
-   \begin{bmatrix}
-    \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
-    \myDarkgrayBox 	& \myDarkgrayBox 	& \myDarkgrayBox 	& \myDarkgrayBox \\
-    \myGrayBox 		& \myGrayBox 		& \myGrayBox 		& \myGrayBox \\
-    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
-   \end{bmatrix}
-  }
-  \cdot
-  \stackrel{\mbox{$W$}}{
-   \begin{bmatrix}
-    \myBlackBox & \myBlackBox & \myBlackBox & \myBlackBox \\
-    \myBlackBox & \myBlackBox & \myBlackBox & \myBlackBox \\
-    \myBlackBox & \myBlackBox & \myBlackBox & \myBlackBox \\
-    \myBlackBox & \myBlackBox & \myBlackBox & \myBlackBox 
-   \end{bmatrix}
-  }
- \]
+\subsection{2D-DFT als Matrixmultiplikation}
+Die \gls{dft} kann als Summation oder als Matrixmultiplikation geschrieben werden, wobei sich letzteres auf einem \gls{asic} bedeutend besser implementieren lässt. 
  
 
-  \subsection{Gegenüberstellung Butterfly / Matrixmultiplipation} 
+\subsection{Gegenüberstellung Butterfly / Matrixmultiplikation} 
   Die \gls{dft} wurde als Matrixmultiplikation implementiert, nachfolgend soll dies begründet und ein Vergleich beider Varianten erfolgen.
   
   Zu einem frühen Zeitpunkt der Überlegungen 
@@ -120,14 +41,6 @@ die Twiddlefaktormatrix ist.
   
   Die Implementierung des Butterfly-Algorithmus nach Cooley und Tukey stellt eine effiziente Berechnung der \gls{dft} dar. 
   
-  
-  \subsection{Gegenüberstellung reelle / komplexe Eingangswerte}
-  Die Sensormatrix liefert für jeden Pixel einen Sinus- und Kosinuswert. Diese können für die Berechnung der DFT zu einer komplexen Zahl zusammengefasst werden. 
-  Auf diese Weise lässt sich die Berechnung mathematisch kompakter schreiben. Dadurch, dass eine komplexe Multiplikation auf vier reellen Multiplikationen basiert,
-  ist es jedoch möglich, dass die Anzahl reeller Multiplikationen hierdurch derer bei der getrennten Berechnung und anschließenden Zusammenführung übersteigt.
-  
-  Bei der Berechnung der DFT 
- 
   
  \subsection{Anzahl der benötigten Multiplikationen}
  \subsection{Optimierte Matrixmultiplipation bezogen auf 8x8}
