@@ -158,7 +158,9 @@ Veranschaulicht wird dies in den Abbildungen \ref{eq:matrix_F1} und \ref{eq:matr
 Aus der anfänglichen Implementation bei der alle Werte einer Berechnung die entweder mit $+\frac{\sqrt{2}}{2}$ oder $-\frac{\sqrt{2}}{2}$ multipliziert werden müssen 
 einzelnd berechnet werden, wird sinngemäß der gemeinsame Faktor ausgeklammert, sodass nur noch jeweils eine Multiplikation erforderlich ist.
 
-
+Da die erste Zeile der Twiddlefaktor-Matrix nur aus Einsen im Real- und Nullen im Imaginärteil besteht, kann und muss hier nichts optimiert werden. 
+Bei den weiteren Zeilen sind hingegen die Zahlen zur Hälfte positiv und zur anderen negativ. Außerdem enthalten die geraden Zeilen den Faktor $\pm\frac{\sqrt{2}}{2}$. 
+Dies lässt sich ausnutzen, um die Anzahl der der Multiplikationen zu reduzieren. Zunächst können die 
 
 
 
@@ -170,7 +172,7 @@ $a_{k0} + a_{k1} + a_{k2} + a_{k3} + a_{k4} + a_{k5} + a_{k6} + a_{k7}$\\
 \end{center}
 %\hrule
 \vspace{0.5cm}
-
+\begin{center}
 \begin{tabular}{ccccccccc}
 Takt&\multicolumn{6}{l}{ } & & Bit\\
 1&$\underbrace{a_{k0} + a_{k1}}$ &  &$ \underbrace{a_{k2} + a_{k3}}$ &  &$\underbrace{a_{k4} + a_{k5}}$ &  &$\underbrace{a_{k6} + a_{k7}}$ & 12\\
@@ -181,11 +183,15 @@ Takt&\multicolumn{6}{l}{ } & & Bit\\
 &\multicolumn{7}{c}{$\Downarrow$}&13\\
 &\multicolumn{7}{c}{$sum\_s3\_1$} & 12\\
 &\end{tabular}
+\end{center}
 
 \vspace{0.5cm}
 
 Wie der linken Spalte zu entnehmen ist, werden 3 Takte für die Berechnungen der Werte aus den ungeraden Spalten der Eingangsmatrix bzw. ungeraden Zeilen der 1D-DFT-Matrix benötigt.
-1. Takt für Additionen bzw. Subtraktionen und 2. sowie 3. Takt für das Aufsummieren.
+1. Takt für Additionen bzw. Subtraktionen und 2. sowie 3. Takt für das Aufsummieren. Der Bitvektor des Ergebnisses ist zwar 12 Bit breit, aber beim letzten Bitshift von 13 auf 12
+werden nur 11 Bit übernommen. Es wird alo ein doppelter Bitshift vollzogen. Dies erfolgt, damit sowohl in den geraden als auch den ungeraden Zeilen gleich viele Bitshifts erfolgen
+und die Werte somit identisch skaliert sind.
+
 \vspace{1cm}
 
 Berechnung gerader Zeilen am Beispiel der zweiten:
@@ -196,6 +202,7 @@ Berechnung gerader Zeilen am Beispiel der zweiten:
  
  \vspace{0.3cm}
 
+\begin{center}
 \begin{tabular}{ccccccccccccc}
 Takt&\multicolumn{11}{c}{}&Bit\\
 1 &$\underbrace{a_0 - x_1}$ &        &$ \underbrace{x_0 - b_2}$ &  &$\underbrace{x_2 - x_3}$ &  &$\underbrace{a_4 - x_5}$ &  &$\underbrace{x_4 - b_6}$ &$\underbrace{x_6 - x_7}$& &12\\
@@ -212,6 +219,7 @@ Takt&\multicolumn{11}{c}{}&Bit\\
   & & & \multicolumn{9}{c}{$\Downarrow$}&13\\
   & & & \multicolumn{9}{c}{$s5\_1$}&12\\
 \end{tabular}
+\end{center}
 
 \vspace{1cm}
 Auch hier ist der linken Spalte die Anzahl der benötigten Takte zu entnehmen. In diesem Fall werden 5 Takte für die Berechnungen benötigt. Diese setzen sich zusammen aus
@@ -221,6 +229,13 @@ Wie rechts am Rand zu sehen, ergibt sich durch die Addition eine Bitbreitenerwei
 Implementierung, die nur die 1D-DFT beherrschte, wurde zumindest die Erweiterung bei der Addition umgesetzt. Da bei der 2D-DFT die selbe Recheneinheit genutzt 
 werden soll, wurde in Absprache mit dem ISAR-Team entschieden, dass die Summanden vor jeder Summation durch einen Bitshift nach rechts halbiert werden. Auf diese
 Weise hat ein Additionsergebnis immer 13 Bit Breite. Durch den Bitshift kann das Resultat der 1D-DFT direkt als Eingang für die 2D-DFT verwendet werden. 
+
+Zu bedenken gilt es bei einem Bitshift, dass das Ergebnis mit jedem Mal eine Division durch 2 erfährt. Bei hintereinander erfolgenden Bitshifts wird demnach durch $2^{N_B}$ geteilt, 
+wobei $N_B$ die Anzahl der Bitshifts ist. Den beiden obigen Darstellungen der Summationen kann entnommen werden, dass, um ein Überlaufen des Bitvektors zu vermeiden es nötig ist,
+drei respektive vier Bitshifts durch zu führen. Wie bereits erläutert erfolgt bei den ungeraden Zeilen abschließend ein doppelter Bitshift. Auf diese Weise ergibt sich für die
+1D-DFT, dass das Ergebnis um den Faktor 16 kleiner ist, als beispielsweise bei der Berechnung mit Matlab. Da bei bei dem zweiten Durchlauf, um die 2D-DFT zu berechnen, ebenfalls 
+durch 16 geteilt wird, ergibt sich insgesamt eine Division durch $2^{2\cdot4} = $ 64.
+ 
 
 \section{Struktogramm}
 

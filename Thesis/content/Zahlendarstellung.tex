@@ -58,7 +58,9 @@ Eine Bitbreite von größer 24 Bit (bei Eingangsspannungen kleiner \SI{5}{V}) is
 Werte beeinflusst werden und die Pegel des Rauschen in dieser Größenordnung liegen.
 Derzeit wird davon ausgegangen, dass der Chip in einer Strukturgröße von \SI{350}{nm} gefertigt wird, sodass sich jeder zusätzliche Platzbedarf merklich auswirkt.
 
-Akkumulation von Fehlern kurz ansprechen.
+
  
 \subsection{Rauschen}
-
+Bei einem Bitshift kann immer Information verloren gehen. Dies ist immer dann der Fall, wenn die Bits die abgeschnitten werden eine 1 sind. Das hat zur Folge, dass beispielsweise
+bei einer Division durch Zwei der resultierende Wert um 1\,LSB kleiner ist, als er eigentlich sein sollte. 
+Da dieses Problem bei jedem Bitshift auftritt und die Wahrscheinlichkeit für eine 1 bei 50$\%$ liegt, muss davon ausgegangen werden, dass das Endergebnis 
