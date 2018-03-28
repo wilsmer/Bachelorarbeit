@@ -1,0 +1,116 @@
+\section{Matrixmultiplikation}
+
+% Betrachtet wird zunächst die Multiplikation einer Matrix mit einem Vektor.
+% 
+% \begingroup
+% \renewcommand*{\arraystretch}{1.0}
+% 
+%  \[
+%    \begin{bmatrix}
+%     \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
+%     \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+%     \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+%     \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox
+%    \end{bmatrix}
+%   \cdot
+%    \begin{bmatrix}
+%     \myBlackBox \\
+%     \myBlackBox \\
+%     \myBlackBox \\
+%     \myBlackBox
+%    \end{bmatrix}
+%   =
+%   \begin{bmatrix}%
+%    \myBlackBox \\
+%    \myLightgrayBox \\
+%    \myLightgrayBox \\
+%    \myLightgrayBox
+%   \end{bmatrix}
+%  \]
+% \endgroup
+% 
+%  \vspace{1cm}  
+ 
+ 
+
+
+Um nachfolgende Abschnitte besser erörten zu können, soll zunächst die Matrizenmultiplikation besprochen werden.
+Wie in Abbildung \ref{eq:grafikMatrizenmultiplikation} verdeutlicht, wird Element$(i,j)$ der Ergebnismatrix dadurch berechnet, dass die Elemente$(i,k)$ einer Zeile der 1. Matrix
+mit den Elementn$(k,j)$ aus der zweiten Matrix multipliziert und die Werte aufsummiert werden. $i$ und $j$ sind für die Berechnung eines Elements konstant, während $k$ über alle
+Elemente einer Zeile bzw. Spalte läuft.
+
+\begin{center}
+ 
+\begin{minipage}{0.2\textwidth}
+ \begingroup
+ \renewcommand*{\arraystretch}{1.1} % Zeilenabstand
+ \renewcommand*{\arraycolsep}{0.6pt} % Spaltenabstand
+
+ \[
+    \begin{bmatrix}
+    \tikzmark{varrowtopleft} \myBlackBox  	& \myBlackBox 		& \myBlackBox 		& \tikzmark{varrowtopright} \myBlackBox \\
+                             \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+                             \myLightgrayBox 	& \myLightgrayBox	& \myLightgrayBox	& \myLightgrayBox \\
+    \tikzmark{varrowbottom}  \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
+   \end{bmatrix}
+ \]
+ \endgroup
+  \tikz[overlay,remember picture] {
+  \draw[->] ([yshift=1.5ex,xshift=-2ex]varrowtopleft) -- ([xshift=-2ex]varrowbottom)
+            node[midway,left] {$i$};
+  \draw[->] ([xshift=2ex,yshift=4ex]varrowtopleft) -- ([yshift=4ex]varrowtopright)
+            node[midway,above] {$k$};
+}
+\end{minipage}
+\begin{minipage}{0.1\textwidth}
+ \hspace{-.5cm}
+ \[
+  \cdot
+ \]
+\end{minipage}
+\begin{minipage}{0.2\textwidth}
+ \begingroup
+ \renewcommand*{\arraystretch}{1.1} % Zeilenabstand
+ \renewcommand*{\arraycolsep}{0.6pt} % Spaltenabstand
+ \[
+   \begin{bmatrix}
+    \tikzmark{varrowtopleft} \myLightgrayBoxHigh & \myBlackBoxHigh & \myLightgrayBoxHigh & \tikzmark{varrowtopright} \myLightgrayBoxHigh \\
+                             \myLightgrayBoxHigh & \myBlackBoxHigh & \myLightgrayBoxHigh & \myLightgrayBoxHigh \\
+                             \myLightgrayBoxHigh & \myBlackBoxHigh & \myLightgrayBoxHigh & \myLightgrayBoxHigh \\
+    \tikzmark{varrowbottom}  \myLightgrayBoxHigh & \myBlackBoxHigh & \myLightgrayBoxHigh & \myLightgrayBoxHigh 
+   \end{bmatrix}
+ \]
+ \endgroup
+   \tikz[overlay,remember picture] {
+  \draw[->] ([yshift=1.5ex,xshift=-2ex]varrowtopleft) -- ([xshift=-2ex]varrowbottom)
+            node[midway,left] {$k$};
+  \draw[->] ([xshift=2ex,yshift=4.5ex]varrowtopleft) -- ([yshift=4.5ex]varrowtopright)
+            node[midway,above] {$j$};
+}
+\end{minipage}
+\begin{minipage}{0.05\textwidth}
+ \[
+  =
+ \]
+\end{minipage}
+\begin{minipage}{0.3\textwidth}
+\begingroup
+\renewcommand*{\arraystretch}{1.1} % Zeilenabstand
+\renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
+\begin{align}\label{eq:grafikMatrizenmultiplikation}
+   \begin{bmatrix}
+    \tikzmark{varrowtopleft} \myLightgrayBox 	& \myBlackBox		& \myLightgrayBox 	& \tikzmark{varrowtopright} \myLightgrayBox \\
+                             \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+                             \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+    \tikzmark{varrowbottom}  \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
+   \end{bmatrix}
+ \end{align} 
+ \endgroup
+    \tikz[overlay,remember picture] {
+  \draw[->] ([yshift=1.5ex,xshift=-2ex]varrowtopleft) -- ([xshift=-2ex]varrowbottom)
+            node[midway,left] {$i$};
+  \draw[->] ([xshift=2ex,yshift=4ex]varrowtopleft) -- ([yshift=4ex]varrowtopright)
+            node[midway,above] {$j$};
+}
+\end{minipage}
+\end{center}
