@@ -25,22 +25,49 @@ Das ließe sich ausnutzen, um durch expliziet einprogrammierte Multiplikationen 
 %sowie Grafik (\ref{pic:reelleDFT}) 
 erläutert wurde, können zudem noch weitere Multiplikationen durch symmetrische Spiegelung der Hälfte der Werte eingespart werden.
 
-\subsection{2D-DFT als Matrixmultiplikation}
-Die \gls{dft} kann als Summation oder als Matrixmultiplikation geschrieben werden, wobei sich letzteres auf einem \gls{asic} bedeutend besser implementieren lässt. 
  
+  
+
+
+\subsection{Optimierte Matrixmultiplipation bezogen auf 8x8}\label{sec:OptimierteMatrixmultiplikation}
+Aus der anfänglichen Implementation bei der alle Werte einer Berechnung die entweder mit $+\frac{\sqrt{2}}{2}$ oder $-\frac{\sqrt{2}}{2}$ multipliziert werden müssen 
+einzelnd berechnet werden, wird sinngemäß der gemeinsame Faktor ausgeklammert, sodass nur noch jeweils eine Multiplikation erforderlich ist.
+
+Da die erste Zeile der Twiddlefaktor-Matrix nur aus Einsen im Real- und Nullen im Imaginärteil besteht, kann und muss hier nichts optimiert werden. 
+Bei den weiteren Zeilen sind hingegen die Zahlen zur Hälfte positiv und zur anderen negativ. Außerdem enthalten die geraden Zeilen den Faktor $\pm\frac{\sqrt{2}}{2}$. 
+Dies lässt sich ausnutzen, um die Anzahl der der Multiplikationen zu reduzieren. Zunächst können die 
+
+
+
+
+
+\subsection{Anzahl der benötigten Multiplikationen}
+
+
 
 \subsection{Gegenüberstellung Butterfly / Matrixmultiplikation} 
-  Die \gls{dft} wurde als Matrixmultiplikation implementiert, nachfolgend soll dies begründet und ein Vergleich beider Varianten erfolgen.
+Die \gls{dft} wurde als Matrixmultiplikation implementiert, nachfolgend soll dies begründet und ein Vergleich beider Varianten erfolgen.
   
-  Zu einem frühen Zeitpunkt der Überlegungen 
-  an dieser Arbeit gab es noch die Idee die \gls{dft} so flexibel wie möglich zu halten, um unkompliziert auf andere Größen wechseln zu können.
-  Hierfür sollten alle Koeffizienten der Twiddlefaktormatrix ladbar sein sowie die Größe der Matrix über eine globale Deklaration variabel gehalten werden.
-  Diese Herangehensweise bedingt die Implementation als Matrixmultiplikation. Die Hoffnung der Projektgruppe bestand darin, dass das Synthesewerkzeug den 
-  VHDL-Code soweit optimiert, dass dies nicht händisch erfolgen müsste.
-  Als klar war, dass sie Optimierung nicht so tief greift, wurden die entsprechenden Schritte manuell umgesetzt. 
+Zu einem frühen Zeitpunkt der Überlegungen 
+an dieser Arbeit gab es noch die Idee die \gls{dft} so flexibel wie möglich zu halten, um unkompliziert auf andere Größen wechseln zu können.
+Hierfür sollten alle Koeffizienten der Twiddlefaktormatrix ladbar sein sowie die Größe der Matrix über eine globale Deklaration variabel gehalten werden.
+Diese Herangehensweise bedingt die Implementation als Matrixmultiplikation. Die Hoffnung der Projektgruppe bestand darin, dass das Synthesewerkzeug den 
+VHDL-Code soweit optimiert, dass dies nicht händisch erfolgen müsste.
+Als klar war, dass sie Optimierung nicht so tief greift, wurden die entsprechenden Schritte manuell umgesetzt. 
   
-  Die Implementierung des Butterfly-Algorithmus nach Cooley und Tukey stellt eine effiziente Berechnung der \gls{dft} dar. 
-  
-  
- \subsection{Anzahl der benötigten Multiplikationen}
- \subsection{Optimierte Matrixmultiplipation bezogen auf 8x8}
+Die Implementierung des Butterfly-Algorithmus nach Cooley und Tukey wurde bereits in Grafik (\ref{pic:Butterfly}) gezeigt. Sie stellt eine effiziente Berechnung der \gls{dft} dar, in 
+Abschnitt (\ref{sec:OptimierteMatrixmultiplikation}) konnte gezeigt werden, dass sich beide nur unwesentlich im Rechenaufwand unterscheiden.
+
+
+\section{Kompromiss aus benötigter Chipfläche und Genauigkeit des Ergebnisses}
+Durch die Begrenzung der Bitbreite ist es nötig nach jeder Addition den Wert zu halbieren. Hierbei steigt die Abweichung gegenüber einer verlustfreien Berechnung immer dann, 
+wenn das letzte eine 1 ist. Im Mittel ist dies bei der Hälfte der Additionen der Fall. In 50$\%$ aller Fälle wird also der Wert um ein halbes LSB zu viel verringert.
+Bei der Multiplikation verdoppelt sich sogar die resultierende Bitbreite. Da mit dem vollständigen 13 Bit Vektor nach der Addition weitergerechnet wird, muss die Konstante
+ebenfalls in 13 Bit hinterlegt sein. Deshalb hat das Ergebnis 26 Bit, von denen für die weitere Berechnung wieder nur 12 übernommen werden. In den Abbildungen 
+(\ref{pic:AkkumulationUngeradeSpalten}) und (\ref{pic:AkkumulationGeradeSpalten}) wird das hier beschriebene Vorgehen veranschaulicht. Bei diesem Verfahren
+kommt es unweigerlich zur Akkumulation von Fehlern.
+ 
+Da für die Berechnung einer Zahl der 1D-DFFT je nach Zeile entweder 8 oder 12 Werte akkumuliert sowie 0 bis 4 Werte multipliziert werden und für die 2D-DFT entsprechend doppelt 
+so viele, akkumulieren sich zwangsläufig Fehler. Bei 12 Bit Eingangswerten wäre ein 47? Bit Ausgangsvektor nötig, um dies vollständig zu vermeiden. Dies ist jedoch aus u.a.
+Platzgründen nicht umsetzbar.
+$\Rightarrow$ Anhand eines Simulationsbeispiels zeigen, dass die mit VHDL berechneten Werte immer kleiner als die in Matlab berechneten sind.

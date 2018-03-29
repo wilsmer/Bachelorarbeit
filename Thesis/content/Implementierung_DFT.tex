@@ -1,4 +1,14 @@
-\section{Entwickeln der 2D-DFT }
+\section{Entwickeln der DFT }
+
+Ziel ist es die gleiche DFT-Einheit für beide DFTs zu verwenden
+
+Zähler für 64 Werte kann als 6 Bit Vektor realisiert werden, der bei 63 einen Überlauf hat und wieder bei 0 anfängt.
+
+Vorderen 3 Bit sind die der Zeile, die hinteren für die Spalte.
+
+Das dritte Bit von vorne sagt einem, ob es eine gerade oder ungerade Zeile ist.
+
+
 
 \section{Direkte Weiterverarbeitung der Zwischenergebnisse}
 Um die Anzahl an Gattern und somit den Flächenbedarf zu reduzieren ist es das Ziel, die Ergebnisse der \gls{1d-dft} aus der 1. Berechnungsstufe im nächsten Schritt direkt als 
@@ -13,154 +23,6 @@ wurde auf das Speichern in lokalen Speicherzellen ausgewichen, welche als Variab
 
 
 
-\subsection{Veranschaulichung 2D-DFT als Matrizenmultiplikation}
-Wie in Gleichung (\ref{eq:2D-DFT_MatrixMult}) beschrieben, kann die 2D-DFT als ``doppelte'' Matrizenmultiplikation geschrieben werden.
-Es wird also erst die 1D-DFT berechnet und die sich daraus ergebende Matrix $X^*$ (Abb. \ref{eq:matrix_F1}) wird anschließend mit der Twiddlefaktor-Matrix $W$ 
-multipliziert. Man könnte es auch als zweite 1D-DFT betrachten, bei der Twiddlefaktor-Matrix und Eingangsmatrix vertauscht sind.
-
-Veranschaulicht wird dies in den Abbildungen \ref{eq:matrix_F1} und \ref{eq:matrix_F2}.
-
-
-\begin{center}
- 
-\begin{minipage}{0.2\textwidth}
- \begingroup
- \renewcommand*{\arraystretch}{1.1} % Zeilenabstand
- \renewcommand*{\arraycolsep}{0.0pt} % Spaltenabstand
-
- \[
-  \stackrel{\mbox{$W$}}{
-   \begin{bmatrix}
-    \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
-    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
-    \myLightgrayBox 	& \myLightgrayBox	& \myLightgrayBox	& \myLightgrayBox \\
-    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
-   \end{bmatrix}
-  }
- \]
- \endgroup
-\end{minipage}
-\begin{minipage}{0.05\textwidth}
- \[
-  \cdot
- \]
-\end{minipage}
-\begin{minipage}{0.2\textwidth}
- \begingroup
- \renewcommand*{\arraystretch}{0.0} % Zeilenabstand
- \renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
-
- \[
-  \stackrel{\mbox{$x$}}{
-   \begin{bmatrix}
-    \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh \\
-    \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh \\
-    \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh \\
-    \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 
-   \end{bmatrix}
-  }
- \]
- \endgroup
-\end{minipage}
-\begin{minipage}{0.05\textwidth}
- \[
-  =
- \]
-\end{minipage}
-\begin{minipage}{0.3\textwidth}
-\begingroup
-\renewcommand*{\arraystretch}{1.1} % Zeilenabstand
-\renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
-\begin{align}\label{eq:matrix_F1}
-  \stackrel{\mbox{$X^*$}}{
-   \begin{bmatrix}
-    \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
-    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
-    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
-    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
-   \end{bmatrix}
-  }
-\end{align}
-
- 
- \endgroup
-\end{minipage}
-\end{center}
-
-
-\begin{center}
- 
-\begin{minipage}{0.2\textwidth}
- \begingroup
- \renewcommand*{\arraystretch}{1.1} % Zeilenabstand
- \renewcommand*{\arraycolsep}{0.0pt} % Spaltenabstand
-
- \[
-  \stackrel{\mbox{$X^*$}}{
-   \begin{bmatrix}
-    \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
-    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
-    \myLightgrayBox 	& \myLightgrayBox	& \myLightgrayBox	& \myLightgrayBox \\
-    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
-   \end{bmatrix}
-  }
- \]
- \endgroup
-\end{minipage}
-\begin{minipage}{0.05\textwidth}
- \[
-  \cdot
- \]
-\end{minipage}
-\begin{minipage}{0.2\textwidth}
- \begingroup
- \renewcommand*{\arraystretch}{0.0} % Zeilenabstand
- \renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
-
- \[
-  \stackrel{\mbox{$W$}}{
-   \begin{bmatrix}
-    \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh \\
-    \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh \\
-    \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh \\
-    \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 
-   \end{bmatrix}
-  }
- \]
- \endgroup
-\end{minipage}
-\begin{minipage}{0.05\textwidth}
- \[
-  =
- \]
-\end{minipage}
-\begin{minipage}{0.3\textwidth}
-\begingroup
-\renewcommand*{\arraystretch}{1.1} % Zeilenabstand
-\renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
-\begin{align}\label{eq:matrix_F2}
-  \stackrel{\mbox{$X$}}{
-   \begin{bmatrix}
-    \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
-    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
-    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
-    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
-   \end{bmatrix}
-  }
- \end{align}
- \endgroup
-\end{minipage}
-\end{center}
-
-
-\section{Optimieren der 8x8-DFT}
-
-Aus der anfänglichen Implementation bei der alle Werte einer Berechnung die entweder mit $+\frac{\sqrt{2}}{2}$ oder $-\frac{\sqrt{2}}{2}$ multipliziert werden müssen 
-einzelnd berechnet werden, wird sinngemäß der gemeinsame Faktor ausgeklammert, sodass nur noch jeweils eine Multiplikation erforderlich ist.
-
-Da die erste Zeile der Twiddlefaktor-Matrix nur aus Einsen im Real- und Nullen im Imaginärteil besteht, kann und muss hier nichts optimiert werden. 
-Bei den weiteren Zeilen sind hingegen die Zahlen zur Hälfte positiv und zur anderen negativ. Außerdem enthalten die geraden Zeilen den Faktor $\pm\frac{\sqrt{2}}{2}$. 
-Dies lässt sich ausnutzen, um die Anzahl der der Multiplikationen zu reduzieren. Zunächst können die 
 
 
 
@@ -183,6 +45,8 @@ Takt&\multicolumn{6}{l}{ } & & Bit\\
 &\multicolumn{7}{c}{$\Downarrow$}&13\\
 &\multicolumn{7}{c}{$sum\_s3\_1$} & 12\\
 &\end{tabular}
+\captionof{figure}{Vorgehensweise der Akkumulation der ungeraden Spalten der Eingangswerte}
+\label{pic:AkkumulationUngeradeSpalten}
 \end{center}
 
 \vspace{0.5cm}
@@ -201,7 +65,7 @@ Berechnung gerader Zeilen am Beispiel der zweiten:
  %\hrule
  
  \vspace{0.3cm}
-
+%\begin{figure}[htbp]
 \begin{center}
 \begin{tabular}{ccccccccccccc}
 Takt&\multicolumn{11}{c}{}&Bit\\
@@ -219,7 +83,11 @@ Takt&\multicolumn{11}{c}{}&Bit\\
   & & & \multicolumn{9}{c}{$\Downarrow$}&13\\
   & & & \multicolumn{9}{c}{$s5\_1$}&12\\
 \end{tabular}
+\captionof{figure}{Vorgehensweise der Akkumulation der geraden Spalten der Eingangswerte}
+\label{pic:AkkumulationGeradeSpalten}
 \end{center}
+
+%\end{figure}
 
 \vspace{1cm}
 Auch hier ist der linken Spalte die Anzahl der benötigten Takte zu entnehmen. In diesem Fall werden 5 Takte für die Berechnungen benötigt. Diese setzen sich zusammen aus
@@ -236,7 +104,15 @@ drei respektive vier Bitshifts durch zu führen. Wie bereits erläutert erfolgt 
 1D-DFT, dass das Ergebnis um den Faktor 16 kleiner ist, als beispielsweise bei der Berechnung mit Matlab. Da bei bei dem zweiten Durchlauf, um die 2D-DFT zu berechnen, ebenfalls 
 durch 16 geteilt wird, ergibt sich insgesamt eine Division durch $2^{2\cdot4} = $ 64.
  
+\subsection{Anzahl der vermuteten benötigten Takte}
+Gerade Zeilen 3 Takte * 8 * 4 * 2 = 192
 
+Ungerade Zeilen 5 Takte * 8 * 4 * 2 = 320
+
+Summe 512
+
+ 
+ 
 \section{Struktogramm}
 
 \includepdf{content/Struktogramm.pdf}

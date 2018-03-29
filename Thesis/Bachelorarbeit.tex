@@ -7,6 +7,8 @@
  \pagenumbering{Roman} 
  \tableofcontents
  
+ %\paragraph{}
+ 
  %\setcounter{page}{1}
  
  
@@ -40,7 +42,37 @@
  
  
  
- \chapter{Entwurf}
+\chapter{Entwurf}
+\section{Bibliotheken und Hardwarebeschreibungssprache}
+\subsection{Verwendete Bibliotheken}
+
+\texttt{library ieee;}
+
+\texttt{use ieee.std\_logic\_1164.all;}
+
+\texttt{use ieee.numeric\_std.all;}
+
+\texttt{use ieee.std\_logic\_arith.all;}
+
+\texttt{use ieee.std\_logic\_unsigned.all;}
+ 
+ \subsection{Interpretation der binären Zahlendarstellung}
+ Matlab fi
+ 
+ immer 10 Nachkommastellen, außer bei Multiplikation
+ 
+ NC Sim, nur Integerdarstellung möglich, bei Vektoren sogar nur positiv
+ 
+ 
+ \subsection{Programmstruktur}
+ 
+ Konstanten
+ 
+ Datentypen
+ 
+ resize-Funktion
+ 
+ 
  \input{content/Implementierung_Konstantenmultiplizierer.tex} 
  \input{content/Implementierung_DFT.tex}
  
@@ -49,19 +81,8 @@
  \chapter{Evaluation}
  \input{content/Simulation.tex}
 
- \subsection{Akkumulation von Fehlern}
- Durch die Begrenzung der Bitbreite ist es nötig nach jeder Addition den Wert zu halbieren. Hierbei steigt die Abweichung gegenüber einer verlustfreien Berechnung immer dann, 
- wenn das letzte eine 1 ist. Im Mittel ist dies bei der Hälfte der Additionen der Fall. In der Hälfte aller Fälle wird also der Wert um ein halbes LSB zu viel verringert.
- Bei der Multiplikation sieht es nicht besser aus, hier werden aus einem 24 Bit Vektor ebenfalls nur 12 übernommen.
- Da für die Berechnung einer Zahl der 1D-DFFT je nach Zeile entweder 8 oder 12 Werte akkumuliert sowie 0 bis 4 Werte multipliziert werden, für die 2D-DFT entsprechend doppelt 
- so viele, akkumulieren sich zwangsläufig Fehler. Bei 12 Bit Eingangswerten wäre ein 47 Bit Ausgangsvektor nötig, um dies vollständig zu vermeiden. Dies ist jedoch aus u.a.
- Platzgründen nicht umsetzbar.
- $\Rightarrow$ Anhand eines Simulationsbeispiels zeigen, dass die mit VHDL berechneten Werte immer kleiner als die in Matlab berechneten sind.
 
  \section{Testumgebung}
- \subsection{1D-DFT, Integer}
- \subsection{2D-DFT, Integer}
- \subsection{2D-DFT, Q-Format}
  \subsection{Struktogramm des Testablaufs}
  \subsection{Reale Eingangswerte}
  
@@ -75,6 +96,10 @@
  \chapter{Schlussfolgerungen}
  \section{Zusammenfassung}
  \section{Bewertung und Fazit}
+ Es konnte eine effiziente Berechnung implementiert werden, die der FFT in nichts nachsteht. Wenn nicht die Ausgangssituation gewesen wäre, dass eine möglichst flexibel gehaltene
+ Matrixmultiplikation erstrebenswert ist, hätte auch eine FFT, dessen Berechnungsvorschrift bekannt ist, implementiert werden können. Für DFT anderer Größe als $2^N$ gilt dies nicht.
+ 
+ 
  \section{Ausblick}
  
  
