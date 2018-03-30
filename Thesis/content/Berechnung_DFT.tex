@@ -1,10 +1,25 @@
 \section{Diskrete Fouriertransformation (DFT)}
 
-\subsection{Verwendung der DFT}
+Die \gls{dft} ist die zeit- und wertdiskrete Variante der Fouriertransformation, die statt von $-\infty$ bis $\infty$ über einen Vektor von N Werten, also von 0 bis N-1 läuft. 
+Dies hat zur Folge, dass sich ihr Frequenzspektrum periodisch nach N Werten wiederholt.
 
-Die \gls{dft} (Gl. \ref{eq:dft}) ist die zeit- und wertdiskrete Variante der \gls{ft}, die statt von $-\infty$ bis $\infty$ nur von 0 bis N-1 Elemente läuft. 
-Im Frequenzspektrum wiederholt sich 
-Da es sich um diskrete Werte handelt, geht das Integral in eine endliche Summe über. Die 2D-DFT ist nur möglich (sinnvoll), wenn die Eingangswerte in Form eines Vektors vorliegen.
+Da es sich um eine endliche Anzahl diskreter Werte handelt, geht das Integral aus Gleichung (\ref{eq:Fouriertransformation}) in die Summe aus Gleichung (\ref{eq:dft}) über. 
+
+
+Üblicher Weise wird die (diskrete) Fouriertransformation genutzt, um vom Zeitbereich in den Frequenzbereich zu gelangen. In diesem Fall enthielte der Eingangsvektor 
+Werten im Zeitbereich, der Ausgangsvektor Werten im Frequenzbereich.
+Um von Daten im Zeitbereich sprechen zu können, müssen diese zeitliche versetzt auf den gleichen Bezugspunkt erfasst worden sein. 
+Bezogen auf das Sensorarray würde eine bestimmte Anzahl an zeitlich versetzten zeit- und wertdiskretisierten Daten eines einzelnen Sensors in einem Vektor zusammengefasst 
+und darauf die \gls{dft} angewandt werden, um beim Ausgangsvektor von Daten im Frequenzbereich sprechen zu können.
+
+Statt zeitlich versetzter Daten werden beim Sensorarray die Daten von mehreren Sensoren gleichzeitig erfasst. Da das Sensorarray zweidimensional ist, ergibt
+sich an Stelle eines Vektors so eine Matrix. Weil die Werte gleichzeitig erfasst werden und diese verschiedene Koordinaten repräsentieren, muss hier von Orts- anstatt von
+Zeitwerten gesprochen werden. Von der Transformation ins Frequenzspektrum spricht man wiederum bei Zeitwerten, da das Spektrum die Frequenzen darstellt, aus denen das Zeitsignal 
+zusammengesetzt ist. Da bei der eben beschriebenen Datenerfassung Ortsdaten transformiert werden, spricht man hier allgemeiner von einer Transformation in den Bilbereich. 
+
+In dieser Arbeit werden statt Zeit- bzw. Ortsbereich respektive Frequenzbereich und Bildverarbeitung häufig auch die Begriffe Ein- und Ausgangsvektor bzw. -matrix verwendet.
+
+
 
 
 \subsection{Summen- und Matrizenschreibweise der DFT}
@@ -260,6 +275,7 @@ Veranschaulicht wird dies in den Abbildungen \ref{eq:matrix_F1} und \ref{eq:matr
  \endgroup
 \end{minipage}
 \end{center}
+
 
 
 
