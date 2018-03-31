@@ -136,7 +136,7 @@ begin
         -- Mit resize werden die 12 Bit Eingangswerte vorzeichengerecht auf 13 Bit erweitert, um um die richtige Groesse zu haben.
         -- Bei der Addition muessen die Summanden die gleiche Bit-Breite wie der Ergebnis-Vektor haben.
         case W_row is
-          -- Die Faktoren (Koeffizienten) der Twiddlefaktor-Matrix W lassen sich ueber exp(i*2*pi*[0:7]'*[0:7]/8) berechnen.
+          -- Die Faktoren (Koeffizienten) der Twiddlefaktor-Matrix W lassen sich ueber exp(-i*2*pi*[0:7]'*[0:7]/8) berechnen.
           -- 1. Zeile aus W -> nur Additionen
           when 0 =>
               -- Die 1. Zeile aus W besteht nur aus den Faktoren (1+j0). Daraus resultiert, dass die rellen

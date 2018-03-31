@@ -1,4 +1,4 @@
-\section{Entwickeln der DFT }
+\section{Entwickeln der 2D-DFT in VHDL}
 
 Ziel ist es die gleiche DFT-Einheit für beide DFTs zu verwenden
 
@@ -9,6 +9,39 @@ Vorderen 3 Bit sind die der Zeile, die hinteren für die Spalte.
 Das dritte Bit von vorne sagt einem, ob es eine gerade oder ungerade Zeile ist.
 
 
+ 
+ 
+ 
+Die in Gleichung (\ref{eq:2D-DFT_MatrixMult}) beschriebene Berechnung der 2D-DFT lässt sich auch wie folgt schreiben:
+
+\begin{align}
+ X &= W \cdot x \cdot W \nonumber \\
+   &= \left(x^T\cdot W\right)^T\cdot W \label{eq:MatMultTranspose1} \\
+   &= X^* \cdot W \nonumber\\
+   &= \left(\left(x\cdot W\right)^T\cdot W\right)^T \label{eq:MatMultTranspose2}\\
+   &= \left(X^{*T} \cdot W\right)^T \nonumber
+\end{align}
+
+In Matlab muss hierfür entweder die Funktion \texttt{transpose()} oder \texttt{.'} verwendet werden. Letzteres muss elementweise angewandt werden, da das Apostroph
+alleine die komplex konjugiert Transponierte bildet.
+
+Die alternativen Schreibweisen der 2D-DFT haben den Vorteil, dass in beiden Fällen die Eingangsmatrix auf der linken Seite steht. Möglich ist dies, da die 
+Twiddlefaktormatrix identisch mit ihrer Transponierten ist.
+Dass nun in den Gleichungen (\ref{eq:MatMultTranspose1}) und (\ref{eq:MatMultTranspose2}) sowohl die Eingangs- als auch die 1D-DFT-Matrix links steht, ist eine wichtige 
+Voraussetzung dafür, dass mit der selben Recheneinheit mit der die 1D-DFT berechnet wird auch die 2D-DFT berechnet werden kann.
+Die zweite Voraussetzung ist das Transponieren einer Matrix. Diese lässt sich durch spaltenweises Abspeichern und zeilenweises Auslesen der Ergebnis-Matrix realisieren.
+Hierfür ist es lediglich notwendig die beiden Indizes, welche ein Matrixelement ansprechen, beim Speichern getauscht werden. Nun sind nun alle Voraussetzungen erfüllt, 
+um beide Berechnungen mit der selben Einheit durch zu führen. In Grafik (\ref{pic:MatMultTranspose}) ist das hier beschriebene veranschaulicht.
+
+(Auf diese Weise wird die direkte Weiterverarbeitung von Werten denkbar.)
+ 
+\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.95\textwidth]{img/MatMultTranspose.png}
+ \caption{Darstellung der Berechnung der 2D-DFT aus Gleichung (\ref{eq:MatMultTranspose2})}
+ \label{pic:MatMultTranspose}
+\end{figure}
+ 
 
 \section{Direkte Weiterverarbeitung der Zwischenergebnisse}
 Um die Anzahl an Gattern und somit den Flächenbedarf zu reduzieren ist es das Ziel, die Ergebnisse der \gls{1d-dft} aus der 1. Berechnungsstufe im nächsten Schritt direkt als 
@@ -102,7 +135,7 @@ Zu bedenken gilt es bei einem Bitshift, dass das Ergebnis mit jedem Mal eine Div
 wobei $N_B$ die Anzahl der Bitshifts ist. Den beiden obigen Darstellungen der Summationen kann entnommen werden, dass, um ein Überlaufen des Bitvektors zu vermeiden es nötig ist,
 drei respektive vier Bitshifts durch zu führen. Wie bereits erläutert erfolgt bei den ungeraden Zeilen abschließend ein doppelter Bitshift. Auf diese Weise ergibt sich für die
 1D-DFT, dass das Ergebnis um den Faktor 16 kleiner ist, als beispielsweise bei der Berechnung mit Matlab. Da bei bei dem zweiten Durchlauf, um die 2D-DFT zu berechnen, ebenfalls 
-durch 16 geteilt wird, ergibt sich insgesamt eine Division durch $2^{2\cdot4} = $ 64.
+durch 16 geteilt wird, ergibt sich insgesamt eine Division durch $2^{2\cdot4} = $ 256.
  
 \subsection{Anzahl der vermuteten benötigten Takte}
 Gerade Zeilen 3 Takte * 8 * 4 * 2 = 192
@@ -150,7 +183,7 @@ Summe 512
 \end{center}
 
 
-
+\section{UML-Diagramm}
 
 %\begin{landscape}
  
