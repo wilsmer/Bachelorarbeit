@@ -288,8 +288,11 @@ komplex ist, kann es dort direkt als Eingangssignal für die komplexe 2D-DFT gen
 Es wäre jedoch auch möglich, das komplexe Ausgangssignal der 1D-DFT als zwei von einander unabhängige rein relle Eingangssignale der 2D-DFTs zu betrachten und später 
 wieder zusammen zu setzen. Gleiches gilt für ein komplexes Eingangssignal. Dieses kann ebenfalls in zwei von einander unabhängigen DFTs transformiert werden.
 Da bei dieser Umsetzung kein Imaginärteil in die Berechnung der Ergebnisse einfließt, hat sie den Vorteil, dass aus Symmetriegründen die Hälfte der Multiplikationen 
-eingespart werden können. Allerdings ist es erforderlich, dass wiederum die Hälfte der gespiegelten Ergebnisse, nämlich der Imaginärteil, negiert werden muss. 
-Grunsätzlich lässt sich dieses Verfahren auch für komplexe Eingangssignale deren Real- und Imaginärteil separat von einander mit der DFT transformiert werden.
+eingespart werden können. Es ist erforderlich, dass der Imaginärteil der gespiegelten Ergebnisse negiert wird. Abbildung (\ref{pic:reelleMatMultRedundanz}) zeigt die 
+redundanten Werte der DFT. Die grau hinterlegten Felder sind die Multiplikationen der Twiddlefaktormatrix. Es müssen bei der 8x8-DFT also statt 16 nur 8 Multiplikationen
+mit rellem Multiplikand und komplexen Multiplkator erfolgen.
+
+Grunsätzlich lässt sich dieses Verfahren auch für komplexe Eingangssignale, deren Real- und Imaginärteil separat von einander mit der DFT transformiert werden, anwenden.
 Anschließend müssen die Ergebnisse zusammen gesetzt werden. Wie dies geschieht ist der Abbildung \ref{pic:reelleDFT} zu entnehmen.
 Da wie in Abschnitt \ref{sec:Konstantenmultiplizierer} gezeigt wird, die Multiplikation
 mit einer Konstanten innerhalb eines Taktes mit einem Schaltnetz erfolgen kann und auch die Negation einen Takt benötigt, ist hier zeitlich kein Gewinn zu erzielen.
@@ -307,6 +310,14 @@ berechnet werden. Die Ergebnisse beider 2D-DFTs müssen identisch zusammengefass
  \includegraphics[width=0.5\textwidth]{img/reelleMatMult.png}
  \caption{Veranschaulichung der reellen DFT}
  \label{pic:reelleDFT}
+\end{figure}
+
+
+\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.4\textwidth]{img/reelleMatMultRedundanz.png}
+ \caption{Redundante Werte der 8x8 DFT; Imaginärteil muss negiert werden, grau hinterlegt sind Multiplikationen der Twiddlefaktormatrix}
+ \label{pic:reelleMatMultRedundanz}
 \end{figure}
 
 

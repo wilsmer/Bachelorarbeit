@@ -1,6 +1,6 @@
 \section{Abschätzung des Rechenaufwandes}\label{sec:abschaetzung_Rechenaufwand}
 
-\subsection{Gegenüberstellung reelle / komplexe Eingangswerte}
+\subsection{Gegenüberstellung von reellen und komplexen Eingangswerten}
 Die Sensormatrix liefert für jedes Sensorelement einen Sinus- und einen Kosinuswert. Diese können für die Berechnung der DFT zu einer komplexen Zahl zusammengefasst werden. 
 Auf diese Weise lässt sich die Berechnung mathematisch kompakter schreiben. Dadurch, dass eine komplexe Multiplikation, wie in Gleichung (\ref{eq:komplexe_Multiplikation}) 
 gezeigt wurde, auf vier reellen Multiplikationen basiert,
@@ -39,23 +39,19 @@ Da die erste Zeile der Twiddlefaktor-Matrix nur aus Einsen im Real- und Nullen i
 Bei den weiteren Zeilen sind hingegen die Zahlen zur Hälfte positiv und zur anderen negativ. Außerdem enthalten die geraden Zeilen den Faktor $\pm\frac{\sqrt{2}}{2}$. 
 Dies lässt sich ausnutzen, um die Anzahl der der Multiplikationen zu reduzieren. Zunächst können die 
 
-
-
-
-
-\subsection{Anzahl der benötigten Multiplikationen}
+Für jede gerade Zeile der DFT ist jeweils für den Real- und den Imaginärteil eine Multiplikation nötig, so dass sich insgesamt acht Multiplikationen ergeben
 
 
 
 \subsection{Gegenüberstellung Butterfly / Matrixmultiplikation} 
-Die \gls{dft} wurde als Matrixmultiplikation implementiert, nachfolgend soll dies begründet und ein Vergleich beider Varianten erfolgen.
-  
-Zu einem frühen Zeitpunkt der Überlegungen 
-an dieser Arbeit gab es noch die Idee die \gls{dft} so flexibel wie möglich zu halten, um unkompliziert auf andere Größen wechseln zu können.
-Hierfür sollten alle Koeffizienten der Twiddlefaktormatrix ladbar sein sowie die Größe der Matrix über eine globale Deklaration variabel gehalten werden.
+
+Die \gls{dft} wurde als Matrixmultiplikation implementiert, um die gewonnenen Erkenntnisse auch auf andere Dimensionen als $2^n$, insbesondere ungerade, 
+übertragen zu können.  
+Zu einem frühen Zeitpunkt der Überlegungen für diese Arbeit gab es noch die Idee die \gls{dft} so flexibel wie möglich zu halten, um unkompliziert auf andere Größen wechseln zu können.
+Hierfür sollten alle Koeffizienten der Twiddlefaktormatrix ladbar sowie die Größe der Matrix über eine globale Deklaration definierbar sein.
 Diese Herangehensweise bedingt die Implementation als Matrixmultiplikation. Die Hoffnung der Projektgruppe bestand darin, dass das Synthesewerkzeug den 
 VHDL-Code soweit optimiert, dass dies nicht händisch erfolgen müsste.
-Als klar war, dass sie Optimierung nicht so tief greift, wurden die entsprechenden Schritte manuell umgesetzt. 
+Als klar war, dass die Optimierung nicht so tief greift, wurden die entsprechenden Schritte manuell umgesetzt. 
   
 Die Implementierung des Butterfly-Algorithmus nach Cooley und Tukey wurde bereits in Grafik (\ref{pic:Butterfly}) gezeigt. Sie stellt eine effiziente Berechnung der \gls{dft} dar, in 
 Abschnitt (\ref{sec:OptimierteMatrixmultiplikation}) konnte gezeigt werden, dass sich beide nur unwesentlich im Rechenaufwand unterscheiden.
