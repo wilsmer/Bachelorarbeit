@@ -22,3 +22,4 @@ rm *.xwm /s
 rm *.dvi /s 
 rm *.glsdefs /s 
 rm *.xml
+rm *.backup

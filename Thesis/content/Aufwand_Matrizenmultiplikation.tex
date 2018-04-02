@@ -1,10 +1,10 @@
-\section{Abschätzung des Rechenaufwandes}\label{sec:abschaetzung_Rechenaufwand}
+\section{Abschätzung des Rechenaufwands}\label{sec:abschaetzung_Rechenaufwand}
 
 \subsection{Gegenüberstellung von reellen und komplexen Eingangswerten}
 Die Sensormatrix liefert für jedes Sensorelement einen Sinus- und einen Kosinuswert. Diese können für die Berechnung der DFT zu einer komplexen Zahl zusammengefasst werden. 
 Auf diese Weise lässt sich die Berechnung mathematisch kompakter schreiben. Dadurch, dass eine komplexe Multiplikation, wie in Gleichung (\ref{eq:komplexe_Multiplikation}) 
 gezeigt wurde, auf vier reellen Multiplikationen basiert,
-ist es jedoch so, dass die Anzahl reeller Multiplikationen hierdurch derer bei der getrennten Berechnung und anschließenden Zusammenführung übersteigt.
+ist es jedoch so, dass die Anzahl reeller Multiplikationen hierdurch derer bei der getrennten Berechnung und anschließenden Zusammenführen übersteigt.
 
 Beweisen!
 
@@ -21,21 +21,39 @@ bei dieser Betrachtung wie in Gl. (\ref{eq:halb_komplexe_Multiplikation}) zu seh
 \end{align}
 
 Es ist somit auch an dieser Stelle noch einmal gezeigt worden, dass keine imaginären Anteile des Eingangssignals in die Berechnung mit einfließen.
-Das ließe sich ausnutzen, um durch expliziet einprogrammierte Multiplikationen den Aufwand deutlich zu verringern. Wie in Abschnitt (\ref{sec:rein_reelle_dft})
+Das ließe sich ausnutzen, um durch explizit einprogrammierte Multiplikationen den Aufwand deutlich zu verringern. Wie in Abschnitt (\ref{sec:rein_reelle_dft})
 %sowie Grafik (\ref{pic:reelleDFT}) 
 erläutert wurde, können zudem noch weitere Multiplikationen durch symmetrische Spiegelung der Hälfte der Werte eingespart werden.
 
  
-  
+\subsection{Direkte Multiplikation zweier 8x8 Matrizen}
+Die in Abschnitt (\ref{sec:Matrixmultiplikation}) erläuterte Matrixmultiplikation bedarf bei einer 8x8 Matrix je Ergebnis der Ausgangsmatrix 8 Multiplikationen. Für
+die 8$\cdot$8=64 Elemente werden deshalb 512 Multiplikationen benötigt. Da es sich sowohl bei den Eingangswerten als auch bei der Twiddlefaktormatrix um komplexe
+Zahlen handelt, sind, wie in Abschnitt (\ref{sec:komplexe_Multiplikation}) beschrieben, insgesamt 512$\cdot$4=2048 Multiplikationen nötig.
+
+Sollte sich dazu entschieden werden die Sinus- und Kosinusanteile separat zu berechnen, um ein rein reelles Eingangssignal weiter zu verarbeiten, sind, wie in Abschnitt
+(\ref{sec:rein_reelle_dft}) hergeleitet, knapp die Hälfte der Multiplikationen unnötig. In Abbildung (\ref{pic:reelleMatMultRedundanz}) ist zu sehen, dass von den 64 
+Ergebniswerten nur 40 berechnet werden müssen. Da die Eingangswerte zwar rein reell, die Twiddlefaktormatrix aber komplex ist, verdoppelt sich die Anzahl der Multiplikationen.
+Somit müssen für die gesamten 64 Werte 40$\cdot$8$\cdot$2=640 Multiplikationen durchgeführt werden.
+
+Im komplexen Fall verdoppelt sich für die 2D-DFT schlicht die Anzahl der reellen Multiplikationen und liegt somit bei 4096. Im reellen Fall müssen, wie in Abbildung 
+(\ref{pic:reelleDFT}) gezeigt, der Real- sowie der Imaginärteil separat mit der Twiddlefaktormatrix multipliziert werden. So ergeben sich alles in allem 
+640$\cdot$3$\cdot$2=3840 reelle Multiplikationen. Diese Zahl liegt nur nur geringfügig unterhalb der komplexen Berechnung.
 
 
-\subsection{Optimierte Matrixmultiplipation bezogen auf 8x8}\label{sec:OptimierteMatrixmultiplikation}
 
+Hierbei wird von einer Twiddlefaktormatrix mit 64 komplexen Werten ausgegangen. In Wirklichkeit sind es nur 16, die übrigen erfordern überhaupt keine Multiplikation, da 
+entweder der Real- oder der Imaginärteil 0 ist. Da dies aber Bestandteil der optimierten Matrixmultiplikation ist, wird an dieser Stelle nicht weiter darauf eingegangen.
+Später werden nur die komplexen Varianten verglichen. Dies wird als ausreichend erachtet, da aufgrund der hier und in Abschnitt (\ref{sec:rein_reelle_dft}) angedeutete deutlich 
+erhöhte Bedarf an Takten die reelle Matrixmultiplikation nicht von Interesse ist. 
+
+
+\subsection{Optimierte Multiplikation zweier 8x8 Matrizen}\label{sec:OptimierteMatrixmultiplikation}
 
 Aus der anfänglichen Implementation bei der alle Werte einer Berechnung die entweder mit $+\frac{\sqrt{2}}{2}$ oder $-\frac{\sqrt{2}}{2}$ multipliziert werden müssen 
 einzelnd berechnet werden, wird sinngemäß der gemeinsame Faktor ausgeklammert, sodass nur noch jeweils eine Multiplikation erforderlich ist.
 
-Da die erste Zeile der Twiddlefaktor-Matrix nur aus Einsen im Real- und Nullen im Imaginärteil besteht, kann und muss hier nichts optimiert werden. 
+Da die erste Zeile der Twiddlefaktormatrix nur aus Einsen im Real- und Nullen im Imaginärteil besteht, kann und muss hier nichts optimiert werden. 
 Bei den weiteren Zeilen sind hingegen die Zahlen zur Hälfte positiv und zur anderen negativ. Außerdem enthalten die geraden Zeilen den Faktor $\pm\frac{\sqrt{2}}{2}$. 
 Dies lässt sich ausnutzen, um die Anzahl der der Multiplikationen zu reduzieren. Zunächst können die 
 
@@ -43,7 +61,7 @@ Für jede gerade Zeile der DFT ist jeweils für den Real- und den Imaginärteil 
 
 
 
-\subsection{Gegenüberstellung Butterfly / Matrixmultiplikation} 
+\subsection{Gegenüberstellung von Butterfly und optimierter Matrixmultiplikation} 
 
 Die \gls{dft} wurde als Matrixmultiplikation implementiert, um die gewonnenen Erkenntnisse auch auf andere Dimensionen als $2^n$, insbesondere ungerade, 
 übertragen zu können.  
