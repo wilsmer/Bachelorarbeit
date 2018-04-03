@@ -35,7 +35,7 @@ Erst bei genauer Betrachtung der Twiddlefaktor-Matrix viel auf, dass in jeder Ze
 ist es dadurch möglich auf das Invertieren der Eingangswerte sowie den hierfür benötigten Takt und die Inverter zu verzichten. Weiter wird auch nur die Multiplikation
 mit $+\frac{\sqrt{2}}{2}$ benötigt.
 
-\subsection{Syntheseergebnis eines 12 Bit Kostantenmultiplizierers}
+\subsection{Syntheseergebnis eines 13 Bit Kostantenmultiplizierers}
 \begin{figure}[!ht]
 \centering  
  \fbox{
@@ -51,18 +51,16 @@ mit $+\frac{\sqrt{2}}{2}$ benötigt.
  \label{tab:VergleichMultiplizierer}
  \begin{tabular}{ccc}
  \hline
-		& Konstantenmultiplizierer 	& regulärer Multiplizierer\\
+				& Konstantenmultiplizierer 	& regulärer Multiplizierer\\
   \hline	
-  Gatter			& 43				& ? \\
-  Inverter			& 10				& ? \\
-  Summe				& 53				& ? \\
-  Fläche (Prozess: 350nm)	& 4787 nm$^2$?			& ? \\
+  Gatter			& 27				& 175 \\
+  Fläche (Prozess: 350nm)	& $\SI{6612}{\mu m^2}$		& $\SI{23261}{}$\\
   \hline
  \end{tabular}
 \end{table}
 
 
-Der Ausgang hat so wie der Eingang 12 Bit, die niederwertigsten 12 Bit werden somit verworfen.
+Der Ausgang hat so wie der Eingang 13 Bit.
 
 Auf Skript verweisen, mit dem ermittelt wurde, dass das die beste Annäherung an $\frac{\sqrt{2}}{2}$ ist.
 

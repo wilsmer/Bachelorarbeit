@@ -2,12 +2,68 @@
 
 \subsection{Gegenüberstellung von reellen und komplexen Eingangswerten}
 Die Sensormatrix liefert für jedes Sensorelement einen Sinus- und einen Kosinuswert. Diese können für die Berechnung der DFT zu einer komplexen Zahl zusammengefasst werden. 
-Auf diese Weise lässt sich die Berechnung mathematisch kompakter schreiben. Dadurch, dass eine komplexe Multiplikation, wie in Gleichung (\ref{eq:komplexe_Multiplikation}) 
-gezeigt wurde, auf vier reellen Multiplikationen basiert,
-ist es jedoch so, dass die Anzahl reeller Multiplikationen hierdurch derer bei der getrennten Berechnung und anschließenden Zusammenführen übersteigt.
+Auf diese Weise lässt sich die Berechnung mathematisch kompakter schreiben.
 
-Beweisen!
+\begin{table}[htbp]
+\centering
+\caption{Takte für die komplexe DFT}
+\begin{tabular}{ccccc}
+\hline
+\multirow{2}{*}{Zeile} & Additionen & Takte pro Element & Takte für & Summe der\\
+      & pro Element ($N$) & ($\log_2(N)$) & Multiplikation & Takte\\
+\hline
+ 1& 8  & 3   &0 &3\\
+ 2& 12 & 3,6 &1 &5\\
+ 3& 8  & 3   &0 &3\\
+ 4& 12 & 3,6 &1 &5\\
+ 5& 8  & 3   &0 &3\\
+ 6& 12 & 3,6 &1 &5\\
+ 7& 8  & 3   &0 &3\\
+ 8& 12 & 3,6 &1 &5\\
+\hline
+\end{tabular}
+\end{table}
 
+(3+5)$\cdot$4$\cdot$8=256 Takte sowohl für den Real- als auch den Imaginärteil der komplexen Ausgangsmatrix. Real- und Imaginärteil werden parallel berechnet.
+
+Wenn nun aber die Eingangswerte in Real- und Imaginärteil getrennt werden, entfallen die Hälfte der Multiplikationen. Dass der Faktor für den Real- als auch den Imaginärteil 
+mindestens betragsmäßig $\frac{\sqrt{2}}{2}$ ist, könnte im komplexen Fall wiederum ausgenutzt werden.
+Dadurch, dass die Eingangswerte rein reell sind, kommen beispielsweise keine $j^2$-Kompnenten zustande, welche auf die reellen Elemente aufaddiert werden müssten.
+Aus diesem Grund müssen weniger Werte aufsummiert werden. Wie das Ausummieren erfolgt, kann in Abschnitt (\ref{sec:Berechnungsschema}) nachgelesen werden.
+
+\begin{table}[htbp]
+\centering
+\caption{Takte für die reelle DFT am Beispiel der reellen Ausgangsmatrix}
+\begin{tabular}{ccccc}
+\hline
+\multirow{2}{*}{Zeile} & Additionen & Takte pro Element & Takte für & Summe der\\
+      & pro Element ($N$) & ($\log_2(N)$) & Multiplikation & Takte\\
+\hline
+ 1& 8 & 3   &0 &3\\
+ 2& 6 & 2,6 &1 &4\\
+ 3& 4 & 2   &0 &2\\
+ 4& 6 & 2,6 &1 &4\\
+ 5& 8 & 3   &0 &3\\
+ 6& 6 & 2,6 &1 &4\\
+ 7& 4 & 2   &0 &2\\
+ 8& 6 & 2,6 &1 &4\\
+\hline
+\end{tabular}
+\end{table}
+
+Da es nur ganze Takte gibt, errechnen sich für den speziellen Fall der Twiddlefaktormatrix für die 8x8-DFT so (3+4+2+4+3+4+2+4)$\cdot$8=208 Takte. Der Imaginärteil errechnet 
+sich noch schneller, da die 1. und 5. Zeile keinen Beitrag leisten. So ergeben sich dort (0+3+2+3+0+3+2+3)$\cdot$8=128 Takte. Da beides parallel berechnet wird, kann hieraus
+kein Nutzen gezogen werden.
+
+
+Wie in Abschnitt \ref{sec:Konstantenmultiplizierer} gezeigt wird, kann die Multiplikation
+mit einer Konstanten innerhalb eines Taktes mit einem Schaltnetz erfolgen. Für die Negation sollte ebenfalls ein Takt eingeplant werden, weshalb der zeitliche Gewinn vermutlich
+begrenzt ist.
+
+
+Interessant ist dieser Ansatz dann, wenn die Recheneinheit so klein wie irgend möglich gehalten werden soll. Zu bedenken gilt es dann, dass zusätzlicher Speicher für 
+Zwischenwerte vorhanden sein muss. Da der Platzbedarf hierfür nicht zu unterschätzen ist, relativiert sich die Ersparnis in gewissem Umfang. Auf eine Gegenüberstellung
+wird an dieser Stelle verzichtet.
 
 
 Wenn das Signal der Sensoren als von einander unabhängige Sinus- und Kosinuswerte  und somit als rein reell aufgefasst wird, reduziert sich der Aufwand wie 

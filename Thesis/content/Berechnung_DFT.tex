@@ -286,24 +286,20 @@ Bei der oben beschriebenen Berechnung können die Eingangssignale auch komplex s
 komplex ist, kann es dort direkt als Eingangssignal für die komplexe 2D-DFT genutzt werden. 
 
 Es wäre jedoch auch möglich, das komplexe Ausgangssignal der 1D-DFT als zwei von einander unabhängige rein relle Eingangssignale der 2D-DFTs zu betrachten und später 
-wieder zusammen zu setzen. Gleiches gilt für ein komplexes Eingangssignal. Dieses kann ebenfalls in zwei von einander unabhängigen DFTs transformiert werden.
+wieder zusammen zu setzen. Gleiches gilt dann natürlich auch für ein komplexes Eingangssignal, welches ebenfalls in zwei von einander unabhängigen DFTs transformiert werden.
 Da bei dieser Umsetzung kein Imaginärteil in die Berechnung der Ergebnisse einfließt, hat sie den Vorteil, dass aus Symmetriegründen die Hälfte der Multiplikationen 
-eingespart werden können. Es ist erforderlich, dass der Imaginärteil der gespiegelten Ergebnisse negiert wird. Abbildung (\ref{pic:reelleMatMultRedundanz}) zeigt die 
+eingespart werden können. Hierbei ist es erforderlich, dass der Imaginärteil der gespiegelten Ergebnisse negiert wird. Abbildung (\ref{pic:reelleMatMultRedundanz}) zeigt die 
 redundanten Werte der DFT. Die grau hinterlegten Felder sind die Multiplikationen der Twiddlefaktormatrix. Es müssen bei der 8x8-DFT also statt 16 nur 8 Multiplikationen
 mit rellem Multiplikand und komplexen Multiplkator erfolgen.
 
-Grunsätzlich lässt sich dieses Verfahren auch für komplexe Eingangssignale, deren Real- und Imaginärteil separat von einander mit der DFT transformiert werden, anwenden.
+Wie bereits beschrieben lässt sich dieses Verfahren auch für komplexe Eingangssignale, deren Real- und Imaginärteil separat von einander mit der DFT transformiert werden, anwenden.
 Anschließend müssen die Ergebnisse zusammen gesetzt werden. Wie dies geschieht ist der Abbildung \ref{pic:reelleDFT} zu entnehmen.
-Da wie in Abschnitt \ref{sec:Konstantenmultiplizierer} gezeigt wird, die Multiplikation
-mit einer Konstanten innerhalb eines Taktes mit einem Schaltnetz erfolgen kann und auch die Negation einen Takt benötigt, ist hier zeitlich kein Gewinn zu erzielen.
-Interessant ist dieser Ansatz dann, wenn die Recheneinheit so klein wie irgend möglich gehalten werden soll. Zu bedenken gilt es dann, dass zusätzlicher Speicher für 
-Zwischenwerte vorhanden sein muss. Da der Platzbedarf hierfür nicht zu unterschätzen ist, relativiert sich die Ersparnis in gewissem Umfang. Auf eine Gegenüberstellung
-wird an dieser Stelle verzichtet.
-Darüber hinaus kann an dieser Stelle bereits gesagt werden, dass aufgrund der zusätzlichen Matrixmultiplikationen mehr Takte für die Berechnung der 2D-DFT benötigt werden.
-In Abbildung \ref{pic:reelleDFT} ist die schematische Berechnung der 2D-DFT eines reellen Eingangssignals zu sehen. Hieran lässt sich gut erkennen, dass die Platzersparnis
-stark auf kosten der benötigten Zeit ginge. Falls Zeit keine Rolle spielt und Speicher ohnehin vorhanden ist, könnten die zweiten DFTs nacheinander erfolgen.
+
+
+
+In Abbildung \ref{pic:reelleDFT} ist die schematische Berechnung der 2D-DFT eines reellen Eingangssignals zu sehen. 
 Um die 2D-DFT eines komplexen Eingangssignals zu berechnen, muss entweder eine identische Einheit für den Imaginärteil vorhanden sein oder noch mehr zeitlich versetzt 
-berechnet werden. Die Ergebnisse beider 2D-DFTs müssen identisch zusammengefasst werden, wie es zum Abschluss der einzelnen 2D-DFTs geschechen muss.
+berechnet werden. Die Ergebnisse beider 2D-DFTs müssen identisch zusammengefasst werden, wie es zum Abschluss der einzelnen 2D-DFTs geschehen muss.
 
 \begin{figure}[htbp]
  \centering

@@ -59,8 +59,8 @@ begin
 
   
   FSM_KOMB: process(dft_state)
-    --constant twiddle_coeff : signed(bit_width_adder-1 downto 0) := "0001011010100";
-    variable twiddle_coeff : signed(16 downto 0) := "00010110101000001";
+    --constant twiddle_coeff : signed(16 downto 0) := "00010110101000001";
+    variable twiddle_coeff : signed(bit_width_adder-1 downto 0);
     
     variable mult_re, mult_im : signed(bit_width_multiplier-1 downto 0);
     
@@ -75,10 +75,11 @@ begin
     
     variable row_col_idx : integer := 0;
     
-    variable LineBuffer : LINE;
+    --variable LineBuffer : LINE;
                   
 
   begin  
+    twiddle_coeff := "0001011010100";
     -- Flip-Flops
        -- werden das 1. Mal sich selbst zu gewiesen, bevor sie einen Wert haben!
     result_ready <= '0';
@@ -346,6 +347,7 @@ begin
         
             -- Hier werden die Bits um 2 Stellen nach rechts geschoben, damit die Werte mit den Zeilen 2, 4, 6, 8 vergleichbar sind. Dort wird insgesamt gleich 
             -- oft geshiftet, aber auch 1x mehr aufaddiert.
+            -- Indizes vertauschen -> Transponiert abspeichern
             if dft_1d_2d = '0' then
                 dft_1d_real(I_col)(row_col_idx) := resize(temp_re(0)(bit_width_adder-1 downto 2), bit_width_extern);
                 dft_1d_imag(I_col)(row_col_idx) := resize(temp_im(0)(bit_width_adder-1 downto 2), bit_width_extern);
@@ -377,8 +379,8 @@ begin
         -- Der Zielvektor der Multiplikation ist 26 Bit breit, die beiden Multiplikanten sind mit je 13 Bit wie gefordert halb so breit.
         
         -- Zeilen 2, 4, 6, 8 (vergleichbar mit oben)
-        mult_re := temp_re(2) * twiddle_coeff(16 downto 16-(bit_width_adder-1));
-        mult_im := temp_im(2) * twiddle_coeff(16 downto 16-(bit_width_adder-1));
+        mult_re := temp_re(2) * twiddle_coeff; --(16 downto 16-(bit_width_adder-1));
+        mult_im := temp_im(2) * twiddle_coeff; --(16 downto 16-(bit_width_adder-1));
         
         next_dft_state <= additions_stage3;
 
@@ -396,6 +398,7 @@ begin
         temp14bit_im := resize(mult_im(bit_width_multiplier-4 downto bit_width_multiplier-4-bit_width_extern), bit_width_adder+1) + resize(temp_im(0)(bit_width_adder-1 downto 1), bit_width_adder+1);
         temp_im(0) := temp14bit_im(bit_width_adder downto 1);
             
+        -- Indizes vertauschen -> Transponiert abspeichern
         if dft_1d_2d = '0' then
           dft_1d_real(I_col)(row_col_idx) := temp_re(0)(bit_width_adder-1 downto 1);
           dft_1d_imag(I_col)(row_col_idx) := temp_im(0)(bit_width_adder-1 downto 1);
@@ -404,15 +407,10 @@ begin
           result_imag(I_col)(row_col_idx) <= temp_im(0)(bit_width_adder-1 downto 1);
         end if;
         
+        next_dft_state <= twiddle_calc;    
         if element = 63 then
           if dft_1d_2d = '1' then
-            next_dft_state <= set_ready_bit;
-            
-            --report "Bitbreite der Eingangswerte ist " &integer'image(bit_width_extern);
-            --write(LineBuffer, std_logic_vector(twiddle_coeff(16 downto 16-(bit_width_adder-1))));
-            --writeline(output, LineBuffer);
-          else
-            next_dft_state <= twiddle_calc;    
+            next_dft_state <= set_ready_bit;            
           end if;
           dft_1d_2d := not dft_1d_2d;
           dft_1d_2d_out <= dft_1d_2d;

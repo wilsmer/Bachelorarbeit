@@ -64,3 +64,12 @@ Derzeit wird davon ausgegangen, dass der Chip in einer Strukturgröße von \SI{3
 Bei einem Bitshift kann immer Information verloren gehen. Dies ist immer dann der Fall, wenn die Bits die abgeschnitten werden eine 1 sind. Das hat zur Folge, dass beispielsweise
 bei einer Division durch Zwei der resultierende Wert um 1\,LSB kleiner ist, als er eigentlich sein sollte. 
 Da dieses Problem bei jedem Bitshift auftritt und die Wahrscheinlichkeit für eine 1 bei 50$\%$ liegt, muss davon ausgegangen werden, dass das Endergebnis 
+
+
+Von Prof. Vollmer: 
+\begin{equation}
+ S_N = \frac{P_Q}{\left(2^0\right)^2} + \frac{P_Q}{\left(2^1\right)^2} + \frac{P_Q}{\left(2^2\right)^2} + \cdots + \frac{P_Q}{\left(2^{L-1}\right)^2}
+\end{equation}
+L : Stufe 
+
+Vielleicht lass ich das auch weg!

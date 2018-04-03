@@ -59,7 +59,7 @@ wurde auf das Speichern in lokalen Speicherzellen ausgewichen, welche als Variab
 
 
 
-\section{Berechnungsschema der geraden und ungeraden Zeilen}
+\section{Berechnungsschema der geraden und ungeraden Zeilen}\label{sec:Berechnungsschema}
 
 Berechnung ungerader Zeilen am Beispiel der ersten:
 \begin{center}
@@ -137,12 +137,16 @@ drei respektive vier Bitshifts durch zu führen. Wie bereits erläutert erfolgt 
 1D-DFT, dass das Ergebnis um den Faktor 16 kleiner ist, als beispielsweise bei der Berechnung mit Matlab. Da bei bei dem zweiten Durchlauf, um die 2D-DFT zu berechnen, ebenfalls 
 durch 16 geteilt wird, ergibt sich insgesamt eine Division durch $2^{2\cdot4} = $ 256.
  
-\subsection{Anzahl der vermuteten benötigten Takte}
-Gerade Zeilen 3 Takte * 8 * 4 * 2 = 192
+\subsection{Erwartete Anzahl benötigter Takte}
+Aus den Abbildungen (\ref{pic:AkkumulationUngeradeSpalten}) und (\ref{pic:AkkumulationGeradeSpalten}) können die Takte die zur Berechnung der 1D- bzw. 2D-DFT benötigt werden 
+abgeleitet werden.
 
-Ungerade Zeilen 5 Takte * 8 * 4 * 2 = 320
+Für ungeraden Zeilen sind je Element 3 Takte nötig und mit 8 Elementen pro Zeile und 4 ungeraden Zeilen errechnen sich so 3$\cdot$8$\cdot$4=96 Takte.
+Analog errechnet sich für die ungeraden Zeilen mit je 5 Takten pro Element 5$\cdot$8$\cdot$4=160 Takte.
+In der Summe ergeben sich so 96+160=256 Takte für die 1D-DFT. Da die 2D-DFT ohne Takte fürs Umspeichern oder ähnliches sofort im Anschluss berechnet werden kann, 
+verdoppelt sich die Anzahl der Takte auf 512 für die vollständige Berechnung.
 
-Summe 512
+
 
  
  
