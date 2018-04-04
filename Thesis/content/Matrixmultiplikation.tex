@@ -34,13 +34,14 @@
  
 
 
-Um nachfolgende Abschnitte besser erörten zu können, soll zunächst die Matrizenmultiplikation besprochen werden.
-Wie in Abbildung \ref{eq:grafikMatrizenmultiplikation} verdeutlicht, wird Element$(i,j)$ der Ergebnismatrix dadurch berechnet, dass die Elemente$(i,k)$ einer Zeile der 1. Matrix
+Um nachfolgende Abschnitte besser erörten zu können, soll zunächst die Matrixmultiplikation besprochen werden.
+Wie in Abbildung \ref{fig:grafikMatrizenmultiplikation} verdeutlicht, wird Element$(i,j)$ der Ergebnismatrix dadurch berechnet, dass die Elemente$(i,k)$ einer Zeile der 1. Matrix
 mit den Elementn$(k,j)$ aus der zweiten Matrix multipliziert und die Werte aufsummiert werden. $i$ und $j$ sind für die Berechnung eines Elements konstant, während $k$ über alle
 Elemente einer Zeile bzw. Spalte läuft.
 
 \begin{center}
- 
+ \begin{figure}[htbp]
+ \centering
 \begin{minipage}{0.2\textwidth}
  \begingroup
  \renewcommand*{\arraystretch}{1.1} % Zeilenabstand
@@ -97,14 +98,14 @@ Elemente einer Zeile bzw. Spalte läuft.
 \begingroup
 \renewcommand*{\arraystretch}{1.1} % Zeilenabstand
 \renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
-\begin{align}\label{eq:grafikMatrizenmultiplikation}
+\begin{align*}
    \begin{bmatrix}
     \tikzmark{varrowtopleft} \myLightgrayBox 	& \myBlackBox		& \myLightgrayBox 	& \tikzmark{varrowtopright} \myLightgrayBox \\
                              \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
                              \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
     \tikzmark{varrowbottom}  \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
    \end{bmatrix}
- \end{align} 
+ \end{align*} 
  \endgroup
     \tikz[overlay,remember picture] {
   \draw[->] ([yshift=1.5ex,xshift=-2ex]varrowtopleft) -- ([xshift=-2ex]varrowbottom)
@@ -113,4 +114,8 @@ Elemente einer Zeile bzw. Spalte läuft.
             node[midway,above] {$j$};
 }
 \end{minipage}
+
+\caption{Veranschaulichung der Matrixmultiplikation}
+\label{fig:grafikMatrizenmultiplikation}
+\end{figure}
 \end{center}

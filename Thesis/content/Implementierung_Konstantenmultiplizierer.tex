@@ -38,10 +38,10 @@ mit $+\frac{\sqrt{2}}{2}$ benötigt.
 \subsection{Syntheseergebnis eines 13 Bit Kostantenmultiplizierers}
 \begin{figure}[!ht]
 \centering  
- \fbox{
-  \includegraphics[width=1\textwidth]{img/Konstantenmultiplizierer_Encounter_sw.png}
-  }
-  \caption{12 Bit Konstantenmultiplizierer für $\frac{\sqrt{2}}{2} = 0,70711... \simeq 0,70703 = 010110101000_2$ in Encounter}
+ %\fbox{
+  \includegraphics[width=1\textwidth]{img/13Bit_Konstantenmultiplizierer_Netlist.png}
+  %}
+  \caption{13 Bit Konstantenmultiplizierer für $\frac{\sqrt{2}}{2} = 0,70711... \simeq 0,70703 = 0001011010100_2$ in Encounter; Eingang links, Ausgang rechts}
 \end{figure}
 
 
@@ -68,3 +68,17 @@ Der vollständige Gate-Report befindet sich in Abschnitt \ref{src:rc_gate_report
 
 
 
+\subsection{Syntheseergebnis für die Bildung des Zweierkomplements eines 13 Bit Vektors}
+
+Zum Vergleich soll hier die nicht Implementierte aber in Abschnitt (\ref{sec:GegenüberstellungRelleKomplexeEingangswerte}) erwähnte Negierung von Zahlen gezeigt werden.
+
+\begin{figure}[htpb]
+\centering
+\includegraphics[width=0.99\textwidth]{img/13Bit_Inverter_Netlist.png}
+\caption{Netzliste einer Einheit zur Bildung des 2er-Komplements eines 13 Bit Vektors; Eingang links, Ausgang rechts}
+\label{pic:13BitInverter}
+\end{figure}
+
+Für die Negierung eines 13 Bit Vektors mit 22 Standardzellen sind knapp doppelt so viele Gatter nötig wie der Vektor Bits breit ist. Wie zu in Abb. (\ref{pic:13BitInverter})
+sehen handelt es sich fast ausschließlich um Inverter und Addierer. In Abschnitt (\ref{sec:Integer2erKomplement}) wurde bereits beschrieben, dass für die Bildung des
+2er-Komplements zunächst alle Bits invertiert werden müssen. Abschließend wird auf den Vektor 1 LSB addiert.

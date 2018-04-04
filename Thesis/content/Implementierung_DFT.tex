@@ -61,26 +61,28 @@ wurde auf das Speichern in lokalen Speicherzellen ausgewichen, welche als Variab
 
 \section{Berechnungsschema der geraden und ungeraden Zeilen}\label{sec:Berechnungsschema}
 
-Berechnung ungerader Zeilen am Beispiel der ersten:
-\begin{center}
-$a_{k0} + a_{k1} + a_{k2} + a_{k3} + a_{k4} + a_{k5} + a_{k6} + a_{k7}$\\
-\end{center}
-%\hrule
+In Abbildung (\ref{pic:AkkumulationUngeradeSpalten}) ist die Berechnung der ungeraden Zeilen am Beispiel der ersten zu sehen.
+
+\begin{figure}[htbp]
+\centering
+$a_{0} + a_{1} + a_{2} + a_{3} + a_{4} + a_{5} + a_{6} + a_{7}$\\
+
 \vspace{0.5cm}
-\begin{center}
 \begin{tabular}{ccccccccc}
 Takt&\multicolumn{6}{l}{ } & & Bit\\
 1&$\underbrace{a_{k0} + a_{k1}}$ &  &$ \underbrace{a_{k2} + a_{k3}}$ &  &$\underbrace{a_{k4} + a_{k5}}$ &  &$\underbrace{a_{k6} + a_{k7}}$ & 12\\
-&\multicolumn{7}{l}{$\hspace{0.65cm} \Downarrow \hspace{2.5cm} \Downarrow \hspace{2.5cm} \Downarrow \hspace{2.5cm}\Downarrow$}&13\\
-2&\multicolumn{3}{c}{$\underbrace{sum\_s1\_1 \quad + \quad sum\_s1\_2}$} & & \multicolumn{3}{c}{$\underbrace{sum\_s1\_3 \quad + \quad sum\_s1\_4}$} & 12\\
+&\multicolumn{7}{l}{$\hspace{0.65cm} \Downarrow \hspace{2.3cm} \Downarrow \hspace{2.3cm} \Downarrow \hspace{2.3cm}\Downarrow$}&13\\
+2&\multicolumn{3}{c}{$\underbrace{sum\_1\_1 \quad + \quad sum\_1\_2}$} & & \multicolumn{3}{c}{$\underbrace{sum\_1\_3 \quad + \quad sum\_1\_4}$} & 12\\
 &\multicolumn{3}{c}{$\Downarrow$} & & \multicolumn{3}{c}{$\Downarrow$}&13\\
-3&\multicolumn{7}{c}{$\underbrace{sum\_s2\_1 \quad  \quad \quad \quad + \quad \quad \quad  \quad sum\_s2\_2}$} & 12\\
+3&\multicolumn{7}{c}{$\underbrace{sum\_2\_1 \quad  \quad \quad \quad + \quad \quad \quad  \quad sum\_2\_2}$} & 12\\
 &\multicolumn{7}{c}{$\Downarrow$}&13\\
-&\multicolumn{7}{c}{$sum\_s3\_1$} & 12\\
+&\multicolumn{7}{c}{$sum\_3\_1$} & 12\\
 &\end{tabular}
-\captionof{figure}{Vorgehensweise der Akkumulation der ungeraden Spalten der Eingangswerte}
+%\captionof{figure}{Vorgehensweise der Akkumulation der ungeraden Spalten der Eingangswerte}
+\caption{Vorgehensweise der Akkumulation der ungeraden Spalten der Eingangswerte}
 \label{pic:AkkumulationUngeradeSpalten}
-\end{center}
+\end{figure}
+%\end{center}
 
 \vspace{0.5cm}
 
@@ -89,38 +91,32 @@ Wie der linken Spalte zu entnehmen ist, werden 3 Takte für die Berechnungen der
 werden nur 11 Bit übernommen. Es wird alo ein doppelter Bitshift vollzogen. Dies erfolgt, damit sowohl in den geraden als auch den ungeraden Zeilen gleich viele Bitshifts erfolgen
 und die Werte somit identisch skaliert sind.
 
-\vspace{1cm}
-
-Berechnung gerader Zeilen am Beispiel der zweiten:
- \begin{center} 
+Die Berechnung der geraden Zeilen wird in Abbildung (\ref{pic:AkkumulationGeradeSpalten}) am Beispiel der zweiten Zeile gezeigt
+\begin{figure}[htbp]
+ \centering
  $a_0 - x_1 + x_0 - b_2 + x_2 - x_3 + a_4 - x_5 + x_4 - b_6 + x_6 - x_7$\\
- \end{center}
- %\hrule
- 
+
  \vspace{0.3cm}
-%\begin{figure}[htbp]
-\begin{center}
+ 
 \begin{tabular}{ccccccccccccc}
 Takt&\multicolumn{11}{c}{}&Bit\\
 1 &$\underbrace{a_0 - x_1}$ &        &$ \underbrace{x_0 - b_2}$ &  &$\underbrace{x_2 - x_3}$ &  &$\underbrace{a_4 - x_5}$ &  &$\underbrace{x_4 - b_6}$ &$\underbrace{x_6 - x_7}$& &12\\
   &\multicolumn{11}{l}{$\hspace{0.5cm} \Downarrow \hspace{1.75cm} \Downarrow \hspace{2.4cm} \Downarrow \hspace{1.8cm}\Downarrow \hspace{1.8cm}\Downarrow \hspace{1.4cm}\Downarrow$}&13\\
-2 &\multicolumn{3}{c}{$\underbrace{s1\_1 \quad + \quad s1\_2}$} & & \multicolumn{3}{c}{$\underbrace{s1\_3 \quad + \quad s1\_4}$} &\multicolumn{3}{c}{$\quad \underbrace{s1\_5 \quad + \quad s1\_6}$}& &12\\
+2 &\multicolumn{3}{c}{$\underbrace{sum1\_1 \: + \: sum1\_2}$} & & \multicolumn{3}{c}{$\underbrace{sum1\_3 \: + \: sum1\_4}$} &\multicolumn{3}{c}{$\: \underbrace{sum1\_5 \: + \: sum1\_6}$}& &12\\
   &\multicolumn{3}{c}{$\Downarrow$}  & & \multicolumn{3}{c}{$\Downarrow$} & & \multicolumn{2}{c}{$\Downarrow$}& &13\\
-3 &\multicolumn{7}{c}{$\underbrace{s2\_1 \quad  \quad \quad \quad + \quad \quad \quad  \quad s2\_2}$} & & & & &12\\
+3 &\multicolumn{7}{c}{$\underbrace{sum2\_1 \quad  \quad \quad \quad + \quad \quad \quad  \quad sum2\_2}$} & & & & &12\\
   &\multicolumn{7}{c}{$\Downarrow$}& & \multicolumn{2}{c}{$\Downarrow$}& &13\\
-  &\multicolumn{7}{c}{$s3\_1$}& & & & &13\\
+  &\multicolumn{7}{c}{$sum3\_1$}& & & & &13\\
   & & & & $\Downarrow$& & & & & \multicolumn{2}{c}{$\Downarrow$} & & 13\\
 4 & & & & $\frac{\sqrt{2}}{2}$&\multicolumn{5}{c}{}& & &13\\
   & & & & $\Downarrow$& & & & & \multicolumn{2}{c}{$\Downarrow$ }& & 26\\
-5 & & & \multicolumn{9}{c}{$\underbrace{s4\_1 \:  \quad \quad \quad \quad \quad \quad + \quad \quad \quad \quad \quad \quad   s2\_3}$} &12\\
+5 & & & \multicolumn{9}{c}{$\underbrace{sum4\_1 \:  \quad \quad \quad \quad \quad \quad + \quad \quad \quad \quad \quad \quad   sum2\_3}$} &12\\
   & & & \multicolumn{9}{c}{$\Downarrow$}&13\\
-  & & & \multicolumn{9}{c}{$s5\_1$}&12\\
+  & & & \multicolumn{9}{c}{$sum5\_1$}&12\\
 \end{tabular}
-\captionof{figure}{Vorgehensweise der Akkumulation der geraden Spalten der Eingangswerte}
+\caption{Vorgehensweise der Akkumulation der geraden Spalten der Eingangswerte}
 \label{pic:AkkumulationGeradeSpalten}
-\end{center}
-
-%\end{figure}
+\end{figure}
 
 \vspace{1cm}
 Auch hier ist der linken Spalte die Anzahl der benötigten Takte zu entnehmen. In diesem Fall werden 5 Takte für die Berechnungen benötigt. Diese setzen sich zusammen aus
@@ -136,7 +132,7 @@ wobei $N_B$ die Anzahl der Bitshifts ist. Den beiden obigen Darstellungen der Su
 drei respektive vier Bitshifts durch zu führen. Wie bereits erläutert erfolgt bei den ungeraden Zeilen abschließend ein doppelter Bitshift. Auf diese Weise ergibt sich für die
 1D-DFT, dass das Ergebnis um den Faktor 16 kleiner ist, als beispielsweise bei der Berechnung mit Matlab. Da bei bei dem zweiten Durchlauf, um die 2D-DFT zu berechnen, ebenfalls 
 durch 16 geteilt wird, ergibt sich insgesamt eine Division durch $2^{2\cdot4} = $ 256.
- 
+ \clearpage
 \subsection{Erwartete Anzahl benötigter Takte}
 Aus den Abbildungen (\ref{pic:AkkumulationUngeradeSpalten}) und (\ref{pic:AkkumulationGeradeSpalten}) können die Takte die zur Berechnung der 1D- bzw. 2D-DFT benötigt werden 
 abgeleitet werden.
@@ -150,14 +146,15 @@ verdoppelt sich die Anzahl der Takte auf 512 für die vollständige Berechnung.
 
  
  
-\section{Struktogramm}
+%\section{Struktogramm}
 
-\includepdf{content/Struktogramm.pdf}
+%\includepdf{content/Struktogramm.pdf}
 
 \section{Automatengraf}
 
-\begin{center}
- 
+
+ \begin{figure}[htbp]
+ \centering
 \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=4.5cm,
                     semithick,initial text=nReset, initial where=above]
   \tikzstyle{every state}=[fill=white, text=black]
@@ -165,12 +162,12 @@ verdoppelt sich die Anzahl der Takte auf 512 für die vollständige Berechnung.
   
 
   \node[initial,state, circle split,minimum size=70pt] (A)                   {Idle};
-  \node[state, circle split, minimum size=70pt]         (B) [below right of=A]{Twiddle\_Calc};
-  \node[state, circle split, minimum size=70pt]         (C) [below right of=B]      {Additions\_1};
-  \node[state, circle split, minimum size=70pt]         (D) [below of=C] {Additions\_2};
-  \node[state, circle split, minimum size=70pt]         (E) [below left of=D] {Const\_mult};
-  \node[state, circle split, minimum size=70pt]         (F) [above left of=E]      {Additions\_3};
-  \node[state, circle split, minimum size=70pt]         (G) [above of=F]      {set\_ready\_bit};
+  \node[state, circle split, minimum size=65pt]         (B) [below right of=A]{Twiddle\_Calc};
+  \node[state, circle split, minimum size=65pt]         (C) [below right of=B]      {Additions\_1};
+  \node[state, circle split, minimum size=65pt]         (D) [below of=C] {Additions\_2};
+  \node[state, circle split, minimum size=65pt]         (E) [below left of=D] {Const\_mult};
+  \node[state, circle split, minimum size=65pt]         (F) [above left of=E]      {Additions\_3};
+  \node[state, circle split, minimum size=65pt]         (G) [above of=F]      {set\_ready\_bit};
 
   
    \path (A) edge (B) 
@@ -184,14 +181,12 @@ verdoppelt sich die Anzahl der Takte auf 512 für die vollständige Berechnung.
          (F) [bend left=10] edge (G)
          (G) edge (B);
 \end{tikzpicture}
-\end{center}
+\caption{Automatengraf}
+\label{pic:Automatengraf}
+\end{figure}
 
 
 \section{UML-Diagramm}
-
-%\begin{landscape}
- 
-
 
 % Define block styles
 \tikzstyle{decision} = [diamond,                    draw, fill=blue!20, text width=6em, text badly centered, node distance=4cm, inner sep=0pt]
