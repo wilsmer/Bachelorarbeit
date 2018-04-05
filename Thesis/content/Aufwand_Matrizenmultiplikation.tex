@@ -145,4 +145,9 @@ kommt es unweigerlich zur Akkumulation von Fehlern.
 Da für die Berechnung einer Zahl der 1D-DFFT je nach Zeile entweder 8 oder 12 Werte akkumuliert sowie 0 bis 4 Werte multipliziert werden und für die 2D-DFT entsprechend doppelt 
 so viele, akkumulieren sich zwangsläufig Fehler. Bei 12 Bit Eingangswerten wäre ein 47? Bit Ausgangsvektor nötig, um dies vollständig zu vermeiden. Dies ist jedoch aus u.a.
 Platzgründen nicht umsetzbar.
+
+Mit jeder Addition kommt 1 bit dazu. So werden aus 12\,Bit bis zur Multiplikation 15 (12 + $\log_2(8)$), 8 = Anzahl der Zahlen die mit $\tfrac{\sqrt{2}}{2}$ multipliziert
+werden müssen. Bei der Multiplikation verdopplet sich der Wert, also 30 und eine letzte Addition macht 31.
+Beim zweiten Durchlauf werden es so (31+3)$\cdot$2+1=69\,Bit.
+
 $\Rightarrow$ Anhand eines Simulationsbeispiels zeigen, dass die mit VHDL berechneten Werte immer kleiner als die in Matlab berechneten sind.

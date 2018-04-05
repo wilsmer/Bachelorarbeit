@@ -7,6 +7,27 @@ Zeigen, welche Bits heraus genommen werden müssen! und belegen warum.
 CLA, RC, in einem Takt
 
 \subsection{Konstantenmultiplikation}
+Dieser Punkt muss irgendwie mit der Implementierung des Konstantenmultiplizierers zusammengeführt werden.
+
+Der duale Wert lässt sich am einfachsten mit der Matlab-Funktion \texttt{fi()} ermitteln. Der Funktion werden hierfür Kommagetrennt der Deziamlwert, 1 für vorzeichenbehaftet,
+die gesamte Anzahl an Stellen (13) und die Anzahl der Nachkommastellen (10) übergeben. Der vollständige Aufruf sieht dann wie folgt aus:
+
+% \begin{lstlisting}[language=matlab, frame=false, numbers=none, keywordstyle=\color{black},rulecolor=\color{white}]
+% val=fi(sqrt(2)/2,1,13,10)
+% \end{lstlisting}
+\texttt{val=fi(sqrt(2)/2,1,13,10)}
+
+Der erzeugte Datentyp hat unter anderem die Eigenschaften \texttt{val.bin}, welche einem mit $0001011010100$ den Wert als Binärzahl zurück gibt, 
+\texttt{val.double} gibt den approximierten Dezimalwert mit 0,70703125 zurück und \texttt{val.dec} interpretiert den Dualwert als Integer, was 724 entspricht.
+Letzterer ist wichtig zu kennen, um die Werte der Simulation nachvollziehen zu können.
+
+Der Berechnung aus Gleichung (\ref{eq:abweichungWurzel2halbe}) kann entnommen werden, dass die Abweichung weit unter einem Prozent liegt.
+
+\begin{equation}\label{eq:abweichungWurzel2halbe}
+ \frac{100}{\dfrac{\sqrt{2}}{2}}\cdot 0,70703125 = 99,989\%
+\end{equation}
+
+
 
 \subsection{1D-DFT mit Integer-Werten}
  
@@ -17,11 +38,16 @@ CLA, RC, in einem Takt
 \subsection{Vertauschen der Twiddlefaktor-Matrix-Zeilen ergibt IDFT}
 
 \section{Test der Matrizenmultiplikation}
-Zunächst wurde die Berechnung als Ganzzahl-Multiplikation mit dem Faktor 3 betrachtet. Da es bei diesem Faktor und den gewählten Eingangswerten nicht zu einem 
-Überlauf kommen kann, war es zu diesem Zeitpunkt noch nicht nötig, sich Gedanken über die Breite des Ergebnisvektors bzw den Ausschnitt daraus für die weitere
-Berechnung zu machen. Auch konnte an dieser Stelle noch auf den Bitshift zur Halbierung der Werte verzichtet werden.
+Unter anderem weil NC\,Sim bzw. dessen Unterprogramm SimVision zur Anzeige von Signalverläufen (Waveform) nur Integer darstellen kann und bei als Vektor gebündelten Signalen 
+diese nicht einmal als vorzeichenbehaftet (signed), wurde der Einfachheit halber zunächst die Berechnung als Ganzzahl-Multiplikation mit dem Faktor 3 betrachtet. 
+Da es bei diesem Faktor und den gewählten Eingangswerten nicht zu einem 
+Überlauf kommen kann, war es zu diesem Zeitpunkt noch nicht nötig, sich Gedanken über die Breite des Ergebnisvektors bzw. den Ausschnitt daraus für die weitere
+Berechnung zu machen. Deshalb konnte an dieser Stelle noch auf den Bitshift zur Halbierung der Werte verzichtet werden.
 
 Erst als der Faktor $\frac{\sqrt{2}}{2}$ übernommen wurde, wurden die Ergebnisse breiter als der Vektor für die weitere Berechnung an Bits zur Verfügung stellt.
+
+${\frac{\sqrt{2}}{2}}_{10}$ = $0001011010100_2$ in S2Q10, als Integer betrachtet jedoch $724_{10}$.
+
 Daraus folgt, dass ein Teil der Bits abgeschnitten werden müssen. Da die Dualzahlen jetzt im S1Q10-Format betrachtet werden, es sich also um Kommazahlen handelt,
 müssen die hinteren Bits abgeschnitten werden. Zudem können vorne Bits ohne Informationsverlust gestrichen werden, da durch die Multiplikation ein weiteres 
 Negations-Bit dazugekommen ist und auf Grund des gegebenen Faktors der Wertebereich vorne nie ganz ausgenutzt wird. (Verifizieren / Belegen!)
@@ -41,7 +67,7 @@ mit $+\frac{\sqrt{2}}{2}$ benötigt.
  %\fbox{
   \includegraphics[width=1\textwidth]{img/13Bit_Konstantenmultiplizierer_Netlist.png}
   %}
-  \caption{13 Bit Konstantenmultiplizierer für $\frac{\sqrt{2}}{2} = 0,70711... \simeq 0,70703 = 0001011010100_2$ in Encounter; Eingang links, Ausgang rechts}
+  \caption{13 Bit Konstantenmultiplizierer für $\frac{\sqrt{2}}{2} = 0.70711 \simeq 0.70703125 = 0001011010100_2$ in Encounter; Eingang links, Ausgang rechts}
 \end{figure}
 
 
@@ -60,9 +86,8 @@ mit $+\frac{\sqrt{2}}{2}$ benötigt.
 \end{table}
 
 
-Der Ausgang hat so wie der Eingang 13 Bit.
 
-Auf Skript verweisen, mit dem ermittelt wurde, dass das die beste Annäherung an $\frac{\sqrt{2}}{2}$ ist.
+
 
 Der vollständige Gate-Report befindet sich in Abschnitt \ref{src:rc_gate_report} auf Seite \pageref{src:rc_gate_report}
 
