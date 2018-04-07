@@ -1,6 +1,7 @@
 \subsection{Berechnung der Diskreten Fouriertransformation mittels FFT}\label{sec:BerechnungFFT}
-Die Mathematiker Cooley und Tukey haben einen Algorithmus entwickelt, mit dem sich die \gls{dft} mit vergleichsweise wenig Multiplikationen
-und somit deutlich schneller als bei der allgemeinen \gls{dft} berechnen lässt. Grundlage ist, dass sich eine DFT
+Die Mathematiker Cooley und Tukey haben einen Algorithmus entwickelt und im Jahr 1965 veröffentlich, mit dem sich die \gls{dft} mit vergleichsweise wenig Multiplikationen
+und somit deutlich schneller als bei der allgemeinen \gls{dft} berechnen lässt. Das Verfahren wird als \gls{fft} bezeichnet.
+Grundlage ist, dass sich eine DFT
 in kleinere Teil-DFTs aufspalten lässt, welche durch Ausnutzen von Symmetrieeigenschaften in der Summe weniger Koeffizienten haben. 
 Üblich ist die Radix-2 FFT, Ausgangspunkt ist also eine DFT mit 2 Eingangswerten.
 Da mit jeder weiteren Teil-DFT sich die Anzahl der Eingangswerte verdoppelt, eignet sich diese Methode nur für Eingangsvektoren der Größe $2^n$. Dieser
@@ -23,7 +24,7 @@ Hier ergeben sich die Werte $1, -j, -1, j$, was ebenfalls bedeutet, dass keine M
 aus der Erkenntnis, dass die Werte $exp(-i 2 \pi m n/N)$ und $exp(-i 2 \pi \frac{m n}{2}/N) = -exp(-i 2 \pi m n/N)$ lediglich ein negiertes Vorzeichen haben. Auch dies lässt sich der Abb. 
 (\ref{pic:Einheitskreis_Faktoren}) entnehmen. Auf diese Weise fällt der Faktor $-j$ weg. Bedeutend wichtiger ist jedoch, dass sich so die Hälfte der Multiplikationen einsparen lässt.
 
-Bei der dritten Stufe gibt es wegen der acht Eingangswerte theortisch auch acht Faktoren. Aus den genannten Symmentriegründen halbiert sich die Anzahl. Wiederum die Hälfte davon 
+Bei der dritten Stufe gibt es wegen der acht Eingangswerte theoretisch auch acht Faktoren. Aus den genannten Symmentriegründen halbiert sich die Anzahl. Wiederum die Hälfte davon 
 sind komplexe Faktoren, die übrigen erfordern keine Multiplikation. Dies bedeutet, dass zwei komplexe Multiplikationen durchgeführt werden müssen, was wiederum insgesamt acht reellen 
 Multiplikationen entspricht. 
 
@@ -40,7 +41,7 @@ Insbesondere bei größeren FFTs ist die relative Abweichung bedeutend geringer.
 \begin{figure}[htbp]
  \centering
  \includegraphics[width=0.7\textwidth]{img/Butterfly.png}
- \caption{8x8 Butterfly}
+ \caption{Berechnungsschema der DFT mit 8 Eingangswerten nach dem Butterfly-Verfahren}
  \label{pic:Butterfly}
 \end{figure}
 

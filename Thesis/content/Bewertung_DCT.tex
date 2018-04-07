@@ -1,8 +1,13 @@
 \section{Bewertung verschiedener DCT-Größen}
+In Tabelle \ref{tab:DCT-TwiddlefaktorMatrizenBewertung} ist die Gegenüberstellung der genannten Größen zu sehen. Für die Bewertung wurd das 
+Matlab-Skript aus Anhang \ref{src:dct_bewertung} geschrieben.
+Ersichtlich ist, dass die Anzahl verschiedener nicht trivialer Werte etwa der Wurzel aus der Anzahl aller Werte ist.
+Dies bedeutet im Umkehrschluss, dass im Schnitt jede Zeile einen neuen Faktor einführt. Die Summe nicht trivialer Werte weist bei allen Matrizen
+mehr als 50$\%$ auf. 
 
 \begingroup
   \renewcommand*{\arraystretch}{1.2} % Zeilenabstand der Tabelle
-\begin{table}[ht]
+\begin{table}[ht!]
  \centering
  \caption{Bewertung der DCT-Twiddlefaktor-Matrizen}
  \begin{tabular}{lccccc}

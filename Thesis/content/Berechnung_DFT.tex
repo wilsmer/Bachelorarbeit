@@ -19,22 +19,26 @@ zusammengesetzt ist. Da bei der eben beschriebenen Datenerfassung Ortsdaten tran
 
 In dieser Arbeit werden statt Zeit- bzw. Ortsbereich respektive Frequenzbereich und Bildverarbeitung häufig auch die Begriffe Ein- und Ausgangsvektor bzw. -matrix verwendet.
 
-
+Mit der \gls{1d-dftn} wird die spaltenweise DFT einer Matrix bezeichnet, in der Regel ist sie der erste Schritt der Berechnung der \gls{2d-dft}. 
+Die Größe der Eingangsmatrix gibt die Größe der Twiddlefaktormatrix vor, beide müssen identisch und
+quadratisch sein. In dieser Arbeit wird die \gls{dft} einer Matrix der Größe $N$x$N$ auch $N$x$N$-\gls{dft} genannt.
 
 
 \subsection{Summen- und Matrizenschreibweise der DFT}
 \subsubsection{1D-DFT}
-Die \gls{1d-dft} findet wie bereits erwähnt üblicherweise Anwendung, um vom Zeit- in den Frequenzbereich zu gelangen.
+Die \gls{dft} findet wie bereits erwähnt üblicherweise Anwendung, um vom Zeit- in den Frequenzbereich zu gelangen.
 \begin{equation}\label{eq:dft}
  X^* \left[ m \right] = \frac{1}{N} \cdot \sum^{N-1}_{n=0} x[n] \cdot e^{-\frac{j 2 \pi m n}{N}}
 \end{equation}
 
 
+In Gleichung (\ref{eq:dft}) ist die übliche Verwendung von Eingangsvektor $x[n]$ und Ausgangsvektor $X[n]$ zu sehen. Eine spaltenweise Multiplikationen einer Matrix
+ist auch denkbar und ist darüber hinaus Grundlage für die \gls{2d-dft}.
+Gleichung (\ref{eq:1D-DFT_MatrixMult}) zeigt die Summenformel aus (\ref{eq:dft}) umgeschrieben zu einer Matrixmultiplikation.
 
-Gleichung \ref{eq:1D-DFT_MatrixMult} zeigt die obige Summenformel umgeschrieben zu einer Matrixmultiplikation.
+Mit Gleichung (\ref{eq:Twiddlefaktorenberechnung}) werden zunächst alle Twiddlefaktoren in Matrixform berechnet, wobei $n$ der Index des zu Berechnenden Elements des 
+Vektors im Zeitbereich und $m$ das Äquivalent im Frequenzbereich ist.
 
-Mit Gleichung \ref{eq:Twiddlefaktorenberechnung} werden zunächst alle Twiddlefaktoren in Matrixform berechnet, wobei n der Index des zu Berechnenden Elements des Vektors im Zeitbereich und
-m das Äquivalent im Frequenzbereich ist.
 \begin{equation}\label{eq:Twiddlefaktorenberechnung}
 \sum^{N-1 }_{m=0} \sum^{N-1 }_{n=0} e^{-\frac{j 2 \pi m n}{N}} = W
 \end{equation}
@@ -281,14 +285,14 @@ Veranschaulicht wird dies in den Abbildungen \ref{eq:matrix_F1} und \ref{eq:matr
 
 
 
-\subsection{Rein reelle 2D-DFT}\label{sec:rein_reelle_dft}
-Bei der oben beschriebenen Berechnung können die Eingangssignale auch komplex sein. Da das Ausgangssignal der 1D-DFT unabhängig von den Eingangssignalen in jedem Fall 
-komplex ist, kann es dort direkt als Eingangssignal für die komplexe 2D-DFT genutzt werden. 
+\subsection{2D-DFT mit rellen Eingangswerten}\label{sec:rein_reelle_dft}
+Bei der oben beschriebenen Berechnung können die Eingangssignale auch komplex sein. Da das Ausgangssignal der \gls{1d-dft} unabhängig von den Eingangssignalen in jedem Fall 
+komplex ist, kann es dort direkt als Eingangssignal für die komplexe \gls{2d-dft} genutzt werden. 
 
-Es wäre jedoch auch möglich, das komplexe Ausgangssignal der 1D-DFT als zwei von einander unabhängige rein relle Eingangssignale der 2D-DFTs zu betrachten und später 
+Es wäre jedoch auch möglich, das komplexe Ausgangssignal der \gls{1d-dft} als zwei von einander unabhängige rein relle Eingangssignale der 2D-DFTs zu betrachten und später 
 wieder zusammen zu setzen. Gleiches gilt dann natürlich auch für ein komplexes Eingangssignal, welches ebenfalls in zwei von einander unabhängigen DFTs transformiert werden.
 Da bei dieser Umsetzung kein Imaginärteil in die Berechnung der Ergebnisse einfließt, hat sie den Vorteil, dass aus Symmetriegründen die Hälfte der Multiplikationen 
-eingespart werden können. Hierbei ist es erforderlich, dass der Imaginärteil der gespiegelten Ergebnisse negiert wird. Abbildung (\ref{pic:reelleMatMultRedundanz}) zeigt die 
+eingespart werden können. Hierbei ist es erforderlich, dass der Imaginärteil der gespiegelten Ergebnisse negiert wird. Abbildung \ref{pic:reelleMatMultRedundanz} zeigt die 
 redundanten Werte der DFT. Die grau hinterlegten Felder sind die Multiplikationen der Twiddlefaktormatrix. Es müssen bei der 8x8-DFT also statt 16 nur 8 Multiplikationen
 mit rellem Multiplikand und komplexen Multiplkator erfolgen.
 
@@ -297,22 +301,31 @@ Anschließend müssen die Ergebnisse zusammen gesetzt werden. Wie dies geschieht
 
 
 
-In Abbildung \ref{pic:reelleDFT} ist die schematische Berechnung der 2D-DFT eines reellen Eingangssignals zu sehen. 
-Um die 2D-DFT eines komplexen Eingangssignals zu berechnen, muss entweder eine identische Einheit für den Imaginärteil vorhanden sein oder noch mehr zeitlich versetzt 
+In Abbildung \ref{pic:reelleDFT} ist die schematische Berechnung der \gls{2d-dft} eines reellen Eingangssignals zu sehen. 
+Um die \gls{2d-dft} eines komplexen Eingangssignals zu berechnen, muss entweder eine identische Einheit für den Imaginärteil vorhanden sein oder noch mehr zeitlich versetzt 
 berechnet werden. Die Ergebnisse beider 2D-DFTs müssen identisch zusammengefasst werden, wie es zum Abschluss der einzelnen 2D-DFTs geschehen muss.
 
 \begin{figure}[htbp]
  \centering
- \includegraphics[width=0.6\textwidth]{img/reelleMatMult.png}
- \caption{Veranschaulichung der reellen DFT}
+   \includegraphics[width=0.6\textwidth]{img/reelleMatMult.png}
+ \caption{Veranschaulichung der Berechnung der DFT mit reellen Eingangswerten}
  \label{pic:reelleDFT}
 \end{figure}
 
 
 \begin{figure}[htbp]
  \centering
- \includegraphics[width=0.3\textwidth]{img/reelleMatMultRedundanz.png}
- \caption{Redundante Werte der 8x8 DFT; Imaginärteil muss negiert werden, grau hinterlegt sind Multiplikationen der Twiddlefaktormatrix}
+  \begin{subfigure}{.5\textwidth}
+  \centering
+   \includegraphics[width=0.8\textwidth]{img/reelleMatMultRedundanzRealteil.png}
+   \caption{Realteil}
+  \end{subfigure}%
+  \begin{subfigure}{.5\textwidth} 
+   \centering
+   \includegraphics[width=0.8\textwidth]{img/reelleMatMultRedundanzImagteil.png}
+   \caption{negierter Imaginärteil}
+  \end{subfigure}
+  \caption{Redundante Werte der spaltenweisen DFT einer 8x8-Matrix. Der Imaginärteil der redundanten Werte hat den selben Betrag mit negiertem Vorzeichen.}
  \label{pic:reelleMatMultRedundanz}
 \end{figure}
 

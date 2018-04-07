@@ -1,5 +1,5 @@
 \section{Fourierreihenentwicklung}
-Mit einer Fourierreihe kann ein periodisches, abschnittsweise stetiges Signal aus einer Summe von Sinus- und Konsinusfunktionen
+Mit einer Fourierreihe kann ein periodisches Signal aus einer Summe von Sinus- und Konsinusfunktionen
 zusammengesetzt werden. Die Schreibweise als Summe von Sinus- und Kosinusfunktionen (Gl. \ref{eq:Fourierreihenentwicklung}) ist eine 
 der häufigsten Darstellungsformen.
 
@@ -78,9 +78,9 @@ Die Fourierkoeffizienten $a_k$ und $b_k$ lassen sich auch als komplexe Zahl $c_k
 
 
 \section{Fouriertransformation}
-Mit der Fouriertransformation kann ein periodisches, abschnittsweise stetiges Signal $f(x)$ in eine Summe aus Sinus- und
+Mit der Fouriertransformation kann umgekert ein periodisches Signal $x(t)$ in eine Summe aus Sinus- und
 Kosinusfunktionen unterschiedlicher Frequenzen zerlegt werden. Da diese Funktionen jeweils mit nur einer Frequenz periodisch sind, entsprechen diese
-Frequenzen den Frequenzbestandteilen von $f(x)$. 
+Frequenzen den Frequenzbestandteilen von $x(t)$. 
 
 Grundlage für die Fouriertransformation ist das Fourierintegral (Gl. \ref{eq:Fouriertransformation})
 
@@ -88,37 +88,15 @@ Grundlage für die Fouriertransformation ist das Fourierintegral (Gl. \ref{eq:Fo
  X(f) = \int^{\infty}_{-\infty} x(t) \cdot e^{-j 2 \pi f t}
 \end{equation}
 
-Wenn Sinus und Kosinus wie in Gl. (\ref{eq:cos_exp}) und (\ref{eq:sin_exp}) als Exponentialfunktion geschrieben werden,
+Wenn Sinus- und Kosinusfunktionen wie in Gl. (\ref{eq:cos_exp}) und (\ref{eq:sin_exp}) als Exponentialfunktion geschrieben werden,
 können sie zu einer komplexen Exponentialfunktion zusammengefasst werden.
+Hieraus lääst sich ableiten, dass das Spektrum, also $X(f)$ komplexwertig sein muss.
+
+Für Signalformen wie etwa ein Rechteck haben entsprechend sehr viele dieser Frequenzbeiträge. Deren Höhe ist Information darüber, wie groß ihr Anteil, also die Amplitude des 
+Zeitsignals, ist. Die Fouriertransformation kann als das Gegenteil der Fourierreihenentwicklung gesehen werden, mit ihr erhält man das Spektrum eines Zeitsignals. Eine
+Vertiefung dieses umfangreichen Gebiets der Fourier-Analyse findet sich u.a. in ...
 
 
 
-
-
-
-Für komplexere Signale, etwa ein Rechteck, ergeben sich entsprechend sehr viele dieser Frequenzbeiträge. Deren Höhe ist Information darüber, wie groß ihr Anteil, also die Amplitude des 
-Zeitsignals, ist. Die Fouriertransformation kann als das Gegenteil der Fourierreihenentwicklung gesehen werden.
-
-
-- unendliche Dauer -> Leistungssignal?
-
-- endliche Dauer -> Energiesignal?
-
-
-
-Energiesignal:
-
-Leistungssignal: Signal unendlicher Energie, aber mit endlicher mittlerer Leistung
-
-Ein Zeitsignal hat ein eindeutig zuordbares Frequenzsignal (bijektiv), abgehsehen von Amplitude? und Phase
-
-Spektrum: Frequenzbestandteile eines Signals
-
-Berechnung des Spektrums: Spektralanalyse, Frequenzanalyse
-
-
-In der Praxis, also basierend auf echten Messdaten, wird die die Bestimmung des Spektrums Spektrumschätzung genannt.
-
-
-In der vorliegenden Arbeit wird künftig $X^*$ für die 1D-DFT und $X$ für die 2D-DFT stehen.
+In der vorliegenden Arbeit wird künftig $X^*$ für die \gls{1d-dft} und $X$ für die \gls{2d-dft} stehen.
 

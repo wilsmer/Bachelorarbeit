@@ -1,7 +1,12 @@
 \section{Binäre Zahlendarstellung von Festkommazahlen}
 
-\subsection{Integer im 1er-Komplement}
-Bei der Interpretation des Bitvektors als Integer im Einerkomplement werden die Bits anhand ihrer Position im Bitvektor gewichtet, wobei as niederwertigste Bit 
+Im Rahmen dieses Projekts wird von Ein- sowie Ausgangswerten mit einer Genauigkeit von 12 Bit ausgegangen, es sollen Werte von $-2 < z < 2$ dargestellt werden können. 
+
+
+
+
+\subsection{Integer-Zahl im 1er-Komplement}
+Bei der Interpretation des Bitvektors als Integerwert im Einerkomplement werden die Bits anhand ihrer Position im Bitvektor gewichtet, wobei as niederwertigste Bit 
 (LSB, least significant bit) dem Wert für den Faktor $2^0$ entspricht, das Bit links davon dem für $2^1$ und so weiter. Die Summe aller Bits, ohne das höchstwertigste, 
 multipliziert mit ihrer Wertigkeit (Potenz) ergibt den Betrag der Dezimalzahl. Das höchstwertigste Bit (MSB, most significant bit) gibt Auskunft darüber, ob es sich 
 um eine negative oder positive Zahl handelt. Dies hat zur Folge, dass es eine positive und eine negative Null und somit eine Doppeldeutigkeit gibt. Desweiteren wird
@@ -14,13 +19,13 @@ Da als einziger konstanter Multiplikand in der 8x8-DFT-Matrix der Faktor $\pm\fr
 Darstellungsform zwischenzeitlich interessant.
 
 Nachteile zeigen sich hingegen bei der Addition sowie Subtraktion negativer Zahlen. Auch hierfür gibt es schematische Rechenregeln, diese erfordern jedoch mehr 
-Zwischenschritte als im Zweierkomplement. Darüberhinaus ist dieses Verfahren aufgrund der geringen Bedeutung in keiner VHDL-Bibliothek implementiert.
-(Verifizieren!)
+Zwischenschritte als im Zweierkomplement. 
 
 
-\subsection{Integer im 2er-Komplement}\label{sec:Integer2erKomplement}
+\subsection{Integer-Zahl im 2er-Komplement}\label{sec:Integer2erKomplement}
+
 Bei der Interpretation als Zweierkomplement kann anhand es MSB ebenfalls erkannt werden, ob es sich um eine positive oder negative Zahl handelt. Dennoch wird es nicht
-als Vorzeichenbit gewertet. Viel mehr bedeutet ein gesetztes MSB $-2^{MSB-1}$, welches der negativsten darstellbaren Zahl entspricht. Hierbei sind alle anderen 
+als Vorzeichenbit gewertet. Viel mehr bedeutet ein gesetztes MSB $-2^{-1}$, welches der negativsten darstellbaren Zahl entspricht. Hierbei sind alle anderen 
 Bits auf 0. Für gesetzte Bits wird der Dezimalwert, wie beim Einerkomplement beschrieben, berechnet und auf den negativen Wert aufaddiert. Wenn das MSB nicht gesetzt
 ist, wird der errechnete Dezimalwert auf 0 addiert. Auf diese Weise lassen sich Zahlen im Wertebereich von $-2^{MSB-1}$ bis $2^{MSB-1}-1 \,LSB$ darstellen. Der positive
 Wertebereich ist also um ein LSB kleiner als der negative und es gibt keine doppelte Null.
@@ -31,39 +36,41 @@ Vorteile bei dieser Darstellung ist, dass die mathematischen Operationen Additio
 von den Datentypen \texttt{unsigned} sowie \texttt{signed}, welche in der Bibliothek u.a. \texttt{ieee.numeric\_std.all} definiert sind.
 
 
-
-
-\subsection{SQ-Format im 2er-Komplement}
-
-Im SQ-Format werden Zahlen als vorzeichenbehafteter Quotient (signed quotient) dargestellt. Die konkretere Schreibweise von beispielsweise S1Q10 bedeutet, dass zusätzlich zu
-einem Vorzeichenbit noch ein weiteres Bit vor dem Komma steht. Für den Quotient stehen 10 Bit zur Verfügung, was einer maximalen Auflösung  von 
-$1\,LSB = 2^{-10} = \frac{1}{1024} = 9,765625\cdot10^{-4}$ entspricht. Der Wertebereich liegt in diesem Fall liegt bei $-2$ bis $1,999023438$. Er wurde in der vorliegenden 
-Arbeit so gewählt, da sich hiermit die Werte $\pm\nicefrac{\SI{3,3}{\V}}{2} = \SI{\pm1,65}{\V}$ darstellen lassen, was nach Abzug des Offsets den Eingangsspannungen des \gls{adc}
-von $\SI{0}{\V}$ bis $\SI{3,3}{\V}$ entspricht und zum derzeitigen Stand des Projekts davon ausgegangen wird, dass der verwendete \gls{adc} Werte mit zwölf Bit Breite ausgibt. 
-Es wird von einer Vorverarbeitung ausgegangen, die dies erledigt.
+\subsection{Darstellung dualer Zahler im SQ-Format}
+Im SQ-Format werden Zahlen als vorzeichenbehafteter Quotient (signed quotient) dargestellt. Wie beim 2er-Komplement entscheidet das höchstwertigste Bit, ob es sich um eine
+positive oder negative Zahl handelt. In Abbildung \ref{pic:SQKreis} ist exemplarisch die Interpretation von Dualzahlen im SQ3-Format, also für vier Bit, zu sehen.
+Der darstellbare Zahlenbereich liegt hier bei $-1\leq z < 1$. Um den geforderten Bereich von etwa $\pm2$ abbilden zu können wird deshalb ein Vorkommabit benötigt. 
 
 
 
 
-\section{Auswirkungen der Bitbegrenzung}
-\subsection{Maximale Auflösung}
+\begin{figure}[ht!]
+ \centering
+ \includegraphics[width=0.5\textwidth]{img/SQ-Kreis.png}
+ \caption{Interpretation von Dualzahlen im SQ3-Format}
+ \label{pic:SQKreis}
+\end{figure}
 
-Um einen guten Kompromiss aus ausreichender Genauigkeit, Geschwindigkeit und Platzbedarf zu erzielen, wird von Eingangs- / Ausgangssignalen mit 12 Bit Breite zwischen
-den einzelnen Komponenten auf dem Chip ausgegangen.
 
-Sicherlich ist eine hohe Genauigkeit erstrebenswert. Es gilt jedoch zu bedenken, dass mit höheren Bitbreiten auch der Platzbedarf jedes einzelnen Datensignals aufgrund der 
-zusätzlich benötigten Leitungen sowie der Flip-Flops für die (Zwischen-) Speicherung, linear steigt. 
-Bei Additionen und insbesondere Multiplikationen geht mit jedem zusätzlichen Bit ebenfalls ein linear steigender Zeitbedarf einher.
-Eine Bitbreite von größer 24 Bit (bei Eingangsspannungen kleiner \SI{5}{V}) ist darüber hinaus bei \gls{adc} nicht sinnvoll, da durch thermisches Rauschen die ermittelten 
-Werte beeinflusst werden und die Pegel des Rauschen in dieser Größenordnung liegen.
-Derzeit wird davon ausgegangen, dass der Chip in einer Strukturgröße von \SI{350}{nm} gefertigt wird, sodass sich jeder zusätzliche Platzbedarf merklich auswirkt.
+
+
+
+
+Da 12 Bit zur Verfügung stehen, von denen eins für das Vorzeichen und ein weiters für eine Vorkommastelle verwendet werden, bleiben 10 Bits für die Nachkommazahlen übrig.
+Die Aufteilung der Bits wird über die Bezeichnung S1Q10 definiert.
+Da für den Quotient 10 Bit zur Verfügung stehen, beträgt die maximale Auflösung $1\,LSB = 2^{-10} = \frac{1}{1024} = 9,765625\cdot10^{-4}$.
+Der Wertebereich liegt in diesem Fall liegt bei $-2$ bis $1,999023438$. 
+
+Für die Addition oder Multiplikation zweier Zahler müssen beide einerseits die selbe Bitbreite und andererseits das gleiche Darstellungsformat besitzen.
+
 
 
  
-\subsection{Rauschen}
+\subsection{Numerisch bedingte Ungenauigkeiten}
 Bei einem Bitshift kann immer Information verloren gehen. Dies ist immer dann der Fall, wenn die Bits die abgeschnitten werden eine 1 sind. Das hat zur Folge, dass beispielsweise
 bei einer Division durch Zwei der resultierende Wert um 1\,LSB kleiner ist, als er eigentlich sein sollte. 
-Da dieses Problem bei jedem Bitshift auftritt und die Wahrscheinlichkeit für eine 1 bei 50$\%$ liegt, muss davon ausgegangen werden, dass das Endergebnis 
+Da dieses Problem bei jedem Bitshift auftritt und die Wahrscheinlichkeit für eine 1 bei 50$\%$ liegt, muss davon ausgegangen werden, dass ein positives Ergebnis etwas kleiner und
+ein negatives vom Betrag her etwas größer ist, als bei verlustfreier Berechnung. 
 
 
 Von Prof. Vollmer: 
@@ -72,6 +79,7 @@ Von Prof. Vollmer:
 \end{equation}
 L : Stufe (Additionstakte?)
 
-Da dies kein Schwerpunkt der Arbeit ist, wird diese Problematik an dieser Stelle nur kurz angesprochen, um darauf aufmerksam zu machen. 
+Da diese Arbeit den Schwerpunkt in der Aufwandsabschätzung einer Chipimplementierung einer 2D-DFT auf einem \gls{asic} hat, ist diese Problematik kein Gegenstand dieser Arbeit und
+wird an dieser Stelle nur in Grundzügen erwähnt. Für eine 
 
 Vielleicht lass ich das auch weg!

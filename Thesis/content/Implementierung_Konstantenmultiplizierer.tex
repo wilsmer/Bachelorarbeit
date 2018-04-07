@@ -35,9 +35,9 @@ Der Berechnung aus Gleichung (\ref{eq:abweichungWurzel2halbe}) kann entnommen we
 
 \subsection{2D-DFT mit Werten SQ-Format}
 
-\subsection{Vertauschen der Twiddlefaktor-Matrix-Zeilen ergibt IDFT}
+\subsection{Zusammenhang von DFT und IDFT bei der Matrixmultiplikation}
 
-\section{Test der Matrizenmultiplikation}
+\section{Test der Matrixmultiplikation}
 Unter anderem weil NC\,Sim bzw. dessen Unterprogramm SimVision zur Anzeige von Signalverläufen (Waveform) nur Integer darstellen kann und bei als Vektor gebündelten Signalen 
 diese nicht einmal als vorzeichenbehaftet (signed), wurde der Einfachheit halber zunächst die Berechnung als Ganzzahl-Multiplikation mit dem Faktor 3 betrachtet. 
 Da es bei diesem Faktor und den gewählten Eingangswerten nicht zu einem 
@@ -61,7 +61,7 @@ Erst bei genauer Betrachtung der Twiddlefaktor-Matrix viel auf, dass in jeder Ze
 ist es dadurch möglich auf das Invertieren der Eingangswerte sowie den hierfür benötigten Takt und die Inverter zu verzichten. Weiter wird auch nur die Multiplikation
 mit $+\frac{\sqrt{2}}{2}$ benötigt.
 
-\subsection{Syntheseergebnis eines 13 Bit Kostantenmultiplizierers}
+\subsection{Syntheseergebnis eines 13 Bit Konstantenmultiplizierers}
 \begin{figure}[!ht]
 \centering  
  %\fbox{
@@ -80,7 +80,7 @@ mit $+\frac{\sqrt{2}}{2}$ benötigt.
 				& Konstantenmultiplizierer 	& regulärer Multiplizierer\\
   \hline	
   Gatter			& 27				& 175 \\
-  Fläche (Prozess: 350nm)	& $\SI{6612}{\mu m^2}$		& $\SI{23261}{}$\\
+  Fläche (Prozess: 350nm)	& $\SI{6612}{um^2}$		& $\SI{23261}{um^2}$\\
   \hline
  \end{tabular}
 \end{table}
@@ -95,7 +95,7 @@ Der vollständige Gate-Report befindet sich in Abschnitt \ref{src:rc_gate_report
 
 \subsection{Syntheseergebnis für die Bildung des Zweierkomplements eines 13 Bit Vektors}
 
-Zum Vergleich soll hier die nicht Implementierte aber in Abschnitt (\ref{sec:GegenüberstellungRelleKomplexeEingangswerte}) erwähnte Negierung von Zahlen gezeigt werden.
+Zum Vergleich soll hier die nicht implementierte aber in Abschnitt \ref{sec:GegenüberstellungRelleKomplexeEingangswerte} erwähnte Negierung von Zahlen gezeigt werden.
 
 \begin{figure}[htpb]
 \centering
@@ -104,6 +104,6 @@ Zum Vergleich soll hier die nicht Implementierte aber in Abschnitt (\ref{sec:Geg
 \label{pic:13BitInverter}
 \end{figure}
 
-Für die Negierung eines 13 Bit Vektors mit 22 Standardzellen sind knapp doppelt so viele Gatter nötig wie der Vektor Bits breit ist. Wie zu in Abb. (\ref{pic:13BitInverter})
-sehen handelt es sich fast ausschließlich um Inverter und Addierer. In Abschnitt (\ref{sec:Integer2erKomplement}) wurde bereits beschrieben, dass für die Bildung des
+Für die Negierung eines 13 Bit Vektors mit 22 Standardzellen sind knapp doppelt so viele Gatter nötig wie der Vektor Bits breit ist. Wie zu in Abb. \ref{pic:13BitInverter}
+sehen handelt es sich fast ausschließlich um Inverter und Addierer. In Abschnitt \ref{sec:Integer2erKomplement} wurde bereits beschrieben, dass für die Bildung des
 2er-Komplements zunächst alle Bits invertiert werden müssen. Abschließend wird auf den Vektor 1 LSB addiert.

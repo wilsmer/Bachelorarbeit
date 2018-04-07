@@ -107,7 +107,7 @@ Später werden nur die komplexen Varianten verglichen. Dies wird als ausreichend
 erhöhte Bedarf an Takten die reelle Matrixmultiplikation nicht von Interesse ist. 
 
 
-\subsection{Optimierte Multiplikation zweier 8x8 Matrizen}\label{sec:OptimierteMatrixmultiplikation}
+\subsection{Optimierte 8x8 DFT als Matrixmultiplikation}\label{sec:OptimierteMatrixmultiplikation}
 
 Aus der anfänglichen Implementation bei der alle Werte einer Berechnung die entweder mit $+\frac{\sqrt{2}}{2}$ oder $-\frac{\sqrt{2}}{2}$ multipliziert werden müssen 
 einzelnd berechnet werden, wird sinngemäß der gemeinsame Faktor ausgeklammert, sodass nur noch jeweils eine Multiplikation erforderlich ist.
@@ -120,7 +120,7 @@ Für jede gerade Zeile der DFT ist jeweils für den Real- und den Imaginärteil 
 
 
 
-\subsection{Gegenüberstellung von Butterfly und optimierter Matrixmultiplikation} 
+\subsection{Gegenüberstellung von Butterfly-Algorithmus und optimierter Matrixmultiplikation} 
 
 Die \gls{dft} wurde als Matrixmultiplikation implementiert, um die gewonnenen Erkenntnisse auch auf andere Dimensionen als $2^n$, insbesondere ungerade, 
 übertragen zu können.  
@@ -142,7 +142,7 @@ ebenfalls in 13 Bit hinterlegt sein. Deshalb hat das Ergebnis 26 Bit, von denen 
 (\ref{pic:AkkumulationUngeradeSpalten}) und (\ref{pic:AkkumulationGeradeSpalten}) wird das hier beschriebene Vorgehen veranschaulicht. Bei diesem Verfahren
 kommt es unweigerlich zur Akkumulation von Fehlern.
  
-Da für die Berechnung einer Zahl der 1D-DFFT je nach Zeile entweder 8 oder 12 Werte akkumuliert sowie 0 bis 4 Werte multipliziert werden und für die 2D-DFT entsprechend doppelt 
+Da für die Berechnung einer Zahl der 1D-DFT je nach Zeile entweder 8 oder 12 Werte akkumuliert sowie 0 bis 4 Werte multipliziert werden und für die 2D-DFT entsprechend doppelt 
 so viele, akkumulieren sich zwangsläufig Fehler. Bei 12 Bit Eingangswerten wäre ein 47? Bit Ausgangsvektor nötig, um dies vollständig zu vermeiden. Dies ist jedoch aus u.a.
 Platzgründen nicht umsetzbar.
 

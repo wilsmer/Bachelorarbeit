@@ -1,18 +1,10 @@
 \section{Bewertung verschiedener DFT-Größen}\label{sec:AnalyseBewertungTwiddlefaktornMatrizen}
 
-In diesem Abschnitt werden verschiedene Größen von Twiddlefaktor-Matrizen auf ihre Werte untersucht und bewertet.
-Ziel ist es aus den in Frage kommenden jene zu ermitteln, die die trivialsten Berechnungen bei einer 
-Multiplikation erfordert. Von Interesse sind aufgrund des dualen Zahlensystems Matrizen mit Werten, die sich einerseits 
-mit wenigen Bits darstellen lassen und andererseits nur Bit-shifting zur Folge haben. Beide Anforderungen bedingen 
-sich in der Regel gegenseitig.
+In der Tabelle \ref{tab:DFT-TwiddlefaktorMatrizenBewertung} werden die DFT-Matrizen einander gegenüber gestellt.
+Anders als die \gls{dct} hat die \gls{dft}
 
-In der folgenden Tabelle \ref{tab:DFT-TwiddlefaktorMatrizenBewertung} werden die 8$\times$8, 9$\times$9, 12$\times$12, 15$\times$15 sowie 16$\times$16-Matrix einander gegenüber gestellt.
-Da die Sensormatrix aus 8$\times$8 Sensoren aufgebaut ist, besteht ein Interesse an einer ungeraden Matrix. Dies hätte den Vorteil, dass
-sich über dem Mittelpunkt der Sensormatrix kein Element der Twiddlefaktormatrix befindet. Auf diese Weise ließe sich die ... einfacher ermitteln.
-Bekannt ist jedoch auch,
-dass die \gls{fft} auf Matrizen mit den Abmessungen 2$^n$ basiert und es sich hierbei um ein sehr schnelles und effizientes Verfahren handelt. 
-Deshalb werden auch Matrizen mit gerader Anzahl an Elementen untersucht.
-Die Beurteilung basiert auf dem Octave-Skript \ref{src:dft_bewertung}
+Die Beurteilung basiert auf dem Matlab-Skript aus Anhang \ref{src:dft_bewertung}. Die beiden Skripte unterscheiden sich
+neben den Koeffizienten darin, dass die Twiddlefaktormatrizen der \gls{dft} komplex sind.
 
 
  \vspace{1cm}
@@ -79,12 +71,12 @@ Die Beurteilung basiert auf dem Octave-Skript \ref{src:dft_bewertung}
  
  Als triviale Werte werden 0, $\pm$0,5 sowie $\pm$1 aufgefasst.
  Andere Werte die sich gut binär darstellen lassen
- tauchen nicht auf. Alle übrigen Werte werden als nicht trivial betrachtet, da eine Multiplikation mit ihnen
- eine komplexere Berechnung bedeutet.
+ treten nicht auf. Alle übrigen Werte werden als nicht trivial betrachtet, da eine Multiplikation mit ihnen
+ eine aufwändigere Berechnung bedeutet.
  
  Bei der 8$\times$8 Matrix gibt es, wie in Grafik \ref{pic:Einheitskreis_Faktoren} zu sehen, als nicht trivialen Wert mit $\abs{\nicefrac{\sqrt{2}}{2}}$ für Real- und 
  Imaginärteil nur einen einzigen Wert, welche dazu noch gemeinsam auftreten. Dies liegt daran, dass
- der Einheitskreis geachtelt wird und für beispielsweise $\frac{2\cdot\pi}{8}=\frac{\pi}{4}$ Sinus und Cosinus identisch sind. Darüberhinaus ist dies auch 
+ der Einheitskreis in acht Teile geteilt wird und für beispielsweise $\frac{2\cdot\pi}{8}=\frac{\pi}{4}$ der Sinus- und Kosinuswert identisch sind. Darüberhinaus ist dies auch 
  der einzige Wert, der sowohl einen Real- aus auch einen Imaginärteil besitzt. Alle anderen Faktoren haben in einem von beiden Teilen $\abs{1}$ und somit im anderen Teil 0.
  
  In der bereits erwähnten Grafik \ref{pic:Einheitskreis_Faktoren} sind zur Veranschaulichung alle möglichen Zeiger der Twiddlefaktoren ($W_{m,n}$) für die 8$\times$8 Matrix dargestellt. 
@@ -99,26 +91,26 @@ Die Beurteilung basiert auf dem Octave-Skript \ref{src:dft_bewertung}
  Hieraus resultiert, dass die Hälfte der Berechnungen der nicht trivialen Werte, die für die reelle Matrix gemacht werden müssen,
  direkt für den imaginären Anteil übernommen werden können. Die andere Hälfte muss über die Bildung des 2er-Komplements lediglich negiert werden, was ein 
  bedeutend geringerer Aufwand ist, als eine Multiplikation. 
- Deshlab ist das berechnete Verhältnis von 3 in Tabelle \ref{tab:DFT-TwiddlefaktorMatrizenBewertung} in Wirklichkeit deutlich höher und übertrifft mit 7 die 12$\times$12
+ Deshalb ist das berechnete Verhältnis von 3 in Tabelle \ref{tab:DFT-TwiddlefaktorMatrizenBewertung} in Wirklichkeit deutlich höher und übertrifft mit 7 die 12$\times$12
  Matrix um den Faktor 2. Dies gilt unter der Annahme, dass die Bildung des 2er-Komplements nicht berücksichtigt wird, was zumindest einer besseren Näherung 
  entspricht, als es als eine volle Multiplikation zu werten.
  
  Hierzu Abschnitt Abschätzung des Rechenaufwandes?
  
- Anfangs wurde angenommen, dass das 1er-Komplement eine gute Wahl sein könnte, da hierbei die Darstellung negativer Zahlen einzig durch Setzen des vordersten 
- Bit (\gls{msb}) erfolgt. Auf diese Weise könnte immer das selbe Resultat für den Imaginär- wie für den Realteil verwendet werden, das Vorzeichen würde sich über eine 
- einfache XOR-Verknüpfung beider \gls{msb} ergeben.
+ Anfangs wurde angenommen, dass das 1er-Komplement eine gute Wahl sein könnte, da hierbei die Darstellung negativer Zahlen einzig durch Setzen des höchstwertigsten 
+ Bit erfolgt. Auf diese Weise könnte immer das selbe Resultat für den Imaginär- wie für den Realteil verwendet werden, das Vorzeichen würde sich über eine 
+ einfache XOR-Verknüpfung beider MSB ergeben.
  Diesem Vorteil steht jedoch eine komlexere Subtraktion (bzw. Addition negativer Zahlen) gegenüber. Der zusätzliche Aufwand entspricht 
- relativ genau dem der Bildung des 2er-Komplements. Aus diesem Grund wurde sich für dieses entschieden, da es deutlich gängiger ist und weitere Vorteile bringt wie 
+ etwa dem der Bildung des 2er-Komplements. Aus diesem Grund wurde sich für dieses entschieden, da es deutlich verbreiteter ist und weitere Vorteile bringt wie 
  beispielsweise keine Doppeldeutigkeit durch eine negative Null hat.
  
- In Abbildung (\ref{pic:Twiddlefaktoren_Darstellung8x8}) sind zur weiteren Veranschaulichung die komplexen Zeiger der Twiddlefaktoren dargestellt. Sie sind aufgeteilt auf 8 
- Einheitskreise, wobei jeder einen Laufindex (m) des Zeitbereichs abdeckt. In den einzelnen Kreisen sind wiederum alle Laufindexe (n) des Frequenzbereichs zu sehen.
+ In Abbildung \ref{pic:Twiddlefaktoren_Darstellung8x8} sind zur weiteren Veranschaulichung die komplexen Zeiger der Twiddlefaktoren dargestellt. Sie sind aufgeteilt auf 8 
+ Einheitskreise, wobei jeder einen Laufindex ($m$) des Zeitbereichs abdeckt. In den einzelnen Kreisen sind wiederum alle Laufindizes ($n$) des Frequenzbereichs zu sehen.
  
- Anhand der Gleichung (\ref{eq:Twiddlefaktorenberechnung}) für die Twiddlefaktoren und des Einheitskreises in Abb (\ref{pic:Einheitskreis_Faktoren}) lässt sich erkennen, 
+ Anhand der Gleichung (\ref{eq:Twiddlefaktorenberechnung}) für die Twiddlefaktoren und des Einheitskreises in Abb. \ref{pic:Einheitskreis_Faktoren} lässt sich erkennen, 
  dass die Zeiger im Gegenuhrzeigersinn rotieren und sich sowohl für den Realteil als auch den Imaginärteil gleichmäßig auf positive und negative
- Werte aufteilen. Das lässt sich ausnutzen, um keine Negationen der Eingangs- / Zwischenwerte erfolgen muss. Darüber hinaus
- minimiert sich bei geschickter Anordnung das Risiko eines Überlaus. Da zur Sicherheit dennoch nach jeder Addition / Subtraktion
+ Werte aufteilen. Das lässt sich ausnutzen, um keine Negationen der Eingangs- und Zwischenwerte erfolgen muss. Darüber hinaus
+ minimiert sich bei geschickter Anordnung das Risiko eines Überlaufs. Da zur Sicherheit dennoch nach jeder Addition oder Subtraktion
  das Ergebnis durch einen Bitshift halbiert wird. Da über die Eingangswerte die Annahme getroffen werden kann, dass 
  aufeinanderfolgende Werte das selbe Vorzeichen haben, kann hier noch weiter die Genauigkeit optimiert werden. 
 
@@ -136,7 +128,7 @@ Die Beurteilung basiert auf dem Octave-Skript \ref{src:dft_bewertung}
 \begin{figure}[!ht]
  \centering
  \includegraphics[width=1\textwidth]{img/Twiddlefaktoren_Einheitskreis.eps}
- \caption{Twiddlefaktoren der 8$\times$8-Matrix, aufgeteilt auf die Laufindexe}
+ \caption{Twiddlefaktoren der 8$\times$8-Matrix, aufgeteilt auf die Laufindizes $m$ und $n$. $m$ bezieht sich auf das Element im Ausgangsvektor $\vec{X}$, $n$ auf den Eingangsvektor $\vec{x}$. Siehe auch Gl. (\ref{eq:dft}) }
  \label{pic:Twiddlefaktoren_Darstellung8x8}
 \end{figure}
 

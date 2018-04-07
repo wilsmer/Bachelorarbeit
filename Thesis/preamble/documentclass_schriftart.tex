@@ -1,7 +1,8 @@
 % load the document class KOMA-Script Report
 \documentclass[	
 		a4paper,			% Papierformat waehlen
-		11pt,				% Schriftgroesse
+		12pt,				% Schriftgroesse
+%		BCOR5mm,			% Bindungskorrektur
 %		draft,				% Randueberschreitungen werden schwarz markiert
 %		DIV13,				% Unterteilung des Blatts in DIVxx - xx Teile              OBSOLETE
 						% Je kleiner die Zahl umso groesser die Raender
@@ -44,6 +45,11 @@
 %		openbib,			% Veraendert aussehen des Lit.-Verzeichnisses
 %	Language
 %		ngerman,			% to pass as standard to all packages
+%halfparskip,                                         % Europäischer Satz: Abstand zwischen Absätzen
+%	abstracton,																					 % Spezielle Formatierung, die erlaubt, dass die
+																											 % Zusammenfassung vor dem Inhaltsverzeichnis steht
+	%draft,		 % Es handelt sich um eine Vorabversion	
+%	final		 % Es handelt sich um die endgültige Version
 ]{scrreprt}
 
 % load packages for european, espacially german users
@@ -59,6 +65,38 @@
 	     english, 
 	     ngerman				% ngerman: Neue Deutsche Rechtschreibung
 	    ]{babel}				% z.B. UKenglish, USenglish, canadian, german, austrian, naustrian
+	    
+%\usepackage[latin1]{inputenc}                   % direkte Umlauteingabe (ä statt "a)
+                                                % latin1/latin9 für unixoide Systeme
+                                                % (latin1 ist auch unter Win verwendbar)
+                                                % ansinew für Windows
+                                                % applemac Macs
+                                                % cp850 OS/2
+\usepackage{times}              	        % Schriften Paket
+\usepackage{array,ragged2e} 			% Wichtig für Abstandsformatierung
+%---------------------------------------------------------------------------------------------------
+\usepackage{cmbright}                                  % serifenlose Schrift als Standard
+                                                       % + alle für TeX benötigten mathematischen
+                                                       %   Schriften einschließlich der AMS-Symbole
+\usepackage[scaled=.90]{helvet}                        % skalierte Helvetica als \sfdefault
+\usepackage{courier}                                   % Courier als \ttdefault
+%---------------------------------------------------------------------------------------------------
+%\usepackage[automark]{scrpage2}                        % Anpassung der Kopf- und Fußzeilen
+\usepackage{xspace}                                    % Korrekter Leerraum nach Befehlsdefinitionen
+\usepackage{setspace}				  % Dieses Package brauchen wir für den 				
+\usepackage[pdftex]{graphicx}
+\usepackage[absolute,overlay]{textpos}         
+
+%\usepackage{natbib}                                    % Neuimplementierung des \cite-Kommandos
+\usepackage{bibgerm}       				 % Deutsche Bezeichnungen
+\usepackage[final]{pdfpages}                           % include pages of external PDF documents
+
+%\usepackage{makeidx}					% Paket zur Erstellung eines Stichwortverzeichnisses
+%\makeindex						 % Automatische Erstellung des Stichwortverzeichnis
+%\usepackage[intoc,
+%						german,
+%						prefix]{nomencl}
+%\makenomenclature
 	    
 %\hyphenation{}					% Trennung von Woertern falls nicht automatisch korrekt erkannt
 %\usepackage{icomma}				% Bei deutscher Schreibweise, damit keine
@@ -90,10 +128,10 @@
 \clearscrheadings				% clear old header style
 \clearscrplain					% clear plain header style
 \clearscrheadfoot				% clear foot style
-%\automark[section]{chapter}
 \automark[chapter]{chapter}
 \ohead{\pagemark}				% beide Außenseiten des Headers --Seitenzahl
 \ihead{\headmark}				% beide Innenseiten Headers -- Chapter
+
 %\chead						% zentriert 
 %\lehead					% left even
 %\cehead
@@ -110,6 +148,7 @@
 									
 % Schriftfamilien Laden
 \usepackage{lmodern}				% Laedt die Schriftart Latin-Modern fuer Text
+\usepackage{textcomp}
 %\usepackage{courier}
 %\rmfamily
 %\sffamily
@@ -126,17 +165,17 @@
 %\renewcommand{\familydefault}{\sfdefault}
 
 % Alternativ Schriftart (Textshchrift) ändern über usepackage:
-\usepackage{
+%\usepackage{
 %	    mathpazo	% Palatino
 %	    mathptmx	% Times
 %	    avant	% Avant Garde
 %	    courier	% Courier
 %	    chancery	% Zapf Chancery
-	    bookman	% Bookman
+%	    bookman	% Bookman
 %	    newcent	% New Century Schoolbook
 %	    charter	% Charter
 %	    helvet	% Helvetica
-} 
+%} 
 %\usepackage[scaled=0.92]{helvet}		% Helvetica, ist größer als Times und sollte bei verwendung beider skaliert werden.
 
 % Im Dokument wechslen:
@@ -206,3 +245,14 @@
 \usepackage{relsize}                            % für größere und kleinere Gleichungen über den Befehl \mathlarger bzw. \mathsmaller, auch \textlarger und \textsmaller
 
 \usepackage{lscape}
+
+%---------------------------------------------------------------------------------------------------
+% Anpassung der Parameter, die TeX bei der Berechnung der Zeilenumbrüche verwendet:
+%---------------------------------------------------------------------------------------------------
+\tolerance 1414
+\hbadness 1414
+\emergencystretch 1.5em
+\hfuzz 0.3pt
+\widowpenalty=10000
+\vfuzz \hfuzz
+\raggedbottom
