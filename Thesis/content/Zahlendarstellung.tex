@@ -1,22 +1,22 @@
 \section{Binäre Zahlendarstellung von Festkommazahlen}
 
-Im Rahmen dieses Projekts wird von Ein- sowie Ausgangswerten mit einer Genauigkeit von 12 Bit ausgegangen, es sollen Werte von $-2 < z < 2$ dargestellt werden können. 
-
-
+Im Rahmen dieses Projekts wird von Ein- sowie Ausgangswerten mit einer Genauigkeit von 12 Bit ausgegangen.
+Basierend auf älteren Sensoren wird von Werten im Bereich von $-2 < z < 2$ ausgegangen.
+Aus diesem Grund müssen sowohl ein Ganzzahlanteil, sowie Nachkommastellen repräsentiert werden können. Wie dies gelingt wird in den nächsten Abschnitten gezeigt.
+Hierfür werden Festkommazahlen verwendet, aufgrund der Rechenoperationen haben diese dennoch unterschiedlich viele Vor- sowie Nachkommastellen.
 
 
 \subsection{Integer-Zahl im 1er-Komplement}
 Bei der Interpretation des Bitvektors als Integerwert im Einerkomplement werden die Bits anhand ihrer Position im Bitvektor gewichtet, wobei as niederwertigste Bit 
 (LSB, least significant bit) dem Wert für den Faktor $2^0$ entspricht, das Bit links davon dem für $2^1$ und so weiter. Die Summe aller Bits, ohne das höchstwertigste, 
 multipliziert mit ihrer Wertigkeit (Potenz) ergibt den Betrag der Dezimalzahl. Das höchstwertigste Bit (MSB, most significant bit) gibt Auskunft darüber, ob es sich 
-um eine negative oder positive Zahl handelt. Dies hat zur Folge, dass es eine positive und eine negative Null und somit eine Doppeldeutigkeit gibt. Desweiteren wird
-ein LSB an Auflösung verschenkt. Der Wertebereich erstreckt sich von $-2^{MSB-1}+1\,LSB$ bis $2^{MSB-1}-1\,LSB$
+um eine negative oder positive Zahl handelt, wobei eine 0 für eine positive Zahl steht. Entsprechend besagt die 1, dass die Zahl negativ ist.
+Dies hat zur Folge, dass es eine positive und eine negative Null und somit eine Doppeldeutigkeit gibt. Desweiteren wird
+ein LSB an Auflösung verschenkt. Der Wertebereich erstreckt sich von $-2^{\mathrm{MSB}-1}+1\,\mathrm{LSB}$ bis $2^{\mathrm{MSB}-1}-1\,\mathrm{LSB}$
 
 Diese Darstellung hat den Vorteil, dass sich das Ergebnis einer Multiplikation der Zahlen $a \cdot b$ und $-a \cdot b$ nur im vorderste Bit unterscheidet. Darüber hinaus
 lässt sich das Vorzeichen des Ergebnisses durch eine einfache XOR-Verknüpfung der beiden MSB der Multiplikanden ermitteln. 
 Die eigentliche Multiplikation beschränkt sich auf die Bits MSB-1 bis LSB.
-Da als einziger konstanter Multiplikand in der 8x8-DFT-Matrix der Faktor $\pm\frac{\sqrt{2}}{2}$ auftaucht, also das oben angeführte Beispiel zutrifft, erschien diese
-Darstellungsform zwischenzeitlich interessant.
 
 Nachteile zeigen sich hingegen bei der Addition sowie Subtraktion negativer Zahlen. Auch hierfür gibt es schematische Rechenregeln, diese erfordern jedoch mehr 
 Zwischenschritte als im Zweierkomplement. 
@@ -36,13 +36,9 @@ Vorteile bei dieser Darstellung ist, dass die mathematischen Operationen Additio
 von den Datentypen \texttt{unsigned} sowie \texttt{signed}, welche in der Bibliothek u.a. \texttt{ieee.numeric\_std.all} definiert sind.
 
 
-\subsection{Darstellung dualer Zahler im SQ-Format}
+\subsection{Darstellung dualer Zahlen im SQ-Format}
 Im SQ-Format werden Zahlen als vorzeichenbehafteter Quotient (signed quotient) dargestellt. Wie beim 2er-Komplement entscheidet das höchstwertigste Bit, ob es sich um eine
 positive oder negative Zahl handelt. In Abbildung \ref{pic:SQKreis} ist exemplarisch die Interpretation von Dualzahlen im SQ3-Format, also für vier Bit, zu sehen.
-Der darstellbare Zahlenbereich liegt hier bei $-1\leq z < 1$. Um den geforderten Bereich von etwa $\pm2$ abbilden zu können wird deshalb ein Vorkommabit benötigt. 
-
-
-
 
 \begin{figure}[ht!]
  \centering
@@ -52,34 +48,32 @@ Der darstellbare Zahlenbereich liegt hier bei $-1\leq z < 1$. Um den geforderten
 \end{figure}
 
 
-
-
-
-
+Der darstellbare Zahlenbereich liegt hier bei $-1\leq z < 1$. Benötigt werden Zahlen im Bereich von etwa $\pm2$, weshalb ein Vorkommabit benötigt wird. 
 Da 12 Bit zur Verfügung stehen, von denen eins für das Vorzeichen und ein weiters für eine Vorkommastelle verwendet werden, bleiben 10 Bits für die Nachkommazahlen übrig.
 Die Aufteilung der Bits wird über die Bezeichnung S1Q10 definiert.
-Da für den Quotient 10 Bit zur Verfügung stehen, beträgt die maximale Auflösung $1\,LSB = 2^{-10} = \frac{1}{1024} = 9,765625\cdot10^{-4}$.
-Der Wertebereich liegt in diesem Fall liegt bei $-2$ bis $1,999023438$. 
+Da für den Quotient 10 Bit zur Verfügung stehen, beträgt die maximale Auflösung $1\,LSB = 2^{-10} = {1024}^{-1} = 9,765625\cdot10^{-4}$.
+Der Wertebereich liegt in diesem Fall liegt bei \num{-2} bis \num{1,999023438}. 
 
-Für die Addition oder Multiplikation zweier Zahler müssen beide einerseits die selbe Bitbreite und andererseits das gleiche Darstellungsformat besitzen.
+Für die Addition oder Multiplikation zweier Zahlen müssen beide einerseits die selbe Bitbreite und andererseits das gleiche Darstellungsformat besitzen.
 
 
 
  
-\subsection{Numerisch bedingte Ungenauigkeiten}
-Bei einem Bitshift kann immer Information verloren gehen. Dies ist immer dann der Fall, wenn die Bits die abgeschnitten werden eine 1 sind. Das hat zur Folge, dass beispielsweise
+\subsection{Numerisch bedingte Ungenauigkeiten}\label{sec:NumerischeUngenauigkeiten}
+Numerische Ungenauigkeiten entstehen immer dann, wenn die zu Verfügung stehenden Bits es nicht ermöglichen eine Zahl exakt abzubilden. 
+Bei einem Bitshift, welcher häufig für dier Division durch Zwei oder Vielfachen von Zwei verwendet wird, kann immer Information verloren gehen. Dies ist immer dann der Fall,
+wenn die Bits die abgeschnitten werden eine 1 sind. Das hat zur Folge, dass beispielsweise
 bei einer Division durch Zwei der resultierende Wert um 1\,LSB kleiner ist, als er eigentlich sein sollte. 
-Da dieses Problem bei jedem Bitshift auftritt und die Wahrscheinlichkeit für eine 1 bei 50$\%$ liegt, muss davon ausgegangen werden, dass ein positives Ergebnis etwas kleiner und
-ein negatives vom Betrag her etwas größer ist, als bei verlustfreier Berechnung. 
+Dieses Problem kann bei jedem Bitshift auftreten. Die Wahrscheinlichkeit für eine 1 liegt bei \SI{50}{\percent}, weshalb davon ausgegangen werden muss, dass ein positives Ergebnis etwas 
+kleiner und ein negatives vom Betrag her etwas größer ist, als bei verlustfreier Berechnung. 
 
 
 Von Prof. Vollmer: 
 \begin{equation}
- S_N = \frac{P_Q}{\left(2^0\right)^2} + \frac{P_Q}{\left(2^1\right)^2} + \frac{P_Q}{\left(2^2\right)^2} + \cdots + \frac{P_Q}{\left(2^{L-1}\right)^2}
+ S_N = \frac{P_Q}{\left(2^0\right)^2} + \dfrac{P_Q}{\left(2^1\right)^2} + \dfrac{P_Q}{\left(2^2\right)^2} + \cdots + \dfrac{P_Q}{\left(2^{L-1}\right)^2}
 \end{equation}
 L : Stufe (Additionstakte?)
 
 Da diese Arbeit den Schwerpunkt in der Aufwandsabschätzung einer Chipimplementierung einer 2D-DFT auf einem \gls{asic} hat, ist diese Problematik kein Gegenstand dieser Arbeit und
 wird an dieser Stelle nur in Grundzügen erwähnt. Für eine 
 
-Vielleicht lass ich das auch weg!

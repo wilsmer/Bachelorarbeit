@@ -1,10 +1,10 @@
-\section{Bewertung verschiedener DFT-Größen}\label{sec:AnalyseBewertungTwiddlefaktornMatrizen}
+\subsection{Bewertung verschiedener DFT-Größen}\label{sec:AnalyseBewertungTwiddlefaktornMatrizen}
 
 In der Tabelle \ref{tab:DFT-TwiddlefaktorMatrizenBewertung} werden die DFT-Matrizen einander gegenüber gestellt.
-Anders als die \gls{dct} hat die \gls{dft}
-
-Die Beurteilung basiert auf dem Matlab-Skript aus Anhang \ref{src:dft_bewertung}. Die beiden Skripte unterscheiden sich
-neben den Koeffizienten darin, dass die Twiddlefaktormatrizen der \gls{dft} komplex sind.
+Anders als die \gls{dct} haben die Twiddlefaktormatrix und deshalb auch das Ergebnis der \gls{dft} einen Real- und einen Imaginärteil.
+Die Beurteilung basiert auf dem Matlab-Skript aus Anhang \ref{src:dft_bewertung}. 
+Wie zu sehen ist, schneiden vor allem die 8x8- und die 12x12-DFT gut ab. Da letztere nur zum Vergleich mit aufgenommen wurde, ist die 
+8x8-DFT der klare Favorit, welcher im folgenden Abschnitt genauer betrachtet werden soll.
 
 
  \vspace{1cm}
@@ -38,87 +38,58 @@ neben den Koeffizienten darin, dass die Twiddlefaktormatrizen der \gls{dft} komp
  \vspace{1cm}
  
  
-%   \vspace{1cm}
-%  \begingroup
-%   \renewcommand*{\arraystretch}{1.2} % Zeilenabstand der Tabelle
-%   \begin{table}[!ht]
-%   \centering
-%   \caption{Bewertung der DFT-Twiddlefaktor-Matrizen}
-%    \begin{tabular}{lccccc}
-%    \hline
-%     N					& 8	& 9	& 12	& 15		& 16 \\
-%     \hline
-%     \rowcolor{lightgray}
-%     N$\times$N				& 64	& 81	& 144	& 225		& 256 \\
-%     trivial $\Re$ 			& 48	& 45	& 128	& 81		& 128 \\
-%     nicht triv. $\Re$			& 16	& 36	& 16	& 144		& 128 \\
-%     \rowcolor{lightgray}
-%     triv. $\Im$ 			& 48	& 21	& 96	& 45		& 128 \\
-%     \rowcolor{lightgray}
-%     nicht triv. $\Im$ 			& 16	& 60	& 48	& 180		& 128 \\
-%     $\sum$ triv. 			& 96	& 66	& 224	& 126		& 256 \\
-%     $\sum$ nicht triv. 			& 32	& 96	& 64	& 324		& 256 \\
-%     \rowcolor{lightgray}
-%     Verhältnis 				& 3*	& 0,6875& 3,5	& 0,3889	& 1\\
-%     \hline
-%    \end{tabular}
-%    \label{tab:DFT-TwiddlefaktorMatrizenBewertung}
-%   \end{table}
-%  \endgroup
-%  \vspace{1cm}
-%  
- 
- 
- Als triviale Werte werden 0, $\pm$0,5 sowie $\pm$1 aufgefasst.
- Andere Werte die sich gut binär darstellen lassen
- treten nicht auf. Alle übrigen Werte werden als nicht trivial betrachtet, da eine Multiplikation mit ihnen
- eine aufwändigere Berechnung bedeutet.
- 
- Bei der 8$\times$8 Matrix gibt es, wie in Grafik \ref{pic:Einheitskreis_Faktoren} zu sehen, als nicht trivialen Wert mit $\abs{\nicefrac{\sqrt{2}}{2}}$ für Real- und 
- Imaginärteil nur einen einzigen Wert, welche dazu noch gemeinsam auftreten. Dies liegt daran, dass
- der Einheitskreis in acht Teile geteilt wird und für beispielsweise $\frac{2\cdot\pi}{8}=\frac{\pi}{4}$ der Sinus- und Kosinuswert identisch sind. Darüberhinaus ist dies auch 
+ \section{Genauere Betrachtung der 8x8-DFT}
+ In Grafik \ref{pic:Einheitskreis_Faktoren} sind die Twiddlefaktoren der 8x8-DFT im Einheitskreis dargestellt. 
+ Betragsmäßig treten die Werte 0, 1 und  $\nicefrac{\sqrt{2}}{2}$ auf. Gemäß der obigen Definition für nicht triviale Werte zählt ausschließlich der letztgenannte zu diesen.
+ Eine besondere Eigenschaft ist, dass für nicht triviale Multiplikationen Real- und Imaginärteil zumindest vom Betrag her identisch sind.
+ Dies liegt daran, dass
+ der Einheitskreis in acht Teile geteilt wird und für beispielsweise $\frac{2\cdot\pi}{8}=\frac{\pi}{4}$ der Sinus- und Kosinuswert identisch sind. Darüber hinaus ist dies auch 
  der einzige Wert, der sowohl einen Real- aus auch einen Imaginärteil besitzt. Alle anderen Faktoren haben in einem von beiden Teilen $\abs{1}$ und somit im anderen Teil 0.
- 
- In der bereits erwähnten Grafik \ref{pic:Einheitskreis_Faktoren} sind zur Veranschaulichung alle möglichen Zeiger der Twiddlefaktoren ($W_{m,n}$) für die 8$\times$8 Matrix dargestellt. 
- Berechnet werden diese mit der
- Gleichung (\ref{eq:Twiddlefaktorenberechnung}), wobei es sich bei $N$ um die Anzahl der Elemente im Vektor bzw. der Spalte einer Matrix von Werten im Zeitbereich 
- handelt. $n$ ist der Laufindex über die einzelnen Elemente, $m$ das Äquivalent für den zu berechnenden Vektor (Matrixspalte) im Frequenzbereich. Beide 
- fangen bei 0 an und laufen entsprechend bis $N-1$.
-
-
- 
- 
  Hieraus resultiert, dass die Hälfte der Berechnungen der nicht trivialen Werte, die für die reelle Matrix gemacht werden müssen,
- direkt für den imaginären Anteil übernommen werden können. Die andere Hälfte muss über die Bildung des 2er-Komplements lediglich negiert werden, was ein 
- bedeutend geringerer Aufwand ist, als eine Multiplikation. 
- Deshalb ist das berechnete Verhältnis von 3 in Tabelle \ref{tab:DFT-TwiddlefaktorMatrizenBewertung} in Wirklichkeit deutlich höher und übertrifft mit 7 die 12$\times$12
- Matrix um den Faktor 2. Dies gilt unter der Annahme, dass die Bildung des 2er-Komplements nicht berücksichtigt wird, was zumindest einer besseren Näherung 
- entspricht, als es als eine volle Multiplikation zu werten.
+ direkt für den imaginären Anteil übernommen werden könnten. Die andere Hälfte müsste lediglich negiert werden. 
+ Deshalb kann das berechnete Verhältnis von 3 in Tabelle \ref{tab:DFT-TwiddlefaktorMatrizenBewertung} als deutlich höher angenommen werden.
  
- Hierzu Abschnitt Abschätzung des Rechenaufwandes?
+ Anfangs wurde in Betracht gezogen das 1er-Komplement zu verwenden, da hierbei zwei betragsmäßig identische Zahen sich nur durch ihr höchstwertigstes 
+ Bit unterscheiden. Auf diese Weise könnte das selbe Resultat für den Imaginär- wie für den Realteil verwendet werden, das Vorzeichen würde sich über eine 
+ einfache XOR-Verknüpfung beider MSB der Multiplikanden ergeben.
+ Diesem Vorteil steht jedoch eine aufwändigere Subtraktion (bzw. Addition negativer Zahlen) gegenüber. Der zusätzliche Aufwand entspricht 
+ etwa dem der Bildung des 2er-Komplements. Aus diesem Grund und da das 2er-Komplement deutlich verbreiteter ist sowie weitere Vorteile bringt wie 
+ beispielsweise keine Doppeldeutigkeit durch eine negative Null hat, wurde sich hierfür entschieden.
  
- Anfangs wurde angenommen, dass das 1er-Komplement eine gute Wahl sein könnte, da hierbei die Darstellung negativer Zahlen einzig durch Setzen des höchstwertigsten 
- Bit erfolgt. Auf diese Weise könnte immer das selbe Resultat für den Imaginär- wie für den Realteil verwendet werden, das Vorzeichen würde sich über eine 
- einfache XOR-Verknüpfung beider MSB ergeben.
- Diesem Vorteil steht jedoch eine komlexere Subtraktion (bzw. Addition negativer Zahlen) gegenüber. Der zusätzliche Aufwand entspricht 
- etwa dem der Bildung des 2er-Komplements. Aus diesem Grund wurde sich für dieses entschieden, da es deutlich verbreiteter ist und weitere Vorteile bringt wie 
- beispielsweise keine Doppeldeutigkeit durch eine negative Null hat.
  
- In Abbildung \ref{pic:Twiddlefaktoren_Darstellung8x8} sind zur weiteren Veranschaulichung die komplexen Zeiger der Twiddlefaktoren dargestellt. Sie sind aufgeteilt auf 8 
+ In späteren Analysen konnte festgestellt werden, dass sowohl für den Real- als auch den Imaginärteil gleichviele Multiplikationen mit positiven wie mit negativen Faktoren 
+ durchgefürht werden müssen. Dies lässt sich anhand des Einheitskreises in Abb. \ref{pic:Einheitskreis_Faktoren} und der Abbildung \ref{pic:Twiddlefaktoren_Darstellung8x8}
+ nachvollziehen. Aus Abschnitt \ref{sec:Matrixmultiplikation} ist bekannt, dass bei einer Matrixmultiplikation Elemente multipliziert und anschließend die Ergebnisse 
+ aufsummiert. Da es das Kommutativgesetz erlaubt die berechneten Ergebnisse auch in einer anderen Reihenfolge zu addieren, 
+ 
+ In Abbildung \ref{pic:Twiddlefaktoren_Darstellung8x8} sind zur besseren Veranschaulichung die komplexen Zeiger der Twiddlefaktoren dargestellt. Sie sind aufgeteilt auf 8 
  Einheitskreise, wobei jeder einen Laufindex ($m$) des Zeitbereichs abdeckt. In den einzelnen Kreisen sind wiederum alle Laufindizes ($n$) des Frequenzbereichs zu sehen.
+  
+ In Abbildung \ref{pic:MatrizenDarstellungTwiddlefaktoren} ist zu sehen, dass die 2., 4., 6., und 8. Zeile je vier nicht triviale und komplexe Faktoren enthält. 
+ Darüber hinaus ist ersichtlich, dass für komplexe Eingangswerte in den genannten Zeilen 12 und in den übrigen 8 Multiplikationen erfolgen müssen. Dies kann anhand der 
+ Gleichungen (\ref{eq:komplexe_Multiplikation}) und (\ref{eq:halb_komplexe_Multiplikation}) nachvollzogen werden.
+ Das lässt sich ausnutzen, um keine Negationen der Eingangs- und Zwischenwerte durchführen zu müssen. 
  
- Anhand der Gleichung (\ref{eq:Twiddlefaktorenberechnung}) für die Twiddlefaktoren und des Einheitskreises in Abb. \ref{pic:Einheitskreis_Faktoren} lässt sich erkennen, 
- dass die Zeiger im Gegenuhrzeigersinn rotieren und sich sowohl für den Realteil als auch den Imaginärteil gleichmäßig auf positive und negative
- Werte aufteilen. Das lässt sich ausnutzen, um keine Negationen der Eingangs- und Zwischenwerte erfolgen muss. Darüber hinaus
- minimiert sich bei geschickter Anordnung das Risiko eines Überlaufs. Da zur Sicherheit dennoch nach jeder Addition oder Subtraktion
- das Ergebnis durch einen Bitshift halbiert wird. Da über die Eingangswerte die Annahme getroffen werden kann, dass 
- aufeinanderfolgende Werte das selbe Vorzeichen haben, kann hier noch weiter die Genauigkeit optimiert werden. 
+ \begin{align}\label{eq:halb_komplexe_Multiplikation}
+\begin{split}
+ e + jf &= a \cdot (c + jd)\\
+        &= a \cdot c + j(a \cdot d)\\
+\end{split}
+\end{align}
+ 
+ 
+ 
+ Darüber hinaus
+ minimiert sich bei geschickter Anordnung das Risiko eines Überlaufs. Wie in Abschnitt \ref{sec:NumerischeUngenauigkeiten} erwähnt, ist dies nicht Gegenstand dieser Arbeit,
+ weshalb der Einfachheit wegen zur Sicherheit dennoch nach jeder Addition oder Subtraktion das Ergebnis durch einen Bitshift halbiert wird. 
+ Es sei an dieser Stelle lediglich angemerkt, dass über die Eingangswerte die Annahme getroffen werden kann, dass aufeinanderfolgende Werte das selbe Vorzeichen haben. 
+ Dies ließe sich ausnutzen, um noch weiter die Wahrscheinlichkeit zu reduzieren, dass es zu einem Überlauf kommt. 
 
 
  \begin{figure}[!t]
   \centering
   \includegraphics[width=0.3\textwidth]{img/Einheitskreis-crop.pdf}
-  \captionof{figure}{Einheitskreis mit relevanten Werten der 8x8-DFT}
+  \caption{Einheitskreis mit relevanten Werten der 8x8-DFT}
   \label{pic:Einheitskreis_Faktoren}
 \end{figure}
   

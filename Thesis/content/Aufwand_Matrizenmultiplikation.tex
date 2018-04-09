@@ -1,5 +1,16 @@
 \section{Abschätzung des Rechenaufwands}\label{sec:abschaetzung_Rechenaufwand}
 
+\subsection{Gegenüberstellung von der Konstantenmultiplikation und der Bildung des 2er-Komplements}
+Unter diesem Punkt sollen die Konstantenmultiplikation und die Bildung des 2er-Komplements unter Aspekten der benötigten Zeit und des benötigten Platzes auf einem Chip 
+betrachtet werden. Um einen Eindruck hiervon zu erhalten, werden im Kapitel Entwurf in den Abschnitten \ref{sec:SyntheseergebnisKonstantenmultiplizierer} und
+\ref{sec:SyntheseergebnisBildungZweierkomplement} jeweils die Schaltnetzte 
+%für die Negation mittels 2er-Komplement und die Multiplikation mit einem konstanten Faktor 
+gezeigt.
+Wie dort erläuter, lässt sich anhand dieser sagen, dass es bei dieser Art der Implementierung keinen zeitlichen Gewinn gibt, da beide kritischen Pfade etwa gleich lang 
+sind. Für die knapp $\nicefrac{1}{4}$ mehr Gatter bei der Multiplikation ist auch ein größerer Vertrahtungsaufwandt erforderlich, sodass die Konstantenmultiplizierer
+auf einem Chip eine etwas größere Fläche beanspruchen. Da es sich hier insgesamt aber um sehr wenige Gatter handelt, wirkt sich dies erst bei sehr vielen Instanzen aus.
+Es kann an dieser Stelle deshalb festgehalten werden, dass dieser Unterschied nicht als entscheidend geltend gemacht werden kann.
+ 
 \subsection{Gegenüberstellung von reellen und komplexen Eingangswerten}\label{sec:GegenüberstellungRelleKomplexeEingangswerte}
 Die Sensormatrix liefert für jedes Sensorelement einen Sinus- und einen Kosinuswert. Diese können für die Berechnung der DFT zu einer komplexen Zahl zusammengefasst werden. 
 Auf diese Weise lässt sich die Berechnung mathematisch kompakter schreiben.
@@ -44,13 +55,6 @@ Wie ein Vergleich der Gleichungen (\ref{eq:komplexe_Multiplikation}) und (\ref{e
 Eingangswerte in Real- und Imaginärteil getrennt werden.
 Wenn die Eingangswerte rein reell sind, kommen beispielsweise keine $j^2$-Komponenten zustande, welche auf die reellen Elemente aufaddiert werden müssten.
 Aus diesem Grund müssen weniger Werte aufsummiert werden, wie sich in Tabelle (\ref{tab:TakteReelleDFT}) zeigt.
-
-\begin{align}\label{eq:halb_komplexe_Multiplikation}
-\begin{split}
- e + jf &= a \cdot (c + jd)\\
-        &= a \cdot c + j(a \cdot d)\\
-\end{split}
-\end{align}
 
 \begin{table}[htbp]
 \centering
@@ -120,6 +124,10 @@ Für jede gerade Zeile der DFT ist jeweils für den Real- und den Imaginärteil 
 
 
 
+
+
+
+
 \subsection{Gegenüberstellung von Butterfly-Algorithmus und optimierter Matrixmultiplikation} 
 
 Die \gls{dft} wurde als Matrixmultiplikation implementiert, um die gewonnenen Erkenntnisse auch auf andere Dimensionen als $2^n$, insbesondere ungerade, 
@@ -135,6 +143,8 @@ Abschnitt (\ref{sec:OptimierteMatrixmultiplikation}) konnte gezeigt werden, dass
 
 
 \section{Kompromiss aus benötigter Chipfläche und Genauigkeit des Ergebnisses}
+Dieser Abschnitt passt hier nicht so richtig hin! Aber wo sonst?
+
 Durch die Begrenzung der Bitbreite ist es nötig nach jeder Addition den Wert zu halbieren. Hierbei steigt die Abweichung gegenüber einer verlustfreien Berechnung immer dann, 
 wenn das letzte eine 1 ist. Im Mittel ist dies bei der Hälfte der Additionen der Fall. In 50$\%$ aller Fälle wird also der Wert um ein halbes LSB zu viel verringert.
 Bei der Multiplikation verdoppelt sich sogar die resultierende Bitbreite. Da mit dem vollständigen 13 Bit Vektor nach der Addition weitergerechnet wird, muss die Konstante
@@ -146,7 +156,7 @@ Da für die Berechnung einer Zahl der 1D-DFT je nach Zeile entweder 8 oder 12 We
 so viele, akkumulieren sich zwangsläufig Fehler. Bei 12 Bit Eingangswerten wäre ein 47? Bit Ausgangsvektor nötig, um dies vollständig zu vermeiden. Dies ist jedoch aus u.a.
 Platzgründen nicht umsetzbar.
 
-Mit jeder Addition kommt 1 bit dazu. So werden aus 12\,Bit bis zur Multiplikation 15 (12 + $\log_2(8)$), 8 = Anzahl der Zahlen die mit $\tfrac{\sqrt{2}}{2}$ multipliziert
+Mit jeder Addition kommt 1\,Bit dazu. So werden aus 12\,Bit bis zur Multiplikation 15 (12 + $\log_2(8)$), 8 = Anzahl der Zahlen die mit $\tfrac{\sqrt{2}}{2}$ multipliziert
 werden müssen. Bei der Multiplikation verdopplet sich der Wert, also 30 und eine letzte Addition macht 31.
 Beim zweiten Durchlauf werden es so (31+3)$\cdot$2+1=69\,Bit.
 

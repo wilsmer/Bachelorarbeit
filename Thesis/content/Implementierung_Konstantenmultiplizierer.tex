@@ -61,13 +61,14 @@ Erst bei genauer Betrachtung der Twiddlefaktor-Matrix viel auf, dass in jeder Ze
 ist es dadurch möglich auf das Invertieren der Eingangswerte sowie den hierfür benötigten Takt und die Inverter zu verzichten. Weiter wird auch nur die Multiplikation
 mit $+\frac{\sqrt{2}}{2}$ benötigt.
 
-\subsection{Syntheseergebnis eines 13 Bit Konstantenmultiplizierers}
+\subsection{Syntheseergebnis eines 13 Bit Konstantenmultiplizierers}\label{sec:SyntheseergebnisKonstantenmultiplizierer}
 \begin{figure}[!ht]
 \centering  
  %\fbox{
   \includegraphics[width=1\textwidth]{img/13Bit_Konstantenmultiplizierer_Netlist.png}
   %}
   \caption{13 Bit Konstantenmultiplizierer für $\frac{\sqrt{2}}{2} = 0.70711 \simeq 0.70703125 = 0001011010100_2$ in Encounter; Eingang links, Ausgang rechts}
+  \label{pic:Konstantenmultiplizierer}
 \end{figure}
 
 
@@ -93,9 +94,10 @@ Der vollständige Gate-Report befindet sich in Abschnitt \ref{src:rc_gate_report
 
 
 
-\subsection{Syntheseergebnis für die Bildung des Zweierkomplements eines 13 Bit Vektors}
+\subsection{Syntheseergebnis für die Bildung des Zweierkomplements eines 13 Bit Vektors}\label{sec:SyntheseergebnisBildungZweierkomplement}
 
-Zum Vergleich soll hier die nicht implementierte aber in Abschnitt \ref{sec:GegenüberstellungRelleKomplexeEingangswerte} erwähnte Negierung von Zahlen gezeigt werden.
+Zum Vergleich mit dem Konstantenmultiplizierers aus Abb. \ref{pic:Konstantenmultiplizierer} soll in Abb. \ref{pic:13BitInverter} die nicht expliziet implementierte aber in Abschnitt
+\ref{sec:GegenüberstellungRelleKomplexeEingangswerte} erwähnte Negierung von Zahlen gezeigt werden.
 
 \begin{figure}[htpb]
 \centering
@@ -104,6 +106,9 @@ Zum Vergleich soll hier die nicht implementierte aber in Abschnitt \ref{sec:Gege
 \label{pic:13BitInverter}
 \end{figure}
 
-Für die Negierung eines 13 Bit Vektors mit 22 Standardzellen sind knapp doppelt so viele Gatter nötig wie der Vektor Bits breit ist. Wie zu in Abb. \ref{pic:13BitInverter}
-sehen handelt es sich fast ausschließlich um Inverter und Addierer. In Abschnitt \ref{sec:Integer2erKomplement} wurde bereits beschrieben, dass für die Bildung des
-2er-Komplements zunächst alle Bits invertiert werden müssen. Abschließend wird auf den Vektor 1 LSB addiert.
+Für die Negierung eines 13 Bit Vektors hat das Synthesewerkzeug \texttt{encounter} 22 Standardzellen verwendet. Das sind knapp doppelt so viele Gatter, wie der Vektor 
+Bits breit ist. Der Unterschied zum Konstantenmultiplizierer fällt somit sehr gering aus. 
+Wie zu sehen, handelt es sich fast ausschließlich um Inverter und Addierer. In Abschnitt \ref{sec:Integer2erKomplement} wurde bereits beschrieben, dass für die Bildung des
+2er-Komplements zunächst alle Bits invertiert werden müssen. Abschließend wird auf den Vektor 1 LSB addiert. 
+Beide Pfade weisen die gleiche Länge auf und verwenden überwiedend die selben
+Gattertypen, weshalb darauf geschlossen werden kann, dass die maximale Gatterlaufzeit in der gleichen Größenordnung liegen muss.
