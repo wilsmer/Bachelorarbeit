@@ -23,8 +23,10 @@ Wie das Ausummieren erfolgt, kann in Abschnitt \ref{sec:Berechnungsschema} detai
 
 Wie in Abschnitt \ref{sec:Konstantenmultiplizierer} gezeigt wird, kann die Multiplikation mit einer Konstanten innerhalb eines Taktes mit einem Schaltnetz erfolgen. 
 Anders als bei der komplexen Multiplikation mit der Twiddlefaktormatrix sind bei der getrennten Berechnung ungleich viele positive und negative Faktoren je Zeile vorhanden, 
-sodass zu diesem Zeitpunkt davon ausgegangen werden muss, dass eine Negation mancher Werte erforderlich sein wird. Um keine zu langen Signal- und Gatterlaufzeiten hervor zu 
-rufen, sollte hierfür ebenfalls ein Takt eingeplant werden, wordurch der zeitliche Gewinn wiederum etwas relativiert wird.
+sodass zu diesem Zeitpunkt davon ausgegangen werden muss, dass eine Negation mancher Werte erforderlich sein wird. In Abschnitt
+\ref{sec:SyntheseergebnisBildungZweierkomplement} wird gezeigt, dass der kritische Pfad der Negierung sogar etwas länger als beim Konstantenmultiplizierer ist.
+Um keine zu langen Signal- und Gatterlaufzeiten erwirken, sollte hierfür unbedingt ein eigener Takt eingeplant werden. Dadurch relativiert sich der zeitliche Gewinn allerdings 
+etwas. 
 
 
 \begin{table}[htbp]
@@ -112,11 +114,34 @@ erhöhte Bedarf an Takten die reelle Matrixmultiplikation nicht von Interesse is
 
 
 \subsection{Optimierte 8x8 DFT als Matrixmultiplikation}\label{sec:OptimierteMatrixmultiplikation}
+Die Twiddlefaktormatrix lässt sich unter verschiedenen Aspekten betrachten.
+Zunächst sticht die erste Zeile hervor, da sie im Realteil nur aus positiven Einsen und im Imaginärteil nur aus Nullen besteht.
+Mit der fünften Zeile verhält es sich ähnlich. Anders ist hier, dass sich positive und negative Einsen abwechseln.
+In die nächste Gruppe können die dritte und die siebte Zeile zusammengefasst werden. Beide haben gemeinsam, dass sie so wie die erste und fünfte nur Einsen und Nullen
+als Faktoren haben. Im Unterschied zu den vorigen können hier aber auch die Imaginärteile eine positive bzw. negative Eins haben. Entsprechend ist dann der Realteil
+Null. Hier müssen zur Berechnung des Ergebnisses also auch Imaginärteile der Eingangsmatrix mit einbezogen werden.
+Für die vier bisher betrachteten Zeilen gilt, dass zur Berechnung eines Elements der Ergebnismatrix ausschließlich Additionen oder Subtraktionen erforderlich sind. 
+Da die komplexen Zeiger nur aus entweder einem Real- oder einem Imaginärteil bestehen, beschränkt sich die Anzahl der der Berechnungen der Elemente der Ausgangsmatrix
+auf acht Additionen bzw. Subtraktionen.
 
-Aus der anfänglichen Implementation bei der alle Werte einer Berechnung die entweder mit $+\frac{\sqrt{2}}{2}$ oder $-\frac{\sqrt{2}}{2}$ multipliziert werden müssen 
-einzelnd berechnet werden, wird sinngemäß der gemeinsame Faktor ausgeklammert, sodass nur noch jeweils eine Multiplikation erforderlich ist.
+Die übrigen vier Zeilen haben alle gemein, dass die Hälfte der Faktoren sowohl einen Real- als auch einen Imaginärteil besitzen. Für diese vier Faktoren sind deshalb
+jeweils insgesamt vier Multiplikationen nötig.
 
-Da die erste Zeile der Twiddlefaktormatrix nur aus Einsen im Real- und Nullen im Imaginärteil besteht, kann und muss hier nichts optimiert werden. 
+
+Für den Realteil bedeutet dies, dass die Elemente der ersten Zeile der Ergebnismatrix durch aufsummieren aller Elemente der korrespondierenden Spalte der Eingangsmatrix 
+berechnet werden. 
+% Später wohl besser ins Kapitel Entwicklung
+Dies hat zur Folge, dass ein sehr großer Wert entstehen kann, welcher Maßgebend für die Anzahl der Vorkommabits sein kann.
+%
+Wegen der Null im Imaginärteil der ersten Zeile der Twiddlefaktormatrix sind auch alle Imaginärteile der ersten Spalte der Ausgangsmatrix Null.
+Bezogen auf den Imaginärteil gilt das Gleiche auch für die fünfte Zeile der Twiddlefaktormatrix. 
+%
+Da sich beim Realteil der fünften Zeile der Twiddlefaktormatrix der fünften Zeile positive und negative Einsen abwechseln, sind hier auch keinerlei Multiplikationen nötig.
+
+Aus der anfänglichen Implementation bei der alle nicht trivialen Werte einer Berechnung die entweder mit $+\frac{\sqrt{2}}{2}$ oder $-\frac{\sqrt{2}}{2}$ multipliziert wurden,
+einzelnd berechnet werden, wird mittels des Distributivgesetzes der gemeinsame Faktor ausgeklammert, sodass nur noch jeweils eine Multiplikation erforderlich ist.
+
+
 Bei den weiteren Zeilen sind hingegen die Zahlen zur Hälfte positiv und zur anderen negativ. Außerdem enthalten die geraden Zeilen den Faktor $\pm\frac{\sqrt{2}}{2}$. 
 Dies lässt sich ausnutzen, um die Anzahl der der Multiplikationen zu reduzieren. Zunächst können die 
 
