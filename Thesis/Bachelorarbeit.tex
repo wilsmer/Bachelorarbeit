@@ -40,25 +40,19 @@
 \chapter{Analyse}
 Im diesem Kapitel werden zunächst die \gls{dft} und die \gls{dct} in verschiedenen Größen einander gegenüber gestellt und eine Entscheidung darüber getroffen, welche
 sich besser dafür eignet auf einem \gls{asic} implementiert zu werden. Hierbei spielen in erster Linie die Anzahl unterschiedlicher Faktoren eine Rolle, 
-da für identische nur eine Multiplikationseinheit nötig ist. Gleiche Faktoren gehen mit einer kleineren Chipfläche einher, was zusammen mit der schnellen 
+da für identische Faktoren nur eine Multiplikationseinheit nötig ist. Gleiche Faktoren gehen also mit einer kleineren Chipfläche einher, was zusammen mit der schnellen 
 Berechnung, also geringe Zahl benötigter Takte, die beiden Hauptziele bei der Chipimplementierung darstellen.
-Als interessante Kandidaten wurden primär die matrizen mit den Größen 8x8, 9x9 und 15x15 ausgewählt. 
+Als interessante Kandidaten wurden primär die Matrizen mit den Größen 8x8, 9x9 und 15x15 ausgewählt. 
 Die 8x8-Matrix hat die selbe Anzahl der Sensoren wie das derzeitige Demo-Array, so dass die Eingangswerte
 direkt transformiert werden können. 
 Die beiden anderen haben aufgrund ihrer ungeraden Zahl ihren Mittelpunkt zwischen den mittleren Sensorelementen, was für die 
-weitere Verarbeitung des transformierten Signals von Bedeutung ist. Die Matrix der Dimension 15x15 ist diejenige, die sich durch Interpolation der Daten einfach errechnen lässt.
+weitere Verarbeitung des transformierten Signals von Bedeutung ist. Die Matrix der Dimension 15x15 lässt sich durch Interpolation der Daten errechnen, während es für
+die 9x9 bisher keine Überlegungen gibt, wie sie errechnet werden könnte.
 Die 12x12 sowie die 16x16 werden zum besseren Einordnen der Bewertungen ebenfalls betrachtet.
-Darüber hinaus ist aus Abschnitt \ref{sec:BerechnungFFT} kekannt, dass die \gls{fft} auf 2$^n$ Elementen basiert und es sich hierbei um ein sehr schnelles und 
+Darüber hinaus ist aus Abschnitt \ref{sec:BerechnungFFT} bekannt, dass die \gls{fft} auf 2$^n$ Elementen basiert und es sich hierbei um ein sehr schnelles und 
 effizientes Verfahren handelt. 
 
-
-Die Bewertung berücksichtigt wie bereits angedeutet die beiden Eigenschaften Anzahl verschiedener Faktoren und die gesamte Anzahl an Faktoren, wovon die erst genannte 
-eine höhere Priorität hat. Bei den Faktoren wird zwischen solchen unterschieden, die als trivial erachtet werden, da sie nur eine Addition bedürfen ($\pm1$), zusätzlich
-zur Addition nur eine Division durch 2 erfolgt ($\pm0,5$) oder gar keine Berechnung nötig ist ($0$) und solchen, die als nicht trivial betrachtet werden müssen, da eine Multiplikation
-unumgänglich ist (beispielsweise $\tfrac{\sqrt{2}}{2}$). Begründet werden kann dies mit dem dualen Zahlensystem, welches die als trivial eingestuften Werte mit wenigen Bits 
-darstellt. Um z.B. einen Wert durch 2 zu teilen, erfolgt im dualen einfach ein Bitshift um 1 nach rechts.
-
-In zweiten Schritt wird untersucht, wie die 8x8-\gls{dft}, welche als Favorit aus der ersten Betrachtung herausgegangen ist, optimiert werden kann.
+Im zweiten Schritt wird untersucht, wie die 8x8-\gls{dft}, welche als Favorit aus der ersten Betrachtung herausgegangen ist, optimiert werden kann.
 
 
  \input{content/Bewertung_DCT.tex}

@@ -37,6 +37,19 @@ Der Berechnung aus Gleichung (\ref{eq:abweichungWurzel2halbe}) kann entnommen we
 
 \subsection{Zusammenhang von DFT und IDFT bei der Matrixmultiplikation}
 
+Durch die umgekehrte Drehrichtung des komplexen Zeigers in Gleichung (\ref{eq:idft}) werden in der Matrizenschreibweise die Zeilen 2 und 8, 3 und 7 sowie 4 und 6 vertauscht.
+Nachvollziehen lässt sich das gut anhand der Grafik (\ref{pic:Einheitskreis_Faktoren}). 
+Verdeutlicht wird das vorgehen in Abbildung \ref{pic:IDFT_Zeilentausch}.
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[width=0.4\textwidth]{img/IDFT_Zeilentausch.png}
+ \caption{Um von der DFT zur IDFT zu kommen, müssen bei der Matrixmultiplikation die Zeilen 2 und 8, 3 und 7 sowie 4 und 6 der Twiddlefaktormatrix vertauscht werden}
+ \label{pic:IDFT_Zeilentausch}
+\end{figure}
+
+
+
 \section{Test der Matrixmultiplikation}
 Unter anderem weil NC\,Sim bzw. dessen Unterprogramm SimVision zur Anzeige von Signalverläufen (Waveform) nur Integer darstellen kann und bei als Vektor gebündelten Signalen 
 diese nicht einmal als vorzeichenbehaftet (signed), wurde der Einfachheit halber zunächst die Berechnung als Ganzzahl-Multiplikation mit dem Faktor 3 betrachtet. 

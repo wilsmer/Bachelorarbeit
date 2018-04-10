@@ -16,12 +16,12 @@ Die Sensormatrix liefert für jedes Sensorelement einen Sinus- und einen Kosinus
 Auf diese Weise lässt sich die Berechnung mathematisch kompakter schreiben.
 
 
-In Tabelle (\ref{tab:TakteKomplexeDFT}) ist eine Auflistung der für die Berechnung veranschlagten Takte für die Multiplikation einer beliebigen Matrix mit der
+In Tabelle \ref{tab:TakteKomplexeDFT} ist eine Auflistung der für die Berechnung veranschlagten Takte für die Multiplikation einer beliebigen Matrix mit der
 Twiddlefaktormatrix für die 8x8-DFT zu sehen. Grundlage ist, dass in einem Takt Summanden 
 paarweise aufaddiert werden und in einer Variablen zwischengespeichert werden. Dieses Verfahren kann auch als Baumstruktur aufgefasst werden. 
-Wie das Ausummieren erfolgt, kann in Abschnitt (\ref{sec:Berechnungsschema}) detaillierter nachgelesen werden.
+Wie das Ausummieren erfolgt, kann in Abschnitt \ref{sec:Berechnungsschema} detaillierter nachgelesen werden.
 
-Wie in Abschnitt (\ref{sec:Konstantenmultiplizierer}) gezeigt wird, kann die Multiplikation mit einer Konstanten innerhalb eines Taktes mit einem Schaltnetz erfolgen. 
+Wie in Abschnitt \ref{sec:Konstantenmultiplizierer} gezeigt wird, kann die Multiplikation mit einer Konstanten innerhalb eines Taktes mit einem Schaltnetz erfolgen. 
 Anders als bei der komplexen Multiplikation mit der Twiddlefaktormatrix sind bei der getrennten Berechnung ungleich viele positive und negative Faktoren je Zeile vorhanden, 
 sodass zu diesem Zeitpunkt davon ausgegangen werden muss, dass eine Negation mancher Werte erforderlich sein wird. Um keine zu langen Signal- und Gatterlaufzeiten hervor zu 
 rufen, sollte hierfür ebenfalls ein Takt eingeplant werden, wordurch der zeitliche Gewinn wiederum etwas relativiert wird.
@@ -54,7 +54,7 @@ werden parallel berechnet und sind somit zeitgleich fertig.
 Wie ein Vergleich der Gleichungen (\ref{eq:komplexe_Multiplikation}) und (\ref{eq:halb_komplexe_Multiplikation}) zeigt, entfallen die Hälfte der Multiplikationen, wenn die
 Eingangswerte in Real- und Imaginärteil getrennt werden.
 Wenn die Eingangswerte rein reell sind, kommen beispielsweise keine $j^2$-Komponenten zustande, welche auf die reellen Elemente aufaddiert werden müssten.
-Aus diesem Grund müssen weniger Werte aufsummiert werden, wie sich in Tabelle (\ref{tab:TakteReelleDFT}) zeigt.
+Aus diesem Grund müssen weniger Werte aufsummiert werden, wie sich in Tabelle \ref{tab:TakteReelleDFT} zeigt.
 
 \begin{table}[htbp]
 \centering
@@ -77,7 +77,7 @@ Aus diesem Grund müssen weniger Werte aufsummiert werden, wie sich in Tabelle (
 \end{tabular}
 \end{table}
 
-Aus Abschnitt (\ref{sec:rein_reelle_dft}) ist bekannt, dass die letzten drei Zeilen direkt oder negiert aus den Zeilen 2-4 übernommen werden können. Die Takte der 6.-8. Zeilen
+Aus Abschnitt \ref{sec:rein_reelle_dft} ist bekannt, dass die letzten drei Zeilen direkt oder negiert aus den Zeilen 2-4 übernommen werden können. Die Takte der 6.-8. Zeilen
 sind deshalb in der Tabelle (\ref{tab:TakteReelleDFT}) grau hinterlegt. Gegenüber der komplexen Matrix ergeben sich hier statt 256 Takten (3+4+2+4+3)$\cdot$8 = 128 Takte. 
 Der Imaginärteil errechnet 
 sich noch schneller, da die 1. und 5. Zeile keinen Beitrag leisten und auch hier die Zeilen 2-4 in diesem Fall nach einer Negation die Werte der letzten 3 Zeilen ergeben. 
@@ -85,29 +85,29 @@ So ergeben sich dort (3+2+3)$\cdot$8=64 Takte. Vermultich müssen an dieser Stel
 hierfür benötigten Takte sozusagen frei verfügbar.
 
 Interessant ist dieser Ansatz dann, wenn einerseits die Recheneinheit so klein wie irgend möglich gehalten werden soll und andererseits die Berechnung noch schneller erfolgen muss.
-Abbildung (\ref{pic:reelleDFT}) zeigt, dass im Vergleich zur komplexen Berechnung der 2D-DFT voraussichtlich 3x so viel Speicher für Zwischenwerte vorhanden sein muss.
+Abbildung \ref{pic:reelleDFT} zeigt, dass im Vergleich zur komplexen Berechnung der 2D-DFT voraussichtlich 3x so viel Speicher für Zwischenwerte vorhanden sein muss.
 Ingesamt übersteigt so der Flächenbedarf der gesamten Einheit der der komplexen Variante. Auch die Leitungen um den Speicher anzubinden dürfen nicht vernachlässigt werden.
 
  
 \subsection{Direkte Multiplikation zweier 8x8 Matrizen}
-Die in Abschnitt (\ref{sec:Matrixmultiplikation}) erläuterte Matrixmultiplikation bedarf bei einer 8x8 Matrix je Ergebnis der Ausgangsmatrix 8 Multiplikationen. Für
+Die in Abschnitt \ref{sec:Matrixmultiplikation} erläuterte Matrixmultiplikation bedarf bei einer 8x8 Matrix je Ergebnis der Ausgangsmatrix 8 Multiplikationen. Für
 die 8$\cdot$8=64 Elemente werden deshalb 512 Multiplikationen benötigt. Da es sich sowohl bei den Eingangswerten als auch bei der Twiddlefaktormatrix um komplexe
-Zahlen handelt, sind, wie in Abschnitt (\ref{sec:komplexe_Multiplikation}) beschrieben, insgesamt 512$\cdot$4=2048 Multiplikationen nötig.
+Zahlen handelt, sind, wie in Abschnitt \ref{sec:komplexe_Multiplikation} beschrieben, insgesamt 512$\cdot$4=2048 Multiplikationen nötig.
 
 Sollte sich dazu entschieden werden die Sinus- und Kosinusanteile separat zu berechnen, um ein rein reelles Eingangssignal weiter zu verarbeiten, sind, wie in Abschnitt
-(\ref{sec:rein_reelle_dft}) hergeleitet, knapp die Hälfte der Multiplikationen unnötig. In Abbildung (\ref{pic:reelleMatMultRedundanz}) ist zu sehen, dass von den 64 
+\ref{sec:rein_reelle_dft} hergeleitet, knapp die Hälfte der Multiplikationen unnötig. In Abbildung \ref{pic:reelleMatMultRedundanz} ist zu sehen, dass von den 64 
 Ergebniswerten nur 40 berechnet werden müssen. Da die Eingangswerte zwar rein reell, die Twiddlefaktormatrix aber komplex ist, verdoppelt sich die Anzahl der Multiplikationen.
 Somit müssen für die gesamten 64 Werte 40$\cdot$8$\cdot$2=640 Multiplikationen durchgeführt werden.
 
 Im komplexen Fall verdoppelt sich für die 2D-DFT schlicht die Anzahl der reellen Multiplikationen und liegt somit bei 4096. Im reellen Fall müssen, wie in Abbildung 
-(\ref{pic:reelleDFT}) gezeigt, der Real- sowie der Imaginärteil separat mit der Twiddlefaktormatrix multipliziert werden. So ergeben sich alles in allem 
+\ref{pic:reelleDFT} gezeigt, der Real- sowie der Imaginärteil separat mit der Twiddlefaktormatrix multipliziert werden. So ergeben sich alles in allem 
 640$\cdot$3$\cdot$2=3840 reelle Multiplikationen. Diese Zahl liegt nur nur geringfügig unterhalb der komplexen Berechnung.
 
 
 
 Hierbei wird von einer Twiddlefaktormatrix mit 64 komplexen Werten ausgegangen. In Wirklichkeit sind es nur 16, die übrigen erfordern überhaupt keine Multiplikation, da 
 entweder der Real- oder der Imaginärteil 0 ist. Da dies aber Bestandteil der optimierten Matrixmultiplikation ist, wird an dieser Stelle nicht weiter darauf eingegangen.
-Später werden nur die komplexen Varianten verglichen. Dies wird als ausreichend erachtet, da aufgrund der hier und in Abschnitt (\ref{sec:rein_reelle_dft}) angedeutete deutlich 
+Später werden nur die komplexen Varianten verglichen. Dies wird als ausreichend erachtet, da aufgrund der hier und in Abschnitt \ref{sec:rein_reelle_dft} angedeutete deutlich 
 erhöhte Bedarf an Takten die reelle Matrixmultiplikation nicht von Interesse ist. 
 
 

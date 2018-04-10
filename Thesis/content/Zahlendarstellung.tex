@@ -11,10 +11,10 @@ Bei der Interpretation des Bitvektors als Integerwert im Einerkomplement werden 
 (LSB, least significant bit) dem Wert für den Faktor $2^0$ entspricht, das Bit links davon dem für $2^1$ und so weiter. Die Summe aller Bits, ohne das höchstwertigste, 
 multipliziert mit ihrer Wertigkeit (Potenz) ergibt den Betrag der Dezimalzahl. Das höchstwertigste Bit (MSB, most significant bit) gibt Auskunft darüber, ob es sich 
 um eine negative oder positive Zahl handelt, wobei eine 0 für eine positive Zahl steht. Entsprechend besagt die 1, dass die Zahl negativ ist.
-Dies hat zur Folge, dass es eine positive und eine negative Null und somit eine Doppeldeutigkeit gibt. Desweiteren wird
+Dies hat zur Folge, dass es eine positive und eine negative Null und somit eine Doppeldeutigkeit gibt. Des Weiteren wird
 ein LSB an Auflösung verschenkt. Der Wertebereich erstreckt sich von $-2^{\mathrm{MSB}-1}+1\,\mathrm{LSB}$ bis $2^{\mathrm{MSB}-1}-1\,\mathrm{LSB}$
 
-Diese Darstellung hat den Vorteil, dass sich das Ergebnis einer Multiplikation der Zahlen $a \cdot b$ und $-a \cdot b$ nur im vorderste Bit unterscheidet. Darüber hinaus
+Diese Darstellung hat den Vorteil, dass sich das Ergebnis einer Multiplikation der Zahlen $a \cdot b$ und $-a \cdot b$ nur im vordersten Bit unterscheidet. Darüber hinaus
 lässt sich das Vorzeichen des Ergebnisses durch eine einfache XOR-Verknüpfung der beiden MSB der Multiplikanden ermitteln. 
 Die eigentliche Multiplikation beschränkt sich auf die Bits MSB-1 bis LSB.
 
@@ -30,9 +30,9 @@ Bits auf 0. Für gesetzte Bits wird der Dezimalwert, wie beim Einerkomplement be
 ist, wird der errechnete Dezimalwert auf 0 addiert. Auf diese Weise lassen sich Zahlen im Wertebereich von $-2^{MSB-1}$ bis $2^{MSB-1}-1 \,LSB$ darstellen. Der positive
 Wertebereich ist also um ein LSB kleiner als der negative und es gibt keine doppelte Null.
 
-Um das Vorzeichen umzukehren müssen alle Bits invertiert werden. Auf den neuen Wert muss abschließend 1 LSB addiert werden.
+Um das Vorzeichen umzukehren müssen alle Bits invertiert werden. Auf das Resultat muss abschließend 1 LSB addiert werden.
 
-Vorteile bei dieser Darstellung ist, dass die mathematischen Operationen Addition, Subtraktion und Multiplikation direkt angewand werden können. Unterstützt werden sie z.B. 
+Vorteil bei dieser Darstellung ist, dass die mathematischen Operationen Addition, Subtraktion und Multiplikation direkt angewandt werden können. Unterstützt werden sie z.B. 
 von den Datentypen \texttt{unsigned} sowie \texttt{signed}, welche in der Bibliothek u.a. \texttt{ieee.numeric\_std.all} definiert sind.
 
 
@@ -60,20 +60,19 @@ Für die Addition oder Multiplikation zweier Zahlen müssen beide einerseits die
 
  
 \subsection{Numerisch bedingte Ungenauigkeiten}\label{sec:NumerischeUngenauigkeiten}
-Numerische Ungenauigkeiten entstehen immer dann, wenn die zu Verfügung stehenden Bits es nicht ermöglichen eine Zahl exakt abzubilden. 
-Bei einem Bitshift, welcher häufig für dier Division durch Zwei oder Vielfachen von Zwei verwendet wird, kann immer Information verloren gehen. Dies ist immer dann der Fall,
+Numerische Ungenauigkeiten entstehen immer dann, wenn die zur Verfügung stehenden Bits es nicht ermöglichen eine Zahl exakt abzubilden. 
+Bei einem Bitshift, welcher häufig für die Division durch Zwei oder Vielfachen von Zwei verwendet wird, kann immer Information verloren gehen. Dies ist immer dann der Fall,
 wenn die Bits die abgeschnitten werden eine 1 sind. Das hat zur Folge, dass beispielsweise
 bei einer Division durch Zwei der resultierende Wert um 1\,LSB kleiner ist, als er eigentlich sein sollte. 
-Dieses Problem kann bei jedem Bitshift auftreten. Die Wahrscheinlichkeit für eine 1 liegt bei \SI{50}{\percent}, weshalb davon ausgegangen werden muss, dass ein positives Ergebnis etwas 
-kleiner und ein negatives vom Betrag her etwas größer ist, als bei verlustfreier Berechnung. 
+Dieses Problem kann bei jedem Bitshift auftreten. Die Wahrscheinlichkeit für eine 1 liegt im Mittel bei \SI{50}{\percent}, weshalb davon ausgegangen werden muss, dass ein 
+positives Ergebnis etwas kleiner und ein negatives vom Betrag her etwas größer ist, als bei verlustfreier Berechnung. 
 
+% Von Prof. Vollmer: 
+% \begin{equation}
+%  S_N = \frac{P_Q}{\left(2^0\right)^2} + \dfrac{P_Q}{\left(2^1\right)^2} + \dfrac{P_Q}{\left(2^2\right)^2} + \cdots + \dfrac{P_Q}{\left(2^{L-1}\right)^2}
+% \end{equation}
+% L : Stufe (Additionstakte?)
 
-Von Prof. Vollmer: 
-\begin{equation}
- S_N = \frac{P_Q}{\left(2^0\right)^2} + \dfrac{P_Q}{\left(2^1\right)^2} + \dfrac{P_Q}{\left(2^2\right)^2} + \cdots + \dfrac{P_Q}{\left(2^{L-1}\right)^2}
-\end{equation}
-L : Stufe (Additionstakte?)
-
-Da diese Arbeit den Schwerpunkt in der Aufwandsabschätzung einer Chipimplementierung einer 2D-DFT auf einem \gls{asic} hat, ist diese Problematik kein Gegenstand dieser Arbeit und
-wird an dieser Stelle nur in Grundzügen erwähnt. Für eine 
+Da diese Arbeit den Schwerpunkt in der Aufwandsabschätzung einer Chipimplementation einer 2D-DFT auf einem \gls{asic} hat, ist diese Problematik kein Gegenstand dieser Arbeit und
+wird an dieser Stelle nur in Grundzügen erwähnt. %Für eine 
 

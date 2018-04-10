@@ -6,7 +6,7 @@ in kleinere Teil-DFTs aufspalten lässt, welche durch Ausnutzen von Symmetrieeig
 Üblich ist die Radix-2 FFT, Ausgangspunkt ist also eine DFT mit 2 Eingangswerten.
 Da mit jeder weiteren Teil-DFT sich die Anzahl der Eingangswerte verdoppelt, eignet sich diese Methode nur für Eingangsvektoren der Größe $2^n$. Dieser
 vermeindliche Nachteil lässt sich durch Auffüllen des Eingangsvektors mit Nullen (Zeropadding) eliminieren. Dies hat zur Folge, dass die Größe des Ausgangsvektors
-immer eine Potenz von zwei ist. Abbildung (\ref{pic:Butterfly}) illustriert dies anhand eines Eingangsvektors mit acht Werten. 
+immer eine Potenz von zwei ist. Abbildung \ref{pic:Butterfly} illustriert dies anhand eines Eingangsvektors mit acht Werten. 
 Um diesen Algorithmus anwenden zu können ist es erforderlich, dass die Werte im Eingangsvektor in umgekehrte Bitreihenfolge getauscht werden (bitreversed order).
 Dies geschieht nach dem Muster, dass die Indizes der Eingangswerte, wie
 üblich bei 0 beginnend, binär dargestellt werden. Nun wird die Reihenfolge der Bits getauscht. Auf diese Weise tauschen bei einem 8-Bit Vektor die

@@ -7,9 +7,9 @@ Da es sich um eine endliche Anzahl diskreter Werte handelt, geht das Integral au
 
 
 Üblicher Weise wird die (diskrete) Fouriertransformation genutzt, um vom Zeitbereich in den Frequenzbereich zu gelangen. In diesem Fall enthielte der Eingangsvektor 
-Werten im Zeitbereich, der Ausgangsvektor Werten im Frequenzbereich.
-Um von Daten im Zeitbereich sprechen zu können, müssen diese zeitliche versetzt auf den gleichen Bezugspunkt erfasst worden sein. 
-Bezogen auf das Sensorarray würde eine bestimmte Anzahl an zeitlich versetzten zeit- und wertdiskretisierten Daten eines einzelnen Sensors in einem Vektor zusammengefasst 
+Werte im Zeitbereich, der Ausgangsvektor Werte im Frequenzbereich.
+Um von Daten im Zeitbereich sprechen zu können, müssen diese zeitlich versetzt auf den gleichen Bezugspunkt erfasst worden sein. 
+Bezogen auf das Sensorarray würde eine bestimmte Anzahl an zeitlich versetzten zeit- und wertediskretisierten Daten eines einzelnen Sensors in einem Vektor zusammengefasst 
 und darauf die \gls{dft} angewandt werden, um beim Ausgangsvektor von Daten im Frequenzbereich sprechen zu können.
 
 Statt zeitlich versetzter Daten werden beim Sensorarray die Daten von mehreren Sensoren gleichzeitig erfasst. Da das Sensorarray zweidimensional ist, ergibt
@@ -34,9 +34,9 @@ Die \gls{dft} findet wie bereits erwähnt üblicherweise Anwendung, um vom Zeit-
 
 In Gleichung (\ref{eq:dft}) ist die übliche Verwendung von Eingangsvektor $x[n]$ und Ausgangsvektor $X[n]$ zu sehen. Eine spaltenweise Multiplikationen einer Matrix
 ist auch denkbar und ist darüber hinaus Grundlage für die \gls{2d-dft}.
-Gleichung (\ref{eq:1D-DFT_MatrixMult}) zeigt die Summenformel aus (\ref{eq:dft}) umgeschrieben zu einer Matrixmultiplikation.
+Gleichung (\ref{eq:1D-DFT_MatrixMult}) zeigt die Summenformel aus (\ref{eq:dft}), umgeschrieben zu einer Matrixmultiplikation.
 
-Mit Gleichung (\ref{eq:Twiddlefaktorenberechnung}) werden zunächst alle Twiddlefaktoren in Matrixform berechnet, wobei $n$ der Index des zu Berechnenden Elements des 
+Mit Gleichung (\ref{eq:Twiddlefaktorenberechnung}) werden zunächst alle Twiddlefaktoren in Matrixform berechnet, wobei $n$ der Index des zu berechnenden Elements des 
 Vektors im Zeitbereich und $m$ das Äquivalent im Frequenzbereich ist.
 
 \begin{equation}\label{eq:Twiddlefaktorenberechnung}
@@ -58,7 +58,7 @@ berechnet werden, wobei N die Anzahl der Elemente je Zeile bzw. Spalte ist.
 
 
 \subsubsection{2D-DFT}
-Die \gls{2d-dft} wird hingegen häufig in der Bildverarbeitung verwendet, um vom Orts- in den Fourierraum zu gelagen. Da es sich somit nicht mehr um eine Abhänigkeit 
+Die \gls{2d-dft} wird hingegen häufig in der Bildverarbeitung verwendet, um vom Orts- in den Fourierraum zu gelagen. Da es sich somit nicht mehr um eine Abhängigkeit 
 der Zeit handelt, werden andere Indizes verwendet.
 \begin{align}
 \begin{split}
@@ -290,11 +290,10 @@ Bei der oben beschriebenen Berechnung können die Eingangssignale auch komplex s
 komplex ist, kann es dort direkt als Eingangssignal für die komplexe \gls{2d-dft} genutzt werden. 
 
 Es wäre jedoch auch möglich, das komplexe Ausgangssignal der \gls{1d-dft} als zwei von einander unabhängige rein relle Eingangssignale der 2D-DFTs zu betrachten und später 
-wieder zusammen zu setzen. Gleiches gilt dann natürlich auch für ein komplexes Eingangssignal, welches ebenfalls in zwei von einander unabhängigen DFTs transformiert werden.
+wieder zusammenzusetzen. Gleiches gilt dann natürlich auch für ein komplexes Eingangssignal, welches ebenfalls in zwei von einander unabhängigen DFTs transformiert werden kann.
 Da bei dieser Umsetzung kein Imaginärteil in die Berechnung der Ergebnisse einfließt, hat sie den Vorteil, dass aus Symmetriegründen die Hälfte der Multiplikationen 
 eingespart werden können. Hierbei ist es erforderlich, dass der Imaginärteil der gespiegelten Ergebnisse negiert wird. Abbildung \ref{pic:reelleMatMultRedundanz} zeigt die 
-redundanten Werte der DFT. Die grau hinterlegten Felder sind die Multiplikationen der Twiddlefaktormatrix. Es müssen bei der 8x8-DFT also statt 16 nur 8 Multiplikationen
-mit rellem Multiplikand und komplexen Multiplkator erfolgen.
+redundanten Werte der DFT. Es müssen bei der 8x8-DFT also statt 16 nur 8 Multiplikationen mit rellem Multiplikand und komplexen Multiplkator erfolgen.
 
 Wie bereits beschrieben lässt sich dieses Verfahren auch für komplexe Eingangssignale, deren Real- und Imaginärteil separat von einander mit der DFT transformiert werden, anwenden.
 Anschließend müssen die Ergebnisse zusammen gesetzt werden. Wie dies geschieht ist der Abbildung \ref{pic:reelleDFT} zu entnehmen.
