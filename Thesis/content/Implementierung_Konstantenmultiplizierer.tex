@@ -44,7 +44,7 @@ Verdeutlicht wird das vorgehen in Abbildung \ref{pic:IDFT_Zeilentausch}.
 \begin{figure}[ht]
  \centering
  \includegraphics[width=0.4\textwidth]{img/IDFT_Zeilentausch.png}
- \caption{Um von der DFT zur IDFT zu kommen, müssen bei der Matrixmultiplikation die Zeilen 2 und 8, 3 und 7 sowie 4 und 6 der Twiddlefaktormatrix vertauscht werden}
+ \caption{Um von der DFT zur IDFT zu kommen, müssen bei der Matrixmultiplikation die Zeilen 2 und 8, 3 und 7 sowie 4 und 6 der Twiddlefaktormatrix vertauscht werden.}
  \label{pic:IDFT_Zeilentausch}
 \end{figure}
 
@@ -125,3 +125,17 @@ Wie zu sehen, handelt es sich fast ausschließlich um Inverter und Addierer. In 
 2er-Komplements zunächst alle Bits invertiert werden müssen. Abschließend wird auf den Vektor 1 LSB addiert. 
 Beide Pfade weisen die gleiche Länge auf und verwenden überwiedend die selben
 Gattertypen, weshalb darauf geschlossen werden kann, dass die maximale Gatterlaufzeit in der gleichen Größenordnung liegen muss.
+
+
+
+\subsection{Gegenüberstellung der Konstantenmultiplikation und der Bildung des 2er-Komplements}
+
+Unter diesem Punkt sollen die Konstantenmultiplikation und die Bildung des 2er-Komplements unter Aspekten der benötigten Zeit und des benötigten Platzes auf einem Chip 
+betrachtet werden. Um einen Eindruck hiervon zu erhalten, werden im Kapitel Entwurf in den Abschnitten \ref{sec:SyntheseergebnisKonstantenmultiplizierer} und
+\ref{sec:SyntheseergebnisBildungZweierkomplement} jeweils die Schaltnetzte 
+%für die Negation mittels 2er-Komplement und die Multiplikation mit einem konstanten Faktor 
+gezeigt.
+Wie dort erläuter, lässt sich anhand dieser sagen, dass es bei dieser Art der Implementierung keinen zeitlichen Gewinn gibt, da beide kritischen Pfade etwa gleich lang 
+sind. Für die knapp $\nicefrac{1}{4}$ mehr Gatter bei der Multiplikation ist auch ein größerer Vertrahtungsaufwandt erforderlich, sodass die Konstantenmultiplizierer
+auf einem Chip eine etwas größere Fläche beanspruchen. Da es sich hier insgesamt aber um sehr wenige Gatter handelt, wirkt sich dies erst bei sehr vielen Instanzen aus.
+Es kann an dieser Stelle deshalb festgehalten werden, dass dieser Unterschied nicht als entscheidend geltend gemacht werden kann.

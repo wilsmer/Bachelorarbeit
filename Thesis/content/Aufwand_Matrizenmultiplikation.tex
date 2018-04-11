@@ -1,16 +1,16 @@
-\section{Abschätzung des Rechenaufwands}\label{sec:abschaetzung_Rechenaufwand}
+\section{Einordnung des Rechenaufwands}\label{sec:abschaetzung_Rechenaufwand}
+Nachdem nun die Symmetrien der 8x8-Twiddlefaktormatrix der DFT analysiert wurden, soll eine Abschätzung des Rechenaufwands erfolgen.
+Hierbei wird in vier Kategorien unterschieden. Zum einen werden die erforderlichen Berechnungen bezüglich der 8x8-Twiddlefaktormatrix einerseits für reelle
+und andererseits für komplexe Eingangswerte betrachtet. Als dritte Variante soll aufgezeigt werden, wie viele Multiplikationen nötig wären, wenn die 
+Twiddlefaktormatrix als variabel angenommen wird. Diese Art der Implementation hätte den Vorteil, dass zu einem späteren Zeitpunkt sich für ein anderes
+Transformationsverfahren entschieden werden könnte. Da keinerlei Optimierungen möglich sind, ist hier auch eine flexible Größe denkbar. Um einen Vergleich
+zu ermöglichen, wird die Multiplikation zweier 8x8 Matrizen betrachtet. Als letztes soll der Butterfly-Algorithmus auf die Anzahl der benötigten Multiplikationen
+hin untersucht werden.
 
-\subsection{Gegenüberstellung von der Konstantenmultiplikation und der Bildung des 2er-Komplements}
-Unter diesem Punkt sollen die Konstantenmultiplikation und die Bildung des 2er-Komplements unter Aspekten der benötigten Zeit und des benötigten Platzes auf einem Chip 
-betrachtet werden. Um einen Eindruck hiervon zu erhalten, werden im Kapitel Entwurf in den Abschnitten \ref{sec:SyntheseergebnisKonstantenmultiplizierer} und
-\ref{sec:SyntheseergebnisBildungZweierkomplement} jeweils die Schaltnetzte 
-%für die Negation mittels 2er-Komplement und die Multiplikation mit einem konstanten Faktor 
-gezeigt.
-Wie dort erläuter, lässt sich anhand dieser sagen, dass es bei dieser Art der Implementierung keinen zeitlichen Gewinn gibt, da beide kritischen Pfade etwa gleich lang 
-sind. Für die knapp $\nicefrac{1}{4}$ mehr Gatter bei der Multiplikation ist auch ein größerer Vertrahtungsaufwandt erforderlich, sodass die Konstantenmultiplizierer
-auf einem Chip eine etwas größere Fläche beanspruchen. Da es sich hier insgesamt aber um sehr wenige Gatter handelt, wirkt sich dies erst bei sehr vielen Instanzen aus.
-Es kann an dieser Stelle deshalb festgehalten werden, dass dieser Unterschied nicht als entscheidend geltend gemacht werden kann.
- 
+
+Abschließend wird die Bildung des Zweierkomplements der Konstantenmultiplikation unter dem Gesichtspunkt der benötigten Zeit und Fläche gegenüber gestellt.
+Dies geschieht vor dem Hintergrund, dass je nach Implementierung zwar weniger Multiplikationseinheiten, dafür aber zusätzliche Einheiten zur Negierung von Werte existieren müssen.
+
 \subsection{Gegenüberstellung von reellen und komplexen Eingangswerten}\label{sec:GegenüberstellungRelleKomplexeEingangswerte}
 Die Sensormatrix liefert für jedes Sensorelement einen Sinus- und einen Kosinuswert. Diese können für die Berechnung der DFT zu einer komplexen Zahl zusammengefasst werden. 
 Auf diese Weise lässt sich die Berechnung mathematisch kompakter schreiben.
@@ -92,7 +92,7 @@ Ingesamt übersteigt so der Flächenbedarf der gesamten Einheit der der komplexe
 
  
 \subsection{Direkte Multiplikation zweier 8x8 Matrizen}
-Die in Abschnitt \ref{sec:Matrixmultiplikation} erläuterte Matrixmultiplikation bedarf bei einer 8x8 Matrix je Ergebnis der Ausgangsmatrix 8 Multiplikationen. Für
+Die in Abschnitt \ref{sec:Matrixmultiplikation} erläuterte Matrixmultiplikation bedarf bei einer 8x8 Matrix je Element der Ausgangsmatrix 8 Multiplikationen. Für
 die 8$\cdot$8=64 Elemente werden deshalb 512 Multiplikationen benötigt. Da es sich sowohl bei den Eingangswerten als auch bei der Twiddlefaktormatrix um komplexe
 Zahlen handelt, sind, wie in Abschnitt \ref{sec:komplexe_Multiplikation} beschrieben, insgesamt 512$\cdot$4=2048 Multiplikationen nötig.
 
@@ -113,76 +113,38 @@ Später werden nur die komplexen Varianten verglichen. Dies wird als ausreichend
 erhöhte Bedarf an Takten die reelle Matrixmultiplikation nicht von Interesse ist. 
 
 
-\subsection{Optimierte 8x8 DFT als Matrixmultiplikation}\label{sec:OptimierteMatrixmultiplikation}
-Die Twiddlefaktormatrix lässt sich unter verschiedenen Aspekten betrachten.
-Zunächst sticht die erste Zeile hervor, da sie im Realteil nur aus positiven Einsen und im Imaginärteil nur aus Nullen besteht.
-Mit der fünften Zeile verhält es sich ähnlich. Anders ist hier, dass sich positive und negative Einsen abwechseln.
-In die nächste Gruppe können die dritte und die siebte Zeile zusammengefasst werden. Beide haben gemeinsam, dass sie so wie die erste und fünfte nur Einsen und Nullen
-als Faktoren haben. Im Unterschied zu den vorigen können hier aber auch die Imaginärteile eine positive bzw. negative Eins haben. Entsprechend ist dann der Realteil
-Null. Hier müssen zur Berechnung des Ergebnisses also auch Imaginärteile der Eingangsmatrix mit einbezogen werden.
-Für die vier bisher betrachteten Zeilen gilt, dass zur Berechnung eines Elements der Ergebnismatrix ausschließlich Additionen oder Subtraktionen erforderlich sind. 
-Da die komplexen Zeiger nur aus entweder einem Real- oder einem Imaginärteil bestehen, beschränkt sich die Anzahl der der Berechnungen der Elemente der Ausgangsmatrix
-auf acht Additionen bzw. Subtraktionen.
-
-Die übrigen vier Zeilen haben alle gemein, dass die Hälfte der Faktoren sowohl einen Real- als auch einen Imaginärteil besitzen. Für diese vier Faktoren sind deshalb
-jeweils insgesamt vier Multiplikationen nötig.
-
-
-Für den Realteil bedeutet dies, dass die Elemente der ersten Zeile der Ergebnismatrix durch aufsummieren aller Elemente der korrespondierenden Spalte der Eingangsmatrix 
-berechnet werden. 
-% Später wohl besser ins Kapitel Entwicklung
-Dies hat zur Folge, dass ein sehr großer Wert entstehen kann, welcher Maßgebend für die Anzahl der Vorkommabits sein kann.
-%
-Wegen der Null im Imaginärteil der ersten Zeile der Twiddlefaktormatrix sind auch alle Imaginärteile der ersten Spalte der Ausgangsmatrix Null.
-Bezogen auf den Imaginärteil gilt das Gleiche auch für die fünfte Zeile der Twiddlefaktormatrix. 
-%
-Da sich beim Realteil der fünften Zeile der Twiddlefaktormatrix der fünften Zeile positive und negative Einsen abwechseln, sind hier auch keinerlei Multiplikationen nötig.
-
-Aus der anfänglichen Implementation bei der alle nicht trivialen Werte einer Berechnung die entweder mit $+\frac{\sqrt{2}}{2}$ oder $-\frac{\sqrt{2}}{2}$ multipliziert wurden,
-einzelnd berechnet werden, wird mittels des Distributivgesetzes der gemeinsame Faktor ausgeklammert, sodass nur noch jeweils eine Multiplikation erforderlich ist.
-
-
-Bei den weiteren Zeilen sind hingegen die Zahlen zur Hälfte positiv und zur anderen negativ. Außerdem enthalten die geraden Zeilen den Faktor $\pm\frac{\sqrt{2}}{2}$. 
-Dies lässt sich ausnutzen, um die Anzahl der der Multiplikationen zu reduzieren. Zunächst können die 
-
-Für jede gerade Zeile der DFT ist jeweils für den Real- und den Imaginärteil eine Multiplikation nötig, so dass sich insgesamt acht Multiplikationen ergeben
 
 
 
 
+\subsection{Betrachung des Butterfly-Algorithmus für 8 Eingangswerte} 
+Anhand der Grafik \ref{pic:Butterfly} lässt sich erkennen, dass die DFT in mehrere Stufen aufgeteilt wird.
+
+Aus Gleichung (\ref{eq:Twiddlefaktorenberechnung}) ist 
+bekannt, dass die Variablen der Twiddlefaktorberechnung die Indizes der Eingangs- sowie Ausgangsvektoren sind. Hieraus lässt sich bereits erkennen, dass
+die gesamte Twiddlefaktormatrix N verschiedene komplexe Werte enthält. Dies wird auch aus Abbildung \ref{pic:Einheitskreis_Faktoren} am Beispiel für N=8 ersichtlich. 
+Darüber hinaus lässt sich erkennen, dass die komplexen Zeiger den Einheitskreis 
+in N Bereiche mit einem Winkel von $\frac{2 \pi}{N}$ unterteilen. Bekannt ist ebenfalls, dass der erste Wert immer die $1$ ist.
+Daraus ergibt sich bei einer DFT mit 2 Eingangswerten die Twiddlefaktoren $1$ und $-1$, sodass eine Multiplikation entfällt. 
+
+Ähnlich verhält es sich mit der zweiten Stufe.
+Hier ergeben sich die Werte $1, -j, -1, j$, was ebenfalls bedeutet, dass keine Multiplikation erfolgen muss. Der Zweite Schritt zur Reduzierung des Rechenaufwandes ergibt sich
+aus der Erkenntnis, dass die Werte $exp(-i 2 \pi m n/N)$ und $exp(-i 2 \pi \frac{m n}{2}/N) = -exp(-i 2 \pi m n/N)$ lediglich ein negiertes Vorzeichen haben. Auch dies lässt sich der 
+Abb. (\ref{pic:Einheitskreis_Faktoren}) entnehmen. Auf diese Weise fällt der Faktor $-j$ weg. Dies bedeutet, dass sich so die Hälfte der Multiplikationen einsparen lässt.
+
+Bei der dritten Stufe gibt es wegen der acht Eingangswerte theoretisch auch acht Faktoren. Aus den genannten Symmentriegründen halbiert sich die Anzahl. Wiederum die Hälfte davon 
+sind komplexe Faktoren, die übrigen erfordern keine Multiplikation. Dies bedeutet, dass zwei komplexe Multiplikationen durchgeführt werden müssen, was wiederum insgesamt acht reellen 
+Multiplikationen entspricht. 
+
+Wie gezeigt wurde, werden nur 2 komplexe Multiplikationen benötigt statt der nach Gleichung (\ref{eq:FFT_komplexMult}) geschätzten $\nicefrac{8}{2}\cdot 3 = 12$.
+So ergeben sich für alle 8 Spalten und einen zweiten Durchlauf für die 2D-DFT tatsächlich nur $2\cdot8\cdot2=32$ komplexe Multiplikationen. 
 
 
-
-\subsection{Gegenüberstellung von Butterfly-Algorithmus und optimierter Matrixmultiplikation} 
-
-Die \gls{dft} wurde als Matrixmultiplikation implementiert, um die gewonnenen Erkenntnisse auch auf andere Dimensionen als $2^n$, insbesondere ungerade, 
-übertragen zu können.  
-Zu einem frühen Zeitpunkt der Überlegungen für diese Arbeit gab es noch die Idee die \gls{dft} so flexibel wie möglich zu halten, um unkompliziert auf andere Größen wechseln zu können.
-Hierfür sollten alle Koeffizienten der Twiddlefaktormatrix ladbar sowie die Größe der Matrix über eine globale Deklaration definierbar sein.
-Diese Herangehensweise bedingt die Implementation als Matrixmultiplikation. Die Hoffnung der Projektgruppe bestand darin, dass das Synthesewerkzeug den 
-VHDL-Code soweit optimiert, dass dies nicht händisch erfolgen müsste.
-Als klar war, dass die Optimierung nicht so tief greift, wurden die entsprechenden Schritte manuell umgesetzt. 
-  
-Die Implementierung des Butterfly-Algorithmus nach Cooley und Tukey wurde bereits in Grafik (\ref{pic:Butterfly}) gezeigt. Sie stellt eine effiziente Berechnung der \gls{dft} dar, in 
-Abschnitt (\ref{sec:OptimierteMatrixmultiplikation}) konnte gezeigt werden, dass sich beide nur unwesentlich im Rechenaufwand unterscheiden.
-
-
-\section{Kompromiss aus benötigter Chipfläche und Genauigkeit des Ergebnisses}
-Dieser Abschnitt passt hier nicht so richtig hin! Aber wo sonst?
-
-Durch die Begrenzung der Bitbreite ist es nötig nach jeder Addition den Wert zu halbieren. Hierbei steigt die Abweichung gegenüber einer verlustfreien Berechnung immer dann, 
-wenn das letzte eine 1 ist. Im Mittel ist dies bei der Hälfte der Additionen der Fall. In 50$\%$ aller Fälle wird also der Wert um ein halbes LSB zu viel verringert.
-Bei der Multiplikation verdoppelt sich sogar die resultierende Bitbreite. Da mit dem vollständigen 13 Bit Vektor nach der Addition weitergerechnet wird, muss die Konstante
-ebenfalls in 13 Bit hinterlegt sein. Deshalb hat das Ergebnis 26 Bit, von denen für die weitere Berechnung wieder nur 12 übernommen werden. In den Abbildungen 
-(\ref{pic:AkkumulationUngeradeSpalten}) und (\ref{pic:AkkumulationGeradeSpalten}) wird das hier beschriebene Vorgehen veranschaulicht. Bei diesem Verfahren
-kommt es unweigerlich zur Akkumulation von Fehlern.
- 
-Da für die Berechnung einer Zahl der 1D-DFT je nach Zeile entweder 8 oder 12 Werte akkumuliert sowie 0 bis 4 Werte multipliziert werden und für die 2D-DFT entsprechend doppelt 
-so viele, akkumulieren sich zwangsläufig Fehler. Bei 12 Bit Eingangswerten wäre ein 47? Bit Ausgangsvektor nötig, um dies vollständig zu vermeiden. Dies ist jedoch aus u.a.
-Platzgründen nicht umsetzbar.
-
-Mit jeder Addition kommt 1\,Bit dazu. So werden aus 12\,Bit bis zur Multiplikation 15 (12 + $\log_2(8)$), 8 = Anzahl der Zahlen die mit $\tfrac{\sqrt{2}}{2}$ multipliziert
-werden müssen. Bei der Multiplikation verdopplet sich der Wert, also 30 und eine letzte Addition macht 31.
-Beim zweiten Durchlauf werden es so (31+3)$\cdot$2+1=69\,Bit.
-
-$\Rightarrow$ Anhand eines Simulationsbeispiels zeigen, dass die mit VHDL berechneten Werte immer kleiner als die in Matlab berechneten sind.
+\subsection{Fazit der Berechnungs-Gegenüberstellungen}
+Es konnte gezeigt werden, dass rein von der Anzahl der benötigten Multiplikationen die optimierte Matrixmultiplikation mit komplexen Eingangswerten nur die dritthöchste Effizienz hat.
+Da es sich bei der FFT um ein spezielles Verfahren handelt, welches nicht auf einer Matrixmultiplikation beruht und nur für Eingannsmatizen und -vektoren, 
+der Dimensionen 2${}^n$ anwendbar ist, fehlt die geforderte Übertragbarkeit auf andere Matrizengrößen. Es wurde lediglich betrachtet, um eine bessere Einordnung zu ermöglichen.
+Auch die Matrixmultiplikation mit rein reellen Eingangswerten schneidet besser ab. Ihr steht jedoch der größere Bedarf an benötigtem Speicher sowie dessen Verdrahtungsaufwandt 
+gegenüber. 
+Als Vorteil kann bei der Multiplikation mit komplexen Eingangswerten hingegen gesehen werden, dass die Programmierung der 2D-DFT als einfacher angenommen werden kann.
+Begründet wird dies damit, dass es möglich ist, die selbe Einheit für die Berechnung der 1D-DFT einfach auch für die 2D-DFT verwenden zu können.

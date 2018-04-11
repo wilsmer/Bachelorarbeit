@@ -1,11 +1,16 @@
-\section{Bewertung verschiedener DFT- und DCT-Größen}
+\section{Bewertung verschiedener DFT- und DCT-Größen}\label{sec:BewertungVerschiedenerGroessen}
 In diesem Abschnitt sollen Erkenntnisse gewonnen werden, auf denen basierend später die Wahl der Transformation und die Größe ihrer Matrix getroffen werden kann.
 Die Bewertung berücksichtigt wie bereits angedeutet die beiden Eigenschaften Anzahl verschiedener Faktoren und die gesamte Anzahl an Faktoren, wobei die erst genannte 
 größeren Einfluss auf eine negative Bewertung hat, da sich gleiche Faktoren mit Hilfe des Distributivgesetzes ausklammern lassen.
 Bei den Faktoren wird zwischen solchen unterschieden, die als trivial erachtet werden, da sie nur eine Addition bedürfen ($\pm1$), zusätzlich
 zur Addition nur eine Division durch 2 erfolgt ($\pm0,5$) oder gar keine Berechnung nötig ist ($0$) und solchen, die als nicht trivial betrachtet werden müssen, da eine Multiplikation
 unumgänglich ist (beispielsweise $\tfrac{\sqrt{2}}{2}$). Begründet werden kann dies mit dem dualen Zahlensystem, da eine Multiplikation mit als trivial eingestuften Werten kein
-komplexes Schaltnetz erfordern. Um z.B. einen Wert durch 2 zu teilen, erfolgt im dualen einfach ein Bitshift um eins nach rechts. 
+komplexes Schaltnetz erfordern. Um z.B. einen Wert durch 2 zu teilen, erfolgt im Dualen einfach ein Bitshift um eins nach rechts. 
+
+Interessant ist die DFT trotz ihrer komplexen Ausgangsmatrix, da sich aus Real- und Imaginärteil direkt der Winkel berechnen lässt.
+Wie in der Einleitung beschrieben, handelt es sich hierbei um eine der Größen, die im Rahmen dieses Projekts anhand des Sensorarrays ermittelt werden soll.
+
+
 
 \subsection{Bewertung verschiedener DCT-Größen}
 In Tabelle \ref{tab:DCT-TwiddlefaktorMatrizenBewertung} ist die Gegenüberstellung der genannten Größen zu sehen. Für die Bewertung wurd das 
