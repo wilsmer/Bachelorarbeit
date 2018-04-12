@@ -2,149 +2,101 @@
 Nachdem nun die Symmetrien der 8x8-Twiddlefaktormatrix der DFT analysiert wurden, soll eine Abschätzung des Rechenaufwands erfolgen.
 Hierbei wird in vier Kategorien unterschieden. Zum einen werden die erforderlichen Berechnungen bezüglich der 8x8-Twiddlefaktormatrix einerseits für reelle
 und andererseits für komplexe Eingangswerte betrachtet. Als dritte Variante soll aufgezeigt werden, wie viele Multiplikationen nötig wären, wenn die 
-Twiddlefaktormatrix als variabel angenommen wird. Diese Art der Implementation hätte den Vorteil, dass zu einem späteren Zeitpunkt sich für ein anderes
-Transformationsverfahren entschieden werden könnte. Da keinerlei Optimierungen möglich sind, ist hier auch eine flexible Größe denkbar. Um einen Vergleich
-zu ermöglichen, wird die Multiplikation zweier 8x8 Matrizen betrachtet. Als letztes soll der Butterfly-Algorithmus auf die Anzahl der benötigten Multiplikationen
+Twiddlefaktormatrix als variabel angenommen wird. Als letztes soll der Butterfly-Algorithmus auf die Anzahl der benötigten Multiplikationen
 hin untersucht werden.
 
 
 Abschließend wird die Bildung des Zweierkomplements der Konstantenmultiplikation unter dem Gesichtspunkt der benötigten Zeit und Fläche gegenüber gestellt.
-Dies geschieht vor dem Hintergrund, dass je nach Implementierung zwar weniger Multiplikationseinheiten, dafür aber zusätzliche Einheiten zur Negierung von Werte existieren müssen.
+Dies geschieht vor dem Hintergrund, dass je nach Implementierung zwar weniger Multiplikationseinheiten, dafür aber zusätzliche Einheiten zur Negierung von Werten existieren müssen.
 
-\subsection{Gegenüberstellung von reellen und komplexen Eingangswerten}\label{sec:GegenüberstellungRelleKomplexeEingangswerte}
+Da die Multiplikationen im Normalfall als bedeutend aufwändiger angenommen werden müseen, wird sich in der folgenden Betrachung hierauf beschränkt. Tatsächlich ist es so,
+dass die Multiplikationen mit einer Konstanten über ein Schaltnetz innerhalb eines Taktes erfolgen können und somit gerade bei wenigen Multiplikationen die Anzahl der Additionen
+an Bedeutung gewinnt. Trotzdem erlaubt der Vergleich eine gute Abschätzung.
+
+\subsection{8x8-DFT mit komplexen Eingangswerten}\label{sec:KomplexeEingangswerte}
 Die Sensormatrix liefert für jedes Sensorelement einen Sinus- und einen Kosinuswert. Diese können für die Berechnung der DFT zu einer komplexen Zahl zusammengefasst werden. 
-Auf diese Weise lässt sich die Berechnung mathematisch kompakter schreiben.
+Auf diese Weise lässt sich die Berechnung mathematisch kompakter durchführen.
+
+Da die Twiddlefaktormatrix insgesamt nur 16 Faktoren aufweist, die einen Real- und einen Imaginärteil besitzen, treten auch nur 16 komplexe Multiplikationen auf.
+Die übrigen $64-16=48$ Faktoren beschränken sich auf einen rein reellen oder komplexen Anteil. Da dieser wegen des Betrags des komplexen Zeigers $1$ sein muss, entfallen sämtliche 
+weiteren Multiplikationen. Die übrigen Berechnungen beschränken sich also auf Additionen.
+Deshalb müssen $16\cdot4=48$ einfache Multiplikationen durchgeführt werden.
+Da sich es möglich sein wird den Faktor $\nicefrac{\sqrt{2}}{2}$ auszuklammer, bleiben nur $4$ komplexe Multiplikationen und somit insgesamt $16$ reelle Multiplikationen übrig.
+Für die 2D-DFT verdoppelt sich dieser Wert zu $32$.
 
 
-In Tabelle \ref{tab:TakteKomplexeDFT} ist eine Auflistung der für die Berechnung veranschlagten Takte für die Multiplikation einer beliebigen Matrix mit der
-Twiddlefaktormatrix für die 8x8-DFT zu sehen. Grundlage ist, dass in einem Takt Summanden 
-paarweise aufaddiert werden und in einer Variablen zwischengespeichert werden. Dieses Verfahren kann auch als Baumstruktur aufgefasst werden. 
-Wie das Ausummieren erfolgt, kann in Abschnitt \ref{sec:Berechnungsschema} detaillierter nachgelesen werden.
-
-Wie in Abschnitt \ref{sec:Konstantenmultiplizierer} gezeigt wird, kann die Multiplikation mit einer Konstanten innerhalb eines Taktes mit einem Schaltnetz erfolgen. 
-Anders als bei der komplexen Multiplikation mit der Twiddlefaktormatrix sind bei der getrennten Berechnung ungleich viele positive und negative Faktoren je Zeile vorhanden, 
-sodass zu diesem Zeitpunkt davon ausgegangen werden muss, dass eine Negation mancher Werte erforderlich sein wird. In Abschnitt
-\ref{sec:SyntheseergebnisBildungZweierkomplement} wird gezeigt, dass der kritische Pfad der Negierung sogar etwas länger als beim Konstantenmultiplizierer ist.
-Um keine zu langen Signal- und Gatterlaufzeiten erwirken, sollte hierfür unbedingt ein eigener Takt eingeplant werden. Dadurch relativiert sich der zeitliche Gewinn allerdings 
-etwas. 
-
-
-\begin{table}[htbp]
-\centering
-\caption{Takte für die komplexe DFT}
-\label{tab:TakteKomplexeDFT}
-\begin{tabular}{ccccc}
-\hline
-\multirow{2}{*}{Zeile} & Additionen & Takte pro Element & Takte für & Summe der\\
-      & pro Element ($N$) & ($\log_2(N)$) & Multiplikation & Takte\\
-\hline
- 1& 8  & 3   &0 &3\\
- 2& 12 & 3,6 &1 &5\\
- 3& 8  & 3   &0 &3\\
- 4& 12 & 3,6 &1 &5\\
- 5& 8  & 3   &0 &3\\
- 6& 12 & 3,6 &1 &5\\
- 7& 8  & 3   &0 &3\\
- 8& 12 & 3,6 &1 &5\\
-\hline
-\end{tabular}
-\end{table}
-
-Anhand der rechten Spalte ergeben sich so (3+5)$\cdot$4$\cdot$8 = 256 Takte sowohl für den Real- als auch den Imaginärteil der komplexen Ausgangsmatrix. Real- und Imaginärteil
-werden parallel berechnet und sind somit zeitgleich fertig.
-
+\subsection{8x8-DFT mit reellen Eingangswerten}\label{sec:RelleEingangswerte}
+Anders als bei der Multiplikation komplexer Eingangswerte sind bei der getrennten Berechnung von Real- und Imaginärteil ungleich viele positive 
+und negative Faktoren je Zeile vorhanden, sodass zu diesem Zeitpunkt davon ausgegangen werden muss, dass eine Negation mancher Werte erforderlich sein wird. 
 Wie ein Vergleich der Gleichungen (\ref{eq:komplexe_Multiplikation}) und (\ref{eq:halb_komplexe_Multiplikation}) zeigt, entfallen die Hälfte der Multiplikationen, wenn die
-Eingangswerte in Real- und Imaginärteil getrennt werden.
-Wenn die Eingangswerte rein reell sind, kommen beispielsweise keine $j^2$-Komponenten zustande, welche auf die reellen Elemente aufaddiert werden müssten.
-Aus diesem Grund müssen weniger Werte aufsummiert werden, wie sich in Tabelle \ref{tab:TakteReelleDFT} zeigt.
+Eingangswerte rein reell sind. Da der Imaginärteil aber getrennt berechnet wird, treten diese Multiplikationen an anderer Stelle wieder auf. Hier findet also keine
+Ersparnis statt.
+Allerdings kommen bei rein reellen Eingangswerten beispielsweise keine $j^2$-Komponenten zustande, welche ausmultipliziert und anschließend aufaddiert werden müssten. 
+Dies führt zu der in Abschnitt \ref{sec:rein_reelle_dft} gezeigten Eigenschaft, dass die letzten drei Zeilen für den Realteil des Ergebnisses direkt bzw. für den Imaginärteil 
+negiert aus den Zeilen 2-4 übernommen werden können. 
+Da zu diesen drei Zeilen auch die beiden gehören, in denen Multiplikationen durchgeführt werden müssen, entfallen bei reellen Eingangswerten die Hälfte der Multiplikationen im 
+Vergleich zu komplexen Eingangswerten, weshalb für die 1D-DFT nur 8 bzw. für die 2D-DFT nur 16 Multiplikationen nötig sind.
 
-\begin{table}[htbp]
-\centering
-\caption{Takte für die reelle DFT am Beispiel der reellen Ausgangsmatrix}
-\label{tab:TakteReelleDFT}
-\begin{tabular}{ccccc}
-\hline
-\multirow{2}{*}{Zeile} & Additionen & Takte pro Element & Takte für & Summe der\\
-      & pro Element ($N$) & ($\log_2(N)$) & Multiplikation & Takte\\
-\hline
- 1& 8 & 3   &0 &3\\
- 2& 6 & 2,6 &1 &4\\
- 3& 4 & 2   &0 &2\\
- 4& 6 & 2,6 &1 &4\\
- 5& 8 & 3   &0 &3\\
- \rowcolor{lightgray} 6& 6 & 2,6 &1 &4\\
- \rowcolor{lightgray} 7& 4 & 2   &0 &2\\
- \rowcolor{lightgray} 8& 6 & 2,6 &1 &4\\
-\hline
-\end{tabular}
-\end{table}
+Interessant ist dieser Ansatz dann, wenn entweder die Recheneinheit so klein wie irgend möglich gehalten werden soll und Real- und Imaginärteil der Eingangsmatrix nacheinander
+berechnet werden können oder die Berechnung äußerst schneller erfolgen muss. In beiden Fällen wird im Vergleich zur Berechnungen mit komplexen Eingangswerten deutlich mehr
+Speicher benötigt.
+Ingesamt übersteigt bei diese Art der Berechnung der Flächenbedarf der gesamten Einheit der der komplexen Variante. Auch die Leitungen um den Speicher anzubinden dürfen 
+nicht vernachlässigt werden.
 
-Aus Abschnitt \ref{sec:rein_reelle_dft} ist bekannt, dass die letzten drei Zeilen direkt oder negiert aus den Zeilen 2-4 übernommen werden können. Die Takte der 6.-8. Zeilen
-sind deshalb in der Tabelle (\ref{tab:TakteReelleDFT}) grau hinterlegt. Gegenüber der komplexen Matrix ergeben sich hier statt 256 Takten (3+4+2+4+3)$\cdot$8 = 128 Takte. 
-Der Imaginärteil errechnet 
-sich noch schneller, da die 1. und 5. Zeile keinen Beitrag leisten und auch hier die Zeilen 2-4 in diesem Fall nach einer Negation die Werte der letzten 3 Zeilen ergeben. 
-So ergeben sich dort (3+2+3)$\cdot$8=64 Takte. Vermultich müssen an dieser Stelle wieder Takte für das Negieren eingeplant werden. Da beide parallel berechnet werden, sind die 
-hierfür benötigten Takte sozusagen frei verfügbar.
 
-Interessant ist dieser Ansatz dann, wenn einerseits die Recheneinheit so klein wie irgend möglich gehalten werden soll und andererseits die Berechnung noch schneller erfolgen muss.
-Abbildung \ref{pic:reelleDFT} zeigt, dass im Vergleich zur komplexen Berechnung der 2D-DFT voraussichtlich 3x so viel Speicher für Zwischenwerte vorhanden sein muss.
-Ingesamt übersteigt so der Flächenbedarf der gesamten Einheit der der komplexen Variante. Auch die Leitungen um den Speicher anzubinden dürfen nicht vernachlässigt werden.
 
- 
-\subsection{Direkte Multiplikation zweier 8x8 Matrizen}
-Die in Abschnitt \ref{sec:Matrixmultiplikation} erläuterte Matrixmultiplikation bedarf bei einer 8x8 Matrix je Element der Ausgangsmatrix 8 Multiplikationen. Für
-die 8$\cdot$8=64 Elemente werden deshalb 512 Multiplikationen benötigt. Da es sich sowohl bei den Eingangswerten als auch bei der Twiddlefaktormatrix um komplexe
+\subsection{Direkte Multiplikation zweier 8x8 Matrizen mit komplexen Werten}
+Diese Art der Implementation hätte den Vorteil, dass zu einem späteren Zeitpunkt sich für ein anderes
+Transformationsverfahren entschieden werden könnte. Da keinerlei Optimierungen möglich sind, ist hier auch eine flexible Größe denkbar. Um einen Vergleich
+zu ermöglichen, wird die Multiplikation zweier 8x8 Matrizen betrachtet.
+Die in Abschnitt \ref{sec:Matrixmultiplikation} erläuterte Matrixmultiplikation bedarf bei einer 8x8 Matrix je Element der Ausgangsmatrix 8 komplexe Multiplikationen. Für
+die 8$\cdot$8=64 Elemente werden deshalb 512 komplexe Multiplikationen benötigt. Da es sich sowohl bei den Eingangswerten als auch bei der Twiddlefaktormatrix um komplexe
 Zahlen handelt, sind, wie in Abschnitt \ref{sec:komplexe_Multiplikation} beschrieben, insgesamt 512$\cdot$4=2048 Multiplikationen nötig.
-
-Sollte sich dazu entschieden werden die Sinus- und Kosinusanteile separat zu berechnen, um ein rein reelles Eingangssignal weiter zu verarbeiten, sind, wie in Abschnitt
-\ref{sec:rein_reelle_dft} hergeleitet, knapp die Hälfte der Multiplikationen unnötig. In Abbildung \ref{pic:reelleMatMultRedundanz} ist zu sehen, dass von den 64 
-Ergebniswerten nur 40 berechnet werden müssen. Da die Eingangswerte zwar rein reell, die Twiddlefaktormatrix aber komplex ist, verdoppelt sich die Anzahl der Multiplikationen.
-Somit müssen für die gesamten 64 Werte 40$\cdot$8$\cdot$2=640 Multiplikationen durchgeführt werden.
-
-Im komplexen Fall verdoppelt sich für die 2D-DFT schlicht die Anzahl der reellen Multiplikationen und liegt somit bei 4096. Im reellen Fall müssen, wie in Abbildung 
-\ref{pic:reelleDFT} gezeigt, der Real- sowie der Imaginärteil separat mit der Twiddlefaktormatrix multipliziert werden. So ergeben sich alles in allem 
-640$\cdot$3$\cdot$2=3840 reelle Multiplikationen. Diese Zahl liegt nur nur geringfügig unterhalb der komplexen Berechnung.
-
-
-
-Hierbei wird von einer Twiddlefaktormatrix mit 64 komplexen Werten ausgegangen. In Wirklichkeit sind es nur 16, die übrigen erfordern überhaupt keine Multiplikation, da 
-entweder der Real- oder der Imaginärteil 0 ist. Da dies aber Bestandteil der optimierten Matrixmultiplikation ist, wird an dieser Stelle nicht weiter darauf eingegangen.
-Später werden nur die komplexen Varianten verglichen. Dies wird als ausreichend erachtet, da aufgrund der hier und in Abschnitt \ref{sec:rein_reelle_dft} angedeutete deutlich 
-erhöhte Bedarf an Takten die reelle Matrixmultiplikation nicht von Interesse ist. 
-
-
-
+Für die 2D-DFT sind mit 4096 entsrechend doppelt so viele Multiplikationen nötig.
 
 
 
 \subsection{Betrachung des Butterfly-Algorithmus für 8 Eingangswerte} 
-Anhand der Grafik \ref{pic:Butterfly} lässt sich erkennen, dass die DFT in mehrere Stufen aufgeteilt wird.
+Abbildung \ref{pic:Butterfly} illustriert die FFT anhand eines Eingangsvektors mit acht Werten. 
+Um diesen Algorithmus anwenden zu können ist es erforderlich, dass die Werte im Eingangsvektor in umgekehrte Bitreihenfolge getauscht werden (bitreversed order).
+Dies geschieht nach dem Muster, dass die Indizes der Eingangswerte, wie
+üblich bei 0 beginnend, binär dargestellt werden. Nun wird die Reihenfolge der Bits getauscht. Auf diese Weise tauschen bei einem 8-Bit Vektor die
+Elemente 2 und 5 sowie 4 und 7 ihre Position. Andernfalls sind die Ergebnisse in vertauschter Reihenfolge.
+Anhand der Grafik lässt sich erkennen, dass die DFT in mehrere Stufen aufgeteilt wird.
 
 Aus Gleichung (\ref{eq:Twiddlefaktorenberechnung}) ist 
 bekannt, dass die Variablen der Twiddlefaktorberechnung die Indizes der Eingangs- sowie Ausgangsvektoren sind. Hieraus lässt sich bereits erkennen, dass
 die gesamte Twiddlefaktormatrix N verschiedene komplexe Werte enthält. Dies wird auch aus Abbildung \ref{pic:Einheitskreis_Faktoren} am Beispiel für N=8 ersichtlich. 
 Darüber hinaus lässt sich erkennen, dass die komplexen Zeiger den Einheitskreis 
 in N Bereiche mit einem Winkel von $\frac{2 \pi}{N}$ unterteilen. Bekannt ist ebenfalls, dass der erste Wert immer die $1$ ist.
-Daraus ergibt sich bei einer DFT mit 2 Eingangswerten die Twiddlefaktoren $1$ und $-1$, sodass eine Multiplikation entfällt. 
+Daraus ergibt sich bei einer DFT mit 2 Eingangswerten die Twiddlefaktoren $1$ und $-1$, so dass eine Multiplikation entfällt. Dies bildet die erste Stufe
 
 Ähnlich verhält es sich mit der zweiten Stufe.
-Hier ergeben sich die Werte $1, -j, -1, j$, was ebenfalls bedeutet, dass keine Multiplikation erfolgen muss. Der Zweite Schritt zur Reduzierung des Rechenaufwandes ergibt sich
+Hier ergeben sich die Werte $1, -j, -1, j$, was ebenfalls bedeutet, dass keine Multiplikation erfolgen muss. Der nächste Schritt zur Reduzierung des Rechenaufwandes ergibt sich
 aus der Erkenntnis, dass die Werte $exp(-i 2 \pi m n/N)$ und $exp(-i 2 \pi \frac{m n}{2}/N) = -exp(-i 2 \pi m n/N)$ lediglich ein negiertes Vorzeichen haben. Auch dies lässt sich der 
 Abb. (\ref{pic:Einheitskreis_Faktoren}) entnehmen. Auf diese Weise fällt der Faktor $-j$ weg. Dies bedeutet, dass sich so die Hälfte der Multiplikationen einsparen lässt.
 
 Bei der dritten Stufe gibt es wegen der acht Eingangswerte theoretisch auch acht Faktoren. Aus den genannten Symmentriegründen halbiert sich die Anzahl. Wiederum die Hälfte davon 
-sind komplexe Faktoren, die übrigen erfordern keine Multiplikation. Dies bedeutet, dass zwei komplexe Multiplikationen durchgeführt werden müssen, was wiederum insgesamt acht reellen 
+sind komplexe Faktoren, die übrigen erfordern keine Multiplikation. Dies bedeutet, dass zwei komplexe Multiplikationen durchgeführt werden müssen, was insgesamt acht reellen 
 Multiplikationen entspricht. 
 
 Wie gezeigt wurde, werden nur 2 komplexe Multiplikationen benötigt statt der nach Gleichung (\ref{eq:FFT_komplexMult}) geschätzten $\nicefrac{8}{2}\cdot 3 = 12$.
-So ergeben sich für alle 8 Spalten und einen zweiten Durchlauf für die 2D-DFT tatsächlich nur $2\cdot8\cdot2=32$ komplexe Multiplikationen. 
+So ergeben sich für alle 8 Spalten einer 8x8-Matrix tatsächlich nur $2\cdot8=16$ komplexe Multiplikationen. 
+Für die 2D-DFT sind somit lediglich 32 komplexe beziehungsweise 128 reelle Multiplikationen erforderlich.
+
+
+
+\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.7\textwidth]{img/Butterfly.png}
+ \caption{Berechnungsschema der DFT mit 8 Eingangswerten nach dem Butterfly-Verfahren}
+ \label{pic:Butterfly}
+\end{figure}
 
 
 \subsection{Fazit der Berechnungs-Gegenüberstellungen}
-Es konnte gezeigt werden, dass rein von der Anzahl der benötigten Multiplikationen die optimierte Matrixmultiplikation mit komplexen Eingangswerten nur die dritthöchste Effizienz hat.
-Da es sich bei der FFT um ein spezielles Verfahren handelt, welches nicht auf einer Matrixmultiplikation beruht und nur für Eingannsmatizen und -vektoren, 
-der Dimensionen 2${}^n$ anwendbar ist, fehlt die geforderte Übertragbarkeit auf andere Matrizengrößen. Es wurde lediglich betrachtet, um eine bessere Einordnung zu ermöglichen.
-Auch die Matrixmultiplikation mit rein reellen Eingangswerten schneidet besser ab. Ihr steht jedoch der größere Bedarf an benötigtem Speicher sowie dessen Verdrahtungsaufwandt 
-gegenüber. 
-Als Vorteil kann bei der Multiplikation mit komplexen Eingangswerten hingegen gesehen werden, dass die Programmierung der 2D-DFT als einfacher angenommen werden kann.
+Es konnte gezeigt werden, dass rein von der Anzahl der benötigten Multiplikationen die optimierte Matrixmultiplikation mit komplexen Eingangswerten weniger Multiplikationen
+als die FFT hat. Das liegt daran, dass es vom Betrag her nur einen einzigen Faktor gibt. Dieser tritt in vier Zeilen der Twiddlefaktormatrix auf und kann für alle Spalten
+der Eingangswerte ausgeklammert werden. Wegen der Spiegelung der Faktoren müssen bei reellen Eingangswerten nur die Hälfte der Multiplikationen durchgeführt werden.
+Als Vorteil kann bei der Multiplikation mit komplexen Eingangswerten gesehen werden, dass die Programmierung der 2D-DFT als einfacher angenommen werden kann.
 Begründet wird dies damit, dass es möglich ist, die selbe Einheit für die Berechnung der 1D-DFT einfach auch für die 2D-DFT verwenden zu können.

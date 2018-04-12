@@ -44,7 +44,7 @@ Wie zu sehen ist, schneiden vor allem die 8x8- und die 12x12-DFT gut ab. Da letz
  Der Vorteil der \gls{dct} gegenüber der \gls{dft} ist, dass sie rein reelle Ergebniswerte liefert. 
  Dem stehen als großer Nachteil gegenüber, dass beinahe alle ihrer Twiddlefaktoren zu den nicht trivialen gezählt werden müssen. 
  Des Weiteren verteilen sich ihre Werte auf mehr verschiedene Zahlen, sodass eine effiziente Implementierung gegenüber der DFT, trotz der rein reellen
- Werte, weniger realistisch erscheint.
+ Werte, weniger praktikabel erscheint.
  
  Als Ausschlag gebendes Kriterium wird letztlich der Vorteil eines komplexen Ergebnisses herangezogen, aus dem sich ohne Umwege der Winkel berechnen lässt.
 
@@ -80,7 +80,7 @@ Wie zu sehen ist, schneiden vor allem die 8x8- und die 12x12-DFT gut ab. Da letz
 \vspace{0.5cm}
  
  Wie anhand der Grafiken \ref{pic:Einheitskreis_Faktoren} zu sehen ist, setzen sich die Faktoren ausschließlich aus den Zahlen $\pm1$, $\pm\nicefrac{\sqrt{2}}{2}$ und $0$ 
- zusammengesetzt. Gemäß der Definition für nicht triviale Werte aus Abschnitt \ref{sec:BewertungVerschiedenerGroessen} zählt ausschließlich der letztgenannte zu diesen.
+ zusammen. Gemäß der Definition für nicht triviale Werte aus Abschnitt \ref{sec:BewertungVerschiedenerGroessen} zählt ausschließlich der letztgenannte zu diesen.
  Ebenfalls ist ersichtlich, dass der Betrag aller Zahlen immer $1$ ist.
  In Abbildung \ref{pic:MatrizenDarstellungTwiddlefaktoren} ist die Twiddlefaktormatrix auf zwei Matrizen aufgeteilt, wobei die Zahlen durch Farben repräsentiert werden.
  Die linke enthält alle realen Anteile, die rechte alle imaginären. 
@@ -152,11 +152,11 @@ Wie zu sehen ist, schneiden vor allem die 8x8- und die 12x12-DFT gut ab. Da letz
  \end{split}
  \end{align}
  
- Für die übrigen vier Zeilen gelten die bisherigen Boebachtungen nicht oder nur teilweise, weshalb sie nicht zur ersten Gruppe gezählt werden können.
+ Für die übrigen vier Zeilen gelten die bisherigen Beobachtungen nicht oder nur teilweise, weshalb sie nicht zur ersten Gruppe gezählt werden können.
  Dafür haben sie aber alle gemein, dass die Hälfte der Faktoren sowohl einen Real- als auch einen Imaginärteil besitzen, welche symmetrisch angeordnet sind.
  Für diese vier Faktoren sind deshalb jeweils die gesamten vier Multiplikationen aus Gleichung \ref{eq:komplexe_Multiplikation} nötig.
 
- Eine besondere Eigenschaft ist, dass nicht triviale Multiplikationen Real- und Imaginärteil zumindest vom Betrag her identisch sind.
+ Eine besondere Eigenschaft ist, dass der Faktor für nicht triviale Multiplikationen im Real- und Imaginärteil zumindest vom Betrag her identisch sind.
  Dies liegt daran, dass der Einheitskreis in acht Teile geteilt wird und für beispielsweise $\frac{2\cdot\pi}{8}=\frac{\pi}{4}$ der Sinus- und Kosinuswert identisch sind. 
  Hieraus resultiert, dass die Hälfte der Berechnungen der nicht trivialen Werte, die für die reelle Matrix gemacht werden müssen,
  direkt für den imaginären Anteil übernommen werden könnten. Die andere Hälfte müsste lediglich negiert werden. 

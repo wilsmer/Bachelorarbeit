@@ -1,4 +1,43 @@
-\section{Entwickeln der 2D-DFT in VHDL}
+\section{Entwickeln der 1D-DFT als in VHDL übertragbare Implementation}
+In Tabelle \ref{tab:TakteKomplexeDFT} ist eine Auflistung der für die Berechnung veranschlagten Takte für die Multiplikation einer beliebigen Matrix mit der
+Twiddlefaktormatrix für die 8x8-DFT zu sehen. Grundlage ist, dass in einem Takt Summanden 
+paarweise aufaddiert werden und in einer Variablen zwischengespeichert werden. Dieses Verfahren kann auch als Baumstruktur aufgefasst werden. 
+Wie das Aufsummieren erfolgt, kann in Abschnitt \ref{sec:Berechnungsschema} detaillierter nachgelesen werden.
+
+Wie in Abschnitt \ref{sec:Konstantenmultiplizierer} gezeigt wird, kann die Multiplikation mit einer Konstanten innerhalb eines Taktes mit einem Schaltnetz erfolgen. 
+
+In Abschnitt \ref{sec:SyntheseergebnisBildungZweierkomplement} wird gezeigt, dass der kritische Pfad der Negierung sogar etwas länger als beim Konstantenmultiplizierer ist.
+Um keine zu langen Signal- und Gatterlaufzeiten hervorzurufen, sollte hierfür unbedingt ein eigener Takt eingeplant werden. Dadurch relativiert sich der zeitliche Gewinn allerdings 
+etwas. 
+
+
+\begin{table}[htbp]
+\centering
+\caption{Takte für die komplexe DFT}
+\label{tab:TakteKomplexeDFT}
+\begin{tabular}{ccccc}
+\hline
+\multirow{2}{*}{Zeile} & Additionen & Takte pro Element & Takte für & Summe der\\
+      & pro Element ($N$) & ($\log_2(N)$) & Multiplikation & Takte\\
+\hline
+ 1& 8  & 3   &0 &3\\
+ 2& 12 & 3,6 &1 &5\\
+ 3& 8  & 3   &0 &3\\
+ 4& 12 & 3,6 &1 &5\\
+ 5& 8  & 3   &0 &3\\
+ 6& 12 & 3,6 &1 &5\\
+ 7& 8  & 3   &0 &3\\
+ 8& 12 & 3,6 &1 &5\\
+\hline
+\end{tabular}
+\end{table}
+
+Anhand der rechten Spalte ergeben sich so (3+5)$\cdot$4$\cdot$8 = 256 Takte sowohl für den Real- als auch den Imaginärteil der komplexen Ausgangsmatrix. Real- und Imaginärteil
+werden parallel berechnet und sind somit zeitgleich fertig.
+
+
+
+\section{Weiterentwickelung zur 2D-DFT}
 
 Ziel ist es die gleiche DFT-Einheit für beide DFTs zu verwenden
 

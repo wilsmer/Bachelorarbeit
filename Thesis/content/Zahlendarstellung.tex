@@ -2,12 +2,12 @@
 
 Im Rahmen dieses Projekts wird von Ein- sowie Ausgangswerten mit einer Genauigkeit von 12 Bit ausgegangen.
 Basierend auf älteren Sensoren wird von Werten im Bereich von $-2 < z < 2$ ausgegangen.
-Aus diesem Grund müssen sowohl ein Ganzzahlanteil, sowie Nachkommastellen repräsentiert werden können. Wie dies gelingt wird in den nächsten Abschnitten gezeigt.
+Aus diesem Grund müssen sowohl ein Ganzzahlanteil, sowie Nachkommastellen repräsentiert werden können. Wie dies gelingt, wird in den nächsten Abschnitten gezeigt.
 Hierfür werden Festkommazahlen verwendet, aufgrund der Rechenoperationen haben diese dennoch unterschiedlich viele Vor- sowie Nachkommastellen.
 
 
 \subsection{Integer-Zahl im 1er-Komplement}
-Bei der Interpretation des Bitvektors als Integerwert im Einerkomplement werden die Bits anhand ihrer Position im Bitvektor gewichtet, wobei as niederwertigste Bit 
+Bei der Interpretation des Bitvektors als Integerwert im Einerkomplement werden die Bits anhand ihrer Position im Bitvektor gewichtet, wobei das niederwertigste Bit 
 (LSB, least significant bit) dem Wert für den Faktor $2^0$ entspricht, das Bit links davon dem für $2^1$ und so weiter. Die Summe aller Bits, ohne das höchstwertigste, 
 multipliziert mit ihrer Wertigkeit (Potenz) ergibt den Betrag der Dezimalzahl. Das höchstwertigste Bit (MSB, most significant bit) gibt Auskunft darüber, ob es sich 
 um eine negative oder positive Zahl handelt, wobei eine 0 für eine positive Zahl steht. Entsprechend besagt die 1, dass die Zahl negativ ist.
@@ -24,8 +24,8 @@ Zwischenschritte als im Zweierkomplement.
 
 \subsection{Integer-Zahl im 2er-Komplement}\label{sec:Integer2erKomplement}
 
-Bei der Interpretation als Zweierkomplement kann anhand es MSB ebenfalls erkannt werden, ob es sich um eine positive oder negative Zahl handelt. Dennoch wird es nicht
-als Vorzeichenbit gewertet. Viel mehr bedeutet ein gesetztes MSB $-2^{-1}$, welches der negativsten darstellbaren Zahl entspricht. Hierbei sind alle anderen 
+Bei der Interpretation als Zweierkomplement kann anhand es MSB ebenfalls erkannt werden, ob es sich um eine positive oder negative Zahl handelt. 
+Hie bedeutet ein gesetztes MSB $-2^{MSB-1}$, was der negativsten darstellbaren Zahl entspricht. Hierbei sind alle anderen 
 Bits auf 0. Für gesetzte Bits wird der Dezimalwert, wie beim Einerkomplement beschrieben, berechnet und auf den negativen Wert aufaddiert. Wenn das MSB nicht gesetzt
 ist, wird der errechnete Dezimalwert auf 0 addiert. Auf diese Weise lassen sich Zahlen im Wertebereich von $-2^{MSB-1}$ bis $2^{MSB-1}-1 \,LSB$ darstellen. Der positive
 Wertebereich ist also um ein LSB kleiner als der negative und es gibt keine doppelte Null.
@@ -49,12 +49,12 @@ positive oder negative Zahl handelt. In Abbildung \ref{pic:SQKreis} ist exemplar
 
 
 Der darstellbare Zahlenbereich liegt hier bei $-1\leq z < 1$. Benötigt werden Zahlen im Bereich von etwa $\pm2$, weshalb ein Vorkommabit benötigt wird. 
-Da 12 Bit zur Verfügung stehen, von denen eins für das Vorzeichen und ein weiters für eine Vorkommastelle verwendet werden, bleiben 10 Bits für die Nachkommazahlen übrig.
+Da 12 Bit zur Verfügung stehen, von denen eins für das Vorzeichen und ein weiteres für eine Vorkommastelle verwendet werden, bleiben 10 Bits für die Nachkommazahlen übrig.
 Die Aufteilung der Bits wird über die Bezeichnung S1Q10 definiert.
 Da für den Quotient 10 Bit zur Verfügung stehen, beträgt die maximale Auflösung $1\,LSB = 2^{-10} = {1024}^{-1} = 9,765625\cdot10^{-4}$.
 Der Wertebereich liegt in diesem Fall liegt bei \num{-2} bis \num{1,999023438}. 
 
-Für die Addition oder Multiplikation zweier Zahlen müssen beide einerseits die selbe Bitbreite und andererseits das gleiche Darstellungsformat besitzen.
+Für die Addition oder Multiplikation zweier Zahlen müssen beide einerseits dieselbe Bitbreite und andererseits das gleiche Darstellungsformat besitzen.
 
 
 
