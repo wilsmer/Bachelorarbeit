@@ -74,48 +74,49 @@ Erst bei genauer Betrachtung der Twiddlefaktor-Matrix viel auf, dass in jeder Ze
 ist es dadurch möglich auf das Invertieren der Eingangswerte sowie den hierfür benötigten Takt und die Inverter zu verzichten. Weiter wird auch nur die Multiplikation
 mit $+\frac{\sqrt{2}}{2}$ benötigt.
 
-\subsection{Syntheseergebnis eines 13 Bit Konstantenmultiplizierers}\label{sec:SyntheseergebnisKonstantenmultiplizierer}
+\subsection{Syntheseergebnisse von Teilkomponenten}\label{sec:Syntheseergebnisse}
+
 \begin{figure}[!ht]
 \centering  
  %\fbox{
-  \includegraphics[width=1\textwidth]{img/13Bit_Konstantenmultiplizierer_Netlist.png}
+  \includegraphics[width=1\textwidth]{img/13Bit_Konstantenmultiplizierer_neu.png}
   %}
-  \caption{13 Bit Konstantenmultiplizierer für $\frac{\sqrt{2}}{2} = 0.70711 \simeq 0.70703125 = 0001011010100_2$ in Encounter; Eingang links, Ausgang rechts}
+  \caption{Schaltnetz des 13 Bit Konstantenmultiplizierers für $\frac{\sqrt{2}}{2} = 0.70711 \simeq 0.70703125 = 0001011010100_2$ in Encounter; Eingang links, Ausgang rechts}
   \label{pic:Konstantenmultiplizierer}
 \end{figure}
 
 
 
+
 \begin{table}[!ht]
+\centering
  \caption{Vergleich Konstanten- mit regulärem Multiplizierer}
  \label{tab:VergleichMultiplizierer}
- \begin{tabular}{ccc}
+ \begin{tabular}{lcc}
  \hline
-				& Konstantenmultiplizierer 	& regulärer Multiplizierer\\
+				&Gatter  	&Fläche (Prozess: 350nm) \\
   \hline	
-  Gatter			& 27				& 175 \\
-  Fläche (Prozess: 350nm)	& $\SI{6612}{um^2}$		& $\SI{23261}{um^2}$\\
+  13\,Bit Konstantenmultiplizierer für $\nicefrac{\sqrt{2}}{2}$	& 82		& $\SI{6612}{\um^2}$ \\
+  13\,Bit regulärer Multiplizierer				& 175		& $\SI{23261}{\um^2}$\\
+  12\,Bit Addierer						& 15		& $\SI{3257}{\um^2}$\\
+  13\,Bit 2er-Komplement-Bildung				& 24		& $\SI{2147}{\um^2}$\\
   \hline
  \end{tabular}
 \end{table}
-
-
-
 
 
 Der vollständige Gate-Report befindet sich in Abschnitt \ref{src:rc_gate_report} auf Seite \pageref{src:rc_gate_report}
 
 
 
-\subsection{Syntheseergebnis für die Bildung des Zweierkomplements eines 13 Bit Vektors}\label{sec:SyntheseergebnisBildungZweierkomplement}
 
-Zum Vergleich mit dem Konstantenmultiplizierers aus Abb. \ref{pic:Konstantenmultiplizierer} soll in Abb. \ref{pic:13BitInverter} die nicht expliziet implementierte aber in Abschnitt
-\ref{sec:RelleEingangswerte} erwähnte Negierung von Zahlen gezeigt werden.
+
+In Abb. \ref{pic:13BitInverter} ist die nicht expliziet implementierte, aber in Abschnitt \ref{sec:RelleEingangswerte} erwähnte Negierung von Zahlen zu sehen.
 
 \begin{figure}[htpb]
 \centering
-\includegraphics[width=0.99\textwidth]{img/13Bit_Inverter_Netlist.png}
-\caption{Netzliste einer Einheit zur Bildung des 2er-Komplements eines 13 Bit Vektors; Eingang links, Ausgang rechts}
+\includegraphics[width=0.99\textwidth]{img/13Bit_Negierer.png}
+\caption{Schaltnetz einer Einheit zur Bildung des 2er-Komplements eines 13 Bit Vektors; Eingang links, Ausgang rechts}
 \label{pic:13BitInverter}
 \end{figure}
 
@@ -125,6 +126,15 @@ Wie zu sehen, handelt es sich fast ausschließlich um Inverter und Addierer. In 
 2er-Komplements zunächst alle Bits invertiert werden müssen. Abschließend wird auf den Vektor 1 LSB addiert. 
 Beide Pfade weisen die gleiche Länge auf und verwenden überwiedend die selben
 Gattertypen, weshalb darauf geschlossen werden kann, dass die maximale Gatterlaufzeit in der gleichen Größenordnung liegen muss.
+
+
+\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.99\textwidth]{img/13Bit_Addierer.png}
+ \caption{Schaltnetz eines 12 Bit Addierers, Eingänge links (12\,Bit), Ausgang rechts (13\,Bit)}
+ \label{pic:13BitAddierer}
+\end{figure}
+
 
 
 
