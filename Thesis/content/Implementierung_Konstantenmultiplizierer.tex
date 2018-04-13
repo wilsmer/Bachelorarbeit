@@ -1,15 +1,41 @@
 
 
-
-
-
 \section{Projekt- und Programmstruktur}
-\subsection{Interpretation binärer Zahlen}
- Matlab fi
+ \subsection{Vorüberlegungen aus Hardwaresicht}
+ Für die binäre Darstellung der Eingangswerte sind zwölf Bit vorgesehen, wovon zehn auf die 
+ Nachkommastellen entfallen. Bei den beiden Rechenoperationen Addition und Subtraktion
+ entstehen keine weiteren Nachkommastellen. Je nach Vorzeichen und Zahlenwert kann es jedoch sein,
+ dass der Vorkomma-Wertebereich von zwei Bit nicht mehr ausreicht. Aus diesem Grund muss der Zielvektor
+  immer um ein Bit breiter sein - von 12 Bit ausgehend also 13 Bit.
+  Da dies bei jeder Addition geschieht, würde die benötigte Bitbreite ohne Gegenmaßnahmen immer 
+  weiter anwachsen. Die einfachste Möglichkeit dies zu verhindern ist die Divison eines Summationsergebnises
+  durch Zwei. Diese Operation ist in Hardware mittels eines Bitshifts um Eins nach rechts sehr einfach
+  umzusetzen.
+  So kann beliebig oft auf den selben Vektor eine Addition ausgeführt werden, ohne einen Überlauf zu provozieren.
+  Die Kehrseite dieser Vorgehensweise ist, dass durch den Bitshift die Genauigkeit des Ergebnisses sinkt.
+  Dies ist immer dann der Fall, wenn das hinausgeschobene Bit eine Eins war, was im Mittel mit
+  einer Wahrscheinlichkeit von 50$\%$ angenommen werden kann.
+  In der Hälfte aller Fälle wird also der Wert um ein halbes LSB zu viel verringert. 
+    
+  Für die verlustfreie Multiplikation zweier Zahlen wird sogar die doppelte Breite des Vektors 
+  benötigt. Hier kann sich der Bitbereich vor und nach dem Komma ändern.
+  Aus diesem Grund müssen die positiven Ergebnisse der 2D-DFT als etwas zu klein und
+  die negativen vom Betrag her etwas zu groß angenommen werden.
+  
+  Wenn diese Maßnahme jedoch nicht ergriffen würde und alle entstehenden Bits beibehalten 
+  werden sollen, müsste mit etwa 70 Bit je Ausgangswert gerechnet werden. Sollte wenigstens
+  auf die bei der Multiplikation entstehenden zusätzlichen Nachkommabits verzichtet werden, 
+  würde die benötigte Bitbreite immer noch bei über 40 liegen.
+  Auch dies würde noch eine immense Vergrößerung der Schaltung alleine schon wegen der zusätzlichen
+  Leitungen bedeuten. Desweiteren würden sich hierdurch die benötigten Zeiten aller Berechnungen erhöhen, 
+  was eine langsamere Taktfrequenz oder eine eine Unterteilung in Teilschaltnetzte und somit in der Summe
+  mehr Takte mit sich ziehen würde.
+  
+
+
+
+
  
- immer 10 Nachkommastellen, außer bei Multiplikation
- 
- NC Sim, nur Integerdarstellung möglich, bei Vektoren sogar nur positiv
  
  \subsection{Bibliotheken}
 \texttt{library ieee;}
@@ -48,6 +74,12 @@ VHDL 2008 kann auch Kommazahlen darstellen ( signed fixed : sfixed(2 downto -10)
  
  resize-Funktion
  
+ 
+
+ Matlab fi
+ 
+ 
+ NC Sim, nur Integerdarstellung möglich, bei Vektoren sogar nur positiv
 
 
 \section{Entwicklungsstufen}
@@ -101,7 +133,8 @@ Vorderen 3 Bit sind die der Zeile, die hinteren für die Spalte.
 
 Das dritte Bit von vorne sagt einem, ob es eine gerade oder ungerade Zeile ist.
 
-
+Zweite interne Matrix erforderlich, da sonst die Werrte oberhalb? der
+Nebendiagonalen  überschrieben wurden
  
  
  

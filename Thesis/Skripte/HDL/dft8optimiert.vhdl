@@ -96,7 +96,7 @@ begin
     dft_1d_2d_out <= dft_1d_2d;
     
     
-    -- Die Matrix hat 64 Elemente -> 2^6=64 -> 6-Bit Vektor passt genau. Ueberlauf = 1. Element vom nächsten Durchlauf. 
+    -- Die Matrix hat 64 Elemente -> 2^6=64 -> 6-Bit Vektor passt genau. Ueberlauf = 1. Element vom naechsten Durchlauf. 
     -- Der Elemente-Vektor kann darueber hinaus in vordere Haelfte = Zeile und hintere Haelfte = Spalte augeteilt werden. 
     -- So laesst sich auch ein Matrix-Element mit zwei Indizes ansprechen:
     

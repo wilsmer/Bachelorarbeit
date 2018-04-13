@@ -42,7 +42,7 @@ Wie zu sehen ist, schneiden vor allem die 8x8- und die 12x12-DFT gut ab. Da letz
  Sowohl die \gls{dct} als auch die \gls{dft} finden häufig in der Bildverarbeitung Anwendung, so dass bereits diverse Algorithmen für die weiteren
  Berechnungen vorhanden sind. Beide haben symmetrische Twiddlefaktormatrizen.
  Der Vorteil der \gls{dct} gegenüber der \gls{dft} ist, dass sie rein reelle Ergebniswerte liefert. 
- Dem stehen als großer Nachteil gegenüber, dass beinahe alle ihrer Twiddlefaktoren zu den nicht trivialen gezählt werden müssen. 
+ Dem steht als großer Nachteil gegenüber, dass beinahe alle ihrer Twiddlefaktoren zu den nicht trivialen gezählt werden müssen. 
  Des Weiteren verteilen sich ihre Werte auf mehr verschiedene Zahlen, sodass eine effiziente Implementierung gegenüber der DFT, trotz der rein reellen
  Werte, weniger praktikabel erscheint.
  
@@ -86,7 +86,7 @@ Wie zu sehen ist, schneiden vor allem die 8x8- und die 12x12-DFT gut ab. Da letz
  Die linke enthält alle realen Anteile, die rechte alle imaginären. 
  Anhand der Grafik lässt sich gut die Symmetrie erkennen, mit der die Werte auftreten. Diese Grafik soll als 
  Ausgangspunkt für die folgende Betrachtung dienen.
- Es lässt sich auch gut erkennen, das ein Kreis aus Abbildung \ref{pic:Twiddlefaktoren_Darstellung8x8} die Werte der korrespondierenden Zeilen wiederspiegelt.
+ Es lässt sich auch gut erkennen, das die Kreise aus Abbildung \ref{pic:Twiddlefaktoren_Darstellung8x8} die Werte der korrespondierenden Zeilen wiederspiegeln.
  
  \begin{minipage}{0.9\textwidth}
 \begingroup
@@ -142,7 +142,7 @@ Wie zu sehen ist, schneiden vor allem die 8x8- und die 12x12-DFT gut ab. Da letz
  
  Alle Werte, die bis jetzt vorkamen, haben entweder nur einem Real- oder einem Imaginärteil. 
  Dies hat den Vorteil, dass weniger Berechnungen erfolgen müssen, da von einer vollständig komplexen Multiplikation nur eine Multiplikation einer komplexen Zahl mit einer
- rein reellen (bzw. imaginären) übrig bleiben. Au diese Weise reduziert sich der in Gleichungen (\ref{eq:komplexe_Multiplikation}) gezeigte Aufwand zu dem in Gleichung (\ref{eq:halb_komplexe_Multiplikation}).
+ rein reellen (bzw. imaginären) übrig bleiben. Auf diese Weise reduziert sich der in Gleichung (\ref{eq:komplexe_Multiplikation}) gezeigte Aufwand zu dem in Gleichung (\ref{eq:halb_komplexe_Multiplikation}).
  Darüber hinaus sind bei den bisherigen Zahlen keine Multiplikationen nötig, weshalb sich der Rechenaufwandt auf den Additionsteil der Gleichung beschränkt.
  
  \begin{align}\label{eq:halb_komplexe_Multiplikation}
