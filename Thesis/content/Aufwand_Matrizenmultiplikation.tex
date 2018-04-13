@@ -14,29 +14,28 @@ dass die Multiplikationen mit einer Konstanten über ein Schaltnetz innerhalb ei
 an Bedeutung gewinnt. Trotzdem erlaubt der Vergleich eine gute Abschätzung.
 
 \subsection{8x8-DFT mit komplexen Eingangswerten}\label{sec:KomplexeEingangswerte}
-Die Sensormatrix liefert für jedes Sensorelement einen Sinus- und einen Kosinuswert. Diese können für die Berechnung der DFT zu einer komplexen Zahl zusammengefasst werden. 
-Auf diese Weise lässt sich die Berechnung mathematisch kompakter durchführen.
+Die Sensormatrix liefert für jedes Sensorelement einen Sinus- und einen Kosinuswert. Diese können für die Berechnung der DFT zu einer komplexen Zahl zusammengefasst werden
+($\cos(x)+j\cdot \sin(x)$. Auf diese Weise lässt sich die Berechnung mathematisch kompakter durchführen.
 
-Da die Twiddlefaktormatrix insgesamt nur 16 Faktoren aufweist, die einen Real- und einen Imaginärteil besitzen, treten auch nur 16 komplexe Multiplikationen auf.
-Die übrigen $64-16=48$ Faktoren beschränken sich auf einen rein reellen oder komplexen Anteil. Da dieser wegen des Betrags des komplexen Zeigers $1$ sein muss, entfallen sämtliche 
-weiteren Multiplikationen. Die übrigen Berechnungen beschränken sich also auf Additionen.
-Deshalb müssen $16\cdot4=48$ einfache Multiplikationen durchgeführt werden.
-Da sich es möglich sein wird den Faktor $\nicefrac{\sqrt{2}}{2}$ auszuklammer, bleiben aus den Zeilen zwei, vier, sechs und acht nur je ein Faktor, der mit jeder Spalten
-der Eingangsmatrix multipliziert werden muss. So ergeben sich insgesamt $4\cdot8=32$ komplexe Multiplikationen. Daraus resultieren $128$ reelle Multiplikationen.
-Für die 2D-DFT verdoppelt sich dieser Wert zu $256$.
+Die Twiddlefaktormatrix der 8x8-DFT weist, wie in Abb. \ref{pic:MatrizenDarstellungTwiddlefaktoren} zu sehen, insgesamt nur 16 Faktoren aufweist, die einen Real- und einen Imaginärteil 
+besitzen. Da diese Faktoren sowohl für den Real- als auch den Imaginärteil betragsmäßig alle den selben Wert haben, lässt er sich ausklammern. Bezogen auf die erforderlichen 
+Additionen verschiebt sich so lediglich deren Durchführung zu einem früheren Zeitpunkt. Man könnte sich die Twiddlefaktormatrix also als Matrix mit nur noch einem einzigen 
+komplexen Faktor in der Zeilen 2, 4, 6, 8 vorstellen. Trotz des selben Betrags beider Anteile müssen beide vorhanden sein, sonst würden die Sinusanteile keinen Einfluss in
+den Realteil des Ergebnisses finden. Da alle Zeilen der Twiddlefaktormatrix mit allen Spalten der Eingangsmatrix multipliziert werden müssen, ergeben sich $4\cdot8=32$ 
+Multiplikationen für Real bzw. Imaginärteil der Ergebnismatrix. Zusammen sind als also $64$ reelle Multiplikationen für die 1D- bzw. $128$ 2D-DFT nötig.
 
 
 \subsection{8x8-DFT mit reellen Eingangswerten}\label{sec:RelleEingangswerte}
 Anders als bei der Multiplikation komplexer Eingangswerte sind bei der getrennten Berechnung von Real- und Imaginärteil ungleich viele positive 
 und negative Faktoren je Zeile vorhanden, sodass zu diesem Zeitpunkt davon ausgegangen werden muss, dass eine Negation mancher Werte erforderlich sein wird. 
 Wie ein Vergleich der Gleichungen (\ref{eq:komplexe_Multiplikation}) und (\ref{eq:halb_komplexe_Multiplikation}) zeigt, entfallen die Hälfte der Multiplikationen, wenn die
-Eingangswerte rein reell sind. Da der Imaginärteil aber getrennt berechnet wird, treten diese Multiplikationen an anderer Stelle wieder auf. Hier findet also keine
-Ersparnis statt.
+Eingangswerte rein reell sind. Da der Imaginärteil der Eingangswerte aber getrennt berechnet werden, treten diese Multiplikationen an anderer Stelle wieder auf.
+Hier findet also keine Ersparnis statt.
 Allerdings kommen bei rein reellen Eingangswerten beispielsweise keine $j^2$-Komponenten zustande, welche ausmultipliziert und anschließend aufaddiert werden müssten. 
 Dies führt zu der in Abschnitt \ref{sec:rein_reelle_dft} gezeigten Eigenschaft, dass die letzten drei Zeilen für den Realteil des Ergebnisses direkt bzw. für den Imaginärteil 
-negiert aus den Zeilen 2-4 übernommen werden können. 
-Da zu diesen drei Zeilen auch die beiden gehören, in denen Multiplikationen durchgeführt werden müssen, entfallen bei reellen Eingangswerten die Hälfte der Multiplikationen im 
-Vergleich zu komplexen Eingangswerten, weshalb für die 1D-DFT nur $64$ bzw. für die 2D-DFT nur $128$ Multiplikationen nötig sind.
+negiert aus den Zeilen 2-4 übernommen werden können. Spätestens an dieser Stelle müssen also Negationen erfolgen.
+Da zu den drei Zeilen aus Abb. \ref{pic:reelleDFT} auch die beiden gehören, in denen Multiplikationen durchgeführt werden müssen, entfallen bei reellen Eingangswerten die 
+Hälfte der Multiplikationen im Vergleich zu komplexen Eingangswerten, weshalb für die 1D-DFT nur $32$ bzw. für die 2D-DFT nur $64$ Multiplikationen nötig sind.
 
 Interessant ist dieser Ansatz dann, wenn entweder die Recheneinheit so klein wie irgend möglich gehalten werden soll und Real- und Imaginärteil der Eingangsmatrix nacheinander
 berechnet werden können oder die Berechnung äußerst schneller erfolgen muss. In beiden Fällen wird im Vergleich zur Berechnungen mit komplexen Eingangswerten deutlich mehr
@@ -47,8 +46,9 @@ nicht vernachlässigt werden.
 
 
 \subsection{Direkte Multiplikation zweier 8x8 Matrizen mit komplexen Werten}
-Diese Art der Implementation hätte den Vorteil, dass zu einem späteren Zeitpunkt sich für ein anderes
-Transformationsverfahren entschieden werden könnte. Da keinerlei Optimierungen möglich sind, ist hier auch eine flexible Größe denkbar. Um einen Vergleich
+Diese Art der Implementation hätte den Vorteil, dass sich zu einem späteren Zeitpunkt für ein anderes
+Transformationsverfahren entschieden und einfach deren Twiddlefaktoren geladen werden könnten.
+Da keinerlei Optimierungen möglich sind, ist hier auch eine flexible Größe denkbar. Um einen Vergleich
 zu ermöglichen, wird die Multiplikation zweier 8x8 Matrizen betrachtet.
 Die in Abschnitt \ref{sec:Matrixmultiplikation} erläuterte Matrixmultiplikation bedarf bei einer 8x8 Matrix je Element der Ausgangsmatrix 8 komplexe Multiplikationen. Für
 die $8\cdot8=64$ Elemente werden deshalb 512 komplexe Multiplikationen benötigt. Da es sich sowohl bei den Eingangswerten als auch bei der Twiddlefaktormatrix um komplexe
@@ -96,11 +96,19 @@ Für die 2D-DFT sind somit lediglich 32 komplexe beziehungsweise 128 reelle Mult
 
 
 \subsection{Fazit der Berechnungs-Gegenüberstellungen}
-Es konnte gezeigt werden, dass rein von der Anzahl der benötigten Multiplikationen die optimierte Matrixmultiplikation mit komplexen Eingangswerten weniger Multiplikationen
-als die FFT hat. Das liegt daran, dass es vom Betrag her nur einen einzigen Faktor gibt. Dieser tritt in vier Zeilen der Twiddlefaktormatrix auf und kann für alle Spalten
-der Eingangswerte ausgeklammert werden. Wegen der Spiegelung der Faktoren müssen bei reellen Eingangswerten nur die Hälfte der Multiplikationen durchgeführt werden.
+Es konnte gezeigt werden, dass die optimierte Matrixmultiplikation mit komplexen Eingangswerten die gleiche Anzahl benötigter Multiplikationen wie die FFT hat.
+Das liegt daran, dass es vom Betrag her nur einen einzigen Faktor gibt. Dieser tritt nur in der Hälfte der Zeilen der Twiddlefaktormatrix auf und kann wegen des Distributivgesetzes
+ausgeklammert werden. Gleiches gilt für die Berechnung mit rein reellen Eingangswerten, hier kann wegen der Symmetrieeigenschaften zusätzlich noch die Hälfte der
+Multiplikationen eingespart werden.
+Bei Twiddlefaktormatrizen mit mehreren als nicht trivial einzustufenden Faktoren ist davon auszugehen, dass die FFT das effizientere Verfahren darstellt. 
+
 Als Vorteil kann bei der Multiplikation mit komplexen Eingangswerten gesehen werden, dass die Programmierung der 2D-DFT als einfacher angenommen werden kann.
-Begründet wird dies damit, dass es möglich ist, die selbe Einheit für die Berechnung der 1D-DFT einfach auch für die 2D-DFT verwenden zu können.
+Begründet wird dies damit, dass es möglich ist, eine einzige Einheit für die Berechnung der 1D-DFT und der 2D-DFT verwenden zu können.
+
+Die Matrixmultiplikation mit ladbaren Faktoren ist so weit abgeschlagen, dass sie nicht ansatzweise in Betracht gezogen werden kann. Sie verdeutlicht
+dafür sehr gut, wie sehr sich Berechnungsaufwandt einsparen lässt, wenn sich für ein dediziertes System entschieden und dieses optimiert wird.
+Falls also zwei verschiedene Transformationsverfahren auf einem Chip vorhanden sein sollen, wäre es immer noch effizienter beide optimiert zu implementieren.
+Abschließend werden in Tabelle \ref{tab:AuflistungMultiplikationen} die Anzahl benötigter reeller Multiplikationen der Verglichenen Methoden aufgeführt.
 
 
 \begin{table}[ht!]
@@ -108,10 +116,10 @@ Begründet wird dies damit, dass es möglich ist, die selbe Einheit für die Ber
 \caption{Auflistung benötigter reeller Multiplikationen der verschiedenen Methoden für die 2D-DFT}
  \begin{tabular}{lc}
   \hline
-  Methode  & Anzahl\\
+  Methode  & Anzahl reeller Multiplikationen\\
   \hline
-  komplexe Eingangswerte & 256\\
-  reelle Eingangswerte   & 128\\
+  komplexe Eingangswerte & 128\\
+  reelle Eingangswerte   & 64\\
   ladbare Matrixmultiplikation & 4096\\
   FFT   & 128\\
   \hline
