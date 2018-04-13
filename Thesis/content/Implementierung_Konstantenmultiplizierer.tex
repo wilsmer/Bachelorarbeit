@@ -11,17 +11,6 @@
  
  NC Sim, nur Integerdarstellung möglich, bei Vektoren sogar nur positiv
  
- \subsection{Struktureller Aufbau}
- Konstanten
- 
- Datentypen
- 
- readfile (read\_input\_matrix) 
- 
- writefile (write\_results)
- 
- resize-Funktion
- 
  \subsection{Bibliotheken}
 \texttt{library ieee;}
 
@@ -40,11 +29,25 @@
 
 \texttt{use ieee.std\_logic\_textio.all;}
 
-
-
 VHDL 2008 kann auch Kommazahlen darstellen ( signed fixed : sfixed(2 downto -10) )
+ 
 
-
+ 
+\subsection{Struktureller Aufbau}
+ Das Programm wurde, wie üblich, auf verschiedene Dateien aufgeteilt. Es wurden alle Konstanten in einem Paket deklariert, welches in allen anderen Dateien
+ eingebunden werden muss. So ist es möglich insbesondere die Bitbreiten eines Vektors an einer zentralen Stelle zu setzen. Die Bitbreiten liegen für 
+ Eingangswerte bei 12 Bit, Summen 13 Bit und Produkte 26 Bit. Da alle anderen Dateien auf diese
+ Konstanten zugreifen, muss dieses Paket zuerst kompiliert werden. In einem weiteren Paket findet die Deklaration der eigenen Datentypen statt. Hier sei
+ insbesondere die 8x8 Matrix mit ihren 12 Bit Vektoren vom Typ \texttt{signed} erwähnt. Da die weiteren Dateien diese Datentypen verwenden, ist es 
+ erforderlich, dass dieses Paket als zweites kompiliert wird. Alle weiteren Pakete können in beliebiger Reihenfolge kompiliert werden, da sie erst später ineinander
+ greifen. 
+ Zum Testen bzw. für die Simulation müssen Eingangswerte geladen werden. Hierfür wurde die Komponente \texttt{read\_input\_matrix} geschrieben. Die Werte müssen
+ in einer Datei mit dem Namen \texttt{InputMatrix\_komplex.txt} stehen und im dualen Zahlenformat vorliegen. 
+  
+ writefile (write\_results)
+ 
+ resize-Funktion
+ 
 
 
 \section{Entwicklungsstufen}
