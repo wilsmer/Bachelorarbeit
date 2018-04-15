@@ -49,14 +49,12 @@ Um Textdateien lesen und schreiben zu können, wird die Bibliothek \texttt{std.t
 %Die im Jahr 2008 veröffentlichte VHDL-Version führt Unterstütztung mit den Datentypen \texttt{ufixed} und 
 %\texttt{sfixed} die Möglichekeit ein, (vorzeichenbehaftete) Kommazahlen zu verwenden. Die 
  
-\subsection{Vorüberlegungen zum Programmablauf}
+\subsection{Vorüberlegungen zum Programmablauf}\label{sec:VorueberlegungenProgrammablauf}
 Über die Parallelität der Berechnungen wird auch bei gleicher Funktion der Komponenten maßgeblich die benötigten Takte der Berechnung der 2D-DFT sowie die benötigte
 Logik und deren Größe bestimmt. 
-Für die Aufwandsabschätzung wird angenommen, dass alle Eingangswerte zeitgleich zur Verfügung stehen.
-
+% Für die Aufwandsabschätzung wird angenommen, dass alle Eingangswerte zeitgleich zur Verfügung stehen.
 Um einen guten Kompromiss aus benötigter Zeit und Chipfläche zu erzielen,
-sollen  Real- und Imaginärteil aller Elemente der 1D- bzw. 2D-DFT gleichzeitig, die einzelnen Elemente aber nacheinander berechnet werden.
-
+sollen  Real- und Imaginärteil die die Berechnung der Matrixelemente jeweils gleichzeitig, die einzelnen Elemente aber nacheinander berechnet werden. Darüber hinaus ist geplant, die selbe Recheneinheit der 1D-DFT auch für die 2D-DFT zu nutzen. 
 
 
 \subsection{Struktureller Aufbau}
@@ -73,108 +71,11 @@ sollen  Real- und Imaginärteil aller Elemente der 1D- bzw. 2D-DFT gleichzeitig,
  in einer Datei mit dem Namen \texttt{InputMatrix\_komplex.txt} stehen und im dualen Zahlenformat vorliegen. 
  Die Datei besteht aus 16 Spalten und acht Zeilen, in den leerzeichengetrennten Spalten stehen immer im Wechsel der Real- und der Imaginärteil einer Zahl.
   Die berechneten Ergebnisse werden mit der Komponente \texttt{write\_results} im gleichen Format in eine Datei geschrieben, wie sie in der Input-Datei stehen. 
- 
 
 
 
 \section{Entwicklungsstufen}
-
-\subsection{2D-DFT-Implementierung in VHDL}
-
-In Tabelle \ref{tab:TakteKomplexeDFT} ist eine Auflistung der für die Berechnung veranschlagten Takte für die Multiplikation einer beliebigen Matrix mit der
-Twiddlefaktormatrix für die 8x8-DFT zu sehen. Grundlage ist, dass in einem Takt Summanden 
-paarweise aufaddiert werden und in einer Variablen zwischengespeichert werden. Dieses Verfahren kann auch als Baumstruktur aufgefasst werden. 
-Wie das Aufsummieren erfolgt, kann in Abschnitt \ref{sec:Berechnungsschema} detaillierter nachgelesen werden.
-
-Wie in Abschnitt \ref{sec:Konstantenmultiplizierer} gezeigt wird, kann die Multiplikation mit einer Konstanten innerhalb eines Taktes mit einem Schaltnetz erfolgen. 
-
-In Abschnitt \ref{sec:Syntheseergebnisse} wird gezeigt, dass der kritische Pfad der Negierung sogar etwas länger als beim Konstantenmultiplizierer ist.
-Um keine zu langen Signal- und Gatterlaufzeiten hervorzurufen, sollte hierfür unbedingt ein eigener Takt eingeplant werden. Dadurch relativiert sich der zeitliche Gewinn allerdings 
-etwas. 
-
-
-\begin{table}[htbp]
-\centering
-\caption{Takte für die komplexe DFT}
-\label{tab:TakteKomplexeDFT}
-\begin{tabular}{ccccc}
-\hline
-\multirow{2}{*}{Zeile} & Additionen & Takte pro Element & Takte für & Summe der\\
-      & pro Element ($N$) & ($\log_2(N)$) & Multiplikation & Takte\\
-\hline
- 1& 8  & 3   &0 &3\\
- 2& 12 & 3,6 &1 &5\\
- 3& 8  & 3   &0 &3\\
- 4& 12 & 3,6 &1 &5\\
- 5& 8  & 3   &0 &3\\
- 6& 12 & 3,6 &1 &5\\
- 7& 8  & 3   &0 &3\\
- 8& 12 & 3,6 &1 &5\\
-\hline
-\end{tabular}
-\end{table}
-
-Anhand der rechten Spalte ergeben sich so (3+5)$\cdot$4$\cdot$8 = 256 Takte sowohl für den Real- als auch den Imaginärteil der komplexen Ausgangsmatrix. Real- und Imaginärteil
-werden parallel berechnet und sind somit zeitgleich fertig.
-
-
-\subsection{Weiterentwickelung zur 2D-DFT}
-
-Ziel ist es die gleiche DFT-Einheit für beide DFTs zu verwenden
-
-Zähler für 64 Werte kann als 6 Bit Vektor realisiert werden, der bei 63 einen Überlauf hat und wieder bei 0 anfängt.
-
-Vorderen 3 Bit sind die der Zeile, die hinteren für die Spalte.
-
-Das dritte Bit von vorne sagt einem, ob es eine gerade oder ungerade Zeile ist.
-
-Zweite interne Matrix erforderlich, da sonst die Werrte oberhalb? der
-Nebendiagonalen  überschrieben wurden
- 
- 
- 
-Die in Gleichung (\ref{eq:2D-DFT_MatrixMult}) beschriebene Berechnung der 2D-DFT lässt sich auch wie folgt schreiben:
-
-\begin{align}
- X &= W \cdot x \cdot W \nonumber \\
-   &= \left(x^T\cdot W\right)^T\cdot W \label{eq:MatMultTranspose1} \\
-   &= X^* \cdot W \nonumber\\
-   &= \left(\left(x\cdot W\right)^T\cdot W\right)^T \label{eq:MatMultTranspose2}\\
-   &= \left(X^{*T} \cdot W\right)^T \nonumber
-\end{align}
-
-In Matlab muss hierfür entweder die Funktion \texttt{transpose()} oder \texttt{.'} verwendet werden. Letzteres muss elementweise angewandt werden, da das Apostroph
-alleine die komplex konjugiert Transponierte bildet.
-
-Die alternativen Schreibweisen der 2D-DFT haben den Vorteil, dass in beiden Fällen die Eingangsmatrix auf der linken Seite steht. Möglich ist dies, da die 
-Twiddlefaktormatrix identisch mit ihrer Transponierten ist.
-Dass nun in den Gleichungen (\ref{eq:MatMultTranspose1}) und (\ref{eq:MatMultTranspose2}) sowohl die Eingangs- als auch die 1D-DFT-Matrix links steht, ist eine wichtige 
-Voraussetzung dafür, dass mit der selben Recheneinheit mit der die 1D-DFT berechnet wird auch die 2D-DFT berechnet werden kann.
-Die zweite Voraussetzung ist das Transponieren einer Matrix. Diese lässt sich durch spaltenweises Abspeichern und zeilenweises Auslesen der Ergebnis-Matrix realisieren.
-Hierfür ist es lediglich notwendig die beiden Indizes, welche ein Matrixelement ansprechen, beim Speichern getauscht werden. Nun sind nun alle Voraussetzungen erfüllt, 
-um beide Berechnungen mit der selben Einheit durch zu führen. In Grafik (\ref{pic:MatMultTranspose}) ist das hier beschriebene veranschaulicht.
-
-(Auf diese Weise wird die direkte Weiterverarbeitung von Werten denkbar.)
- 
-\begin{figure}[htbp]
- \centering
- \includegraphics[width=0.95\textwidth]{img/MatMultTranspose2.png}
- \caption{Darstellung der Berechnung der 2D-DFT aus Gleichung (\ref{eq:MatMultTranspose2})}
- \label{pic:MatMultTranspose}
-\end{figure}
-
-\subsubsection{W = transpose(W)}
-
-\subsection{Direkte Weiterverarbeitung der Zwischenergebnisse}
-Um die Anzahl an Gattern und somit den Flächenbedarf zu reduzieren ist es das Ziel, die Ergebnisse der \gls{1d-dft} aus der 1. Berechnungsstufe im nächsten Schritt direkt als 
-Eingangswerte für die \gls{2d-dft} zu verwenden. Auf diese Weise würden 64$\cdot$2$\cdot$12 Bit = 1536 Bit = 1,5kBit = 192 Byte an Speicher eingespart werden.
-Wie sich im Laufe der Entwicklung gezeigt hat, lässt sich das nicht nutzen. Das liegt daran, dass dazu übergegangen wurde, immer nur ein Element zur Zeit berechnet wird und die 
-bereits errechneten demnach zwischengespeichert werden müssen. Dieser Ansatz wurde verfolgt, da der Entwicklungsaufwand in VHDL für die spaltenweise Berechnung der Ausgangswerte 
-einfacher umzusetzen war und es zunächst nur um die mathematische Umsetzung und nicht um die Platzeffizienz auf einem Chip ging.
-
-Unklar war zu diesem Zeitpunkt noch, wie der Speicher realisiert werden soll. In der finalen Variante des Chips soll es einen \gls{ram} geben, der als zentraler
-Speicher von allen Komponenten genutzt wird. Da die Entwicklung im Projekt noch nicht soweit fortgeschritten ist und dies nicht zu den Aufgaben der vorliegenden Arbeit gehört,
-wurde auf das Speichern in lokalen Speicherzellen ausgewichen, welche als Variable oder Signal im VHDL-Code definiert und von der Software als Flip-Flop synthetisiert werden.
+Bis zur endgültigen Umsetzung wurden verschieden Stadien durchlaufen, von denen die Relevanten nachfolgend näher beleuchtet werden sollen.
 
 
 
@@ -236,11 +137,11 @@ Für jede gerade Zeile der DFT ist jeweils für den Real- und den Imaginärteil 
  
 
 
-
+%\subsection{Erwartete Anzahl benötigter Takte}
 
  
  
-\subsection{Berechnungsschema der geraden und ungeraden Zeilen}\label{sec:Berechnungsschema}
+\subsection{Berechnungsschema und benötigte Takte der Ergebnisse}\label{sec:Berechnungsschema}
 
 In Abbildung \ref{pic:AkkumulationUngeradeSpalten} ist die Berechnung der ungeraden Zeilen am Beispiel der ersten zu sehen.
 
@@ -314,7 +215,7 @@ drei respektive vier Bitshifts durch zu führen. Wie bereits erläutert erfolgt 
 1D-DFT, dass das Ergebnis um den Faktor 16 kleiner ist, als beispielsweise bei der Berechnung mit Matlab. Da bei bei dem zweiten Durchlauf, um die 2D-DFT zu berechnen, ebenfalls 
 durch 16 geteilt wird, ergibt sich insgesamt eine Division durch $2^{2\cdot4} = $ 256.
 
-\subsubsection{Erwartete Anzahl benötigter Takte}
+
 Aus den Abbildungen \ref{pic:AkkumulationUngeradeSpalten} und \ref{pic:AkkumulationGeradeSpalten} können die Takte die zur Berechnung der 1D- bzw. 2D-DFT benötigt werden 
 abgeleitet werden.
 
@@ -322,6 +223,113 @@ Für ungeraden Zeilen sind je Element 3 Takte nötig und mit 8 Elementen pro Zei
 Analog errechnet sich für die ungeraden Zeilen mit je 5 Takten pro Element 5$\cdot$8$\cdot$4=160 Takte.
 In der Summe ergeben sich so 96+160=256 Takte für die 1D-DFT. Da die 2D-DFT ohne Takte fürs Umspeichern oder ähnliches sofort im Anschluss berechnet werden kann, 
 verdoppelt sich die Anzahl der Takte auf 512 für die vollständige Berechnung.
+
+
+
+
+
+
+
+
+
+Wie in Abschnitt \ref{sec:Konstantenmultiplizierer} gezeigt wird, kann die Multiplikation mit einer Konstanten innerhalb eines Taktes mit einem Schaltnetz erfolgen. 
+
+In Abschnitt \ref{sec:Syntheseergebnisse} wird gezeigt, dass der kritische Pfad der Negierung sogar etwas länger als beim Konstantenmultiplizierer ist.
+Um keine zu langen Signal- und Gatterlaufzeiten hervorzurufen, sollte hierfür unbedingt ein eigener Takt eingeplant werden. Dadurch relativiert sich der zeitliche Gewinn allerdings 
+etwas. 
+
+
+\begin{table}[ht!]
+\centering
+\caption{Takte für die komplexe DFT}
+\label{tab:TakteKomplexeDFT}
+\begin{tabular}{ccccc}
+\hline
+\multirow{2}{*}{Zeile} & Additionen & Takte pro Element & Takte für & Summe der\\
+      & pro Element ($N$) & ($\log_2(N)$) & Multiplikation & Takte\\
+\hline
+ 1& 8  & 3   &0 &3\\
+ 2& 12 & 3,6 &1 &5\\
+ 3& 8  & 3   &0 &3\\
+ 4& 12 & 3,6 &1 &5\\
+ 5& 8  & 3   &0 &3\\
+ 6& 12 & 3,6 &1 &5\\
+ 7& 8  & 3   &0 &3\\
+ 8& 12 & 3,6 &1 &5\\
+\hline
+\end{tabular}
+\end{table}
+
+Anhand der rechten Spalte ergeben sich so (3+5)$\cdot$4$\cdot$8 = 256 Takte sowohl für den Real- als auch den Imaginärteil der komplexen Ausgangsmatrix. Real- und Imaginärteil
+werden parallel berechnet und sind somit zeitgleich fertig.
+
+
+\subsection{2D-DFT-Implementierung in VHDL}
+
+In Tabelle \ref{tab:TakteKomplexeDFT} ist eine Auflistung der für die Berechnung veranschlagten Takte für die Multiplikation einer beliebigen Matrix mit der
+Twiddlefaktormatrix für die 8x8-DFT auf Basis der in Abschnitt \ref{sec:OptimierteMatrixmultiplikation} genannten Optimierungen zu sehen. Grundlage ist, dass in einem Takt Summanden 
+paarweise aufaddiert werden und in einer Variablen zwischengespeichert werden. Dieses Verfahren kann auch als Baumstruktur aufgefasst werden. 
+Wie das Aufsummieren erfolgt, kann in Abschnitt \ref{sec:Berechnungsschema} detaillierter nachgelesen werden.
+
+
+
+
+\subsection{Weiterentwickelung zur 2D-DFT}
+In Abschnitt \ref{sec:VorueberlegungenProgrammablauf} wurde entschieden, dass nach Möglichkeit die selbe Recheneinheit
+für die 1D- wie auch die 2D-DFT genutzt werden soll. 
+
+Zähler für 64 Werte kann als 6 Bit Vektor realisiert werden, der bei 63 einen Überlauf hat und wieder bei 0 anfängt.
+
+Vorderen 3 Bit sind die der Zeile, die hinteren für die Spalte.
+
+Das dritte Bit von vorne sagt einem, ob es eine gerade oder ungerade Zeile ist.
+
+Zweite interne Matrix erforderlich, da sonst die Werrte oberhalb? der
+Nebendiagonalen  überschrieben wurden
+ 
+ 
+ 
+Die in Gleichung (\ref{eq:2D-DFT_MatrixMult}) beschriebene Berechnung der 2D-DFT lässt sich auch wie folgt schreiben:
+
+\begin{align}
+ X &= W \cdot x \cdot W \nonumber \\
+   &= \left(x^T\cdot W\right)^T\cdot W \label{eq:MatMultTranspose1} \\
+   &= X^* \cdot W \nonumber\\
+   &= \left(\left(x\cdot W\right)^T\cdot W\right)^T \label{eq:MatMultTranspose2}\\
+   &= \left(X^{*T} \cdot W\right)^T \nonumber
+\end{align}
+
+In Matlab muss hierfür entweder die Funktion \texttt{transpose()} oder \texttt{.'} verwendet werden. Letzteres muss elementweise angewandt werden, da das Apostroph
+alleine die komplex konjugiert Transponierte bildet.
+
+Die alternativen Schreibweisen der 2D-DFT haben den Vorteil, dass in beiden Fällen die Eingangsmatrix auf der linken Seite steht. Möglich ist dies, da die 
+Twiddlefaktormatrix identisch mit ihrer Transponierten ist.
+Dass nun in den Gleichungen (\ref{eq:MatMultTranspose1}) und (\ref{eq:MatMultTranspose2}) sowohl die Eingangs- als auch die 1D-DFT-Matrix links steht, ist eine wichtige 
+Voraussetzung dafür, dass mit der selben Recheneinheit mit der die 1D-DFT berechnet wird auch die 2D-DFT berechnet werden kann.
+Die zweite Voraussetzung ist, dass  Transponieren einer Matrix. Diese lässt sich durch spaltenweises Abspeichern und zeilenweises Auslesen der Ergebnis-Matrix realisieren.
+Hierfür ist es lediglich notwendig die beiden Indizes, welche ein Matrixelement ansprechen, beim Speichern getauscht werden. Nun sind nun alle Voraussetzungen erfüllt, 
+um beide Berechnungen mit der selben Einheit durch zu führen. In Grafik (\ref{pic:MatMultTranspose}) ist das hier beschriebene veranschaulicht.
+
+(Auf diese Weise wird die direkte Weiterverarbeitung von Werten denkbar.)
+ 
+\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.95\textwidth]{img/MatMultTranspose2.png}
+ \caption{Darstellung der Berechnung der 2D-DFT aus Gleichung (\ref{eq:MatMultTranspose2})}
+ \label{pic:MatMultTranspose}
+\end{figure}
+
+
+\subsection{Direkte Weiterverarbeitung der Zwischenergebnisse}
+Um die Anzahl an Gattern und somit den Flächenbedarf zu reduzieren ist es das Ziel, die Ergebnisse der \gls{1d-dft} aus der 1. Berechnungsstufe im nächsten Schritt direkt als 
+Eingangswerte für die \gls{2d-dft} zu verwenden. Auf diese Weise würden 64$\cdot$2$\cdot$12 Bit = 1536 Bit = 1,5kBit = 192 Byte an Speicher eingespart werden.
+Wie sich im Laufe der Entwicklung gezeigt hat, lässt sich das nicht nutzen. Das liegt daran, dass dazu übergegangen wurde, immer nur ein Element zur Zeit berechnet wird und die 
+bereits errechneten demnach zwischengespeichert werden müssen. Dieser Ansatz wurde verfolgt, da der Entwicklungsaufwand in VHDL für die spaltenweise Berechnung der Ausgangswerte 
+einfacher umzusetzen war und es zunächst nur um die mathematische Umsetzung und nicht um die Platzeffizienz auf einem Chip ging.
+
+Unklar war zu diesem Zeitpunkt noch, wie der Speicher realisiert werden soll. In der finalen Variante des Chips soll es einen \gls{ram} geben, der als zentraler
+Speicher von allen Komponenten genutzt wird. Da die Entwicklung im Projekt noch nicht soweit fortgeschritten ist und dies nicht zu den Aufgaben der vorliegenden Arbeit gehört,
+wurde auf das Speichern in lokalen Speicherzellen ausgewichen, welche als Variable oder Signal im VHDL-Code definiert und von der Software als Flip-Flop synthetisiert werden.
 
 
 
@@ -367,6 +375,8 @@ Negations-Bit dazugekommen ist und auf Grund des gegebenen Faktors der Wertebere
 
 
 \section{Syntheseergebnisse von Teilkomponenten}\label{sec:Syntheseergebnisse}
+Da das Schaltnetz der gesamten Schaltung zu groß und nicht nachvollziebar wäre, werden in diesem Abschnitt nur relevante Teilkomkonenten gezeigt.
+
 \subsection{13 Bit Konstantenmultiplizierer}\label{sec:Konstantenmultiplizierer}
 
 Der duale Wert lässt sich am einfachsten mit der Matlab-Funktion \texttt{fi()} ermitteln. Der Funktion werden hierfür Kommagetrennt der Deziamlwert, 1 für vorzeichenbehaftet,

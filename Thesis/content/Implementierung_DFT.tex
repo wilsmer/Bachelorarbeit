@@ -134,7 +134,8 @@ test test
     \draw (Punkt_8) -- (Punkt_9);
     \draw (Zeile_8) -- (Punkt_9);
     \draw (Punkt_9) -- (Punkt_10);
-    \draw (Punkt_return_1) |- (Knoten_init);
+    %\draw (Punkt_return_1) |- (Knoten_init);
+    \path [arrowline] (Punkt_9) -- (Punkt_10);
     \path (start) [loop right] edge (start);
     
      \begin{pgfonlayer}{background}

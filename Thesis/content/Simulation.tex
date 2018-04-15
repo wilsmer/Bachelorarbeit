@@ -1,10 +1,10 @@
-\section{Simulation}
- \subsection{NC Sim - positive Zahlendarstellung}
-Matlab fi
- 
- NC Sim, nur Integerdarstellung möglich, bei Vektoren sogar nur positiv 
- \section{Anzahl benötigter Takte}
- Anhand der Simulation kann die Anzahl der vorausgesagten benötigten Takte verifiziert werden. 
+\section{Simulation der 2D-DFT}
+Zur Simulation der Signalverläufe von Hardwarekomponenten dient in der Cadence-Umgebung das Programm NC\,Sim.
+Das Programm beherrscht lediglich bei einzelnen Vektoren die Umrechnung zu vorzeichenbehafteten Zahlen im Dezimalsystem.
+Bei der Bündelung von Vektoren können nur positive Dezimalzahlen dargestellt werden. Dies hat zur Folge, dass Vektoren, die eine negative Zahl repräsentieren, mittels $2^{n+1}+m$, $n=$ Bitbreite des Vektors und $m=$ angezeigte Zahl, bei Bedarf händisch umgerechnet werden müssten. 
+Die Darstellung von Festkoomazahlen ist in keinem Fall möglich.
+
+ Anhand der Simulation kann die Anzahl der im Voraus ermittelten, zur Berechnung der 2D-DFT benötigten Takte, verifiziert werden, was nachfolgend geschen soll.
  
  Nachdem \texttt{nReset} auf '1' gesetzt wird, werden die Eingangswerte
  eingelesen. Wenn dieser Vorgang abgeschlossen ist, geht \texttt{loaded} auf '1'. Mit der nächsten steigenden Taktflanke, in Bild \ref{pic:Simulationsdauer} bei 
