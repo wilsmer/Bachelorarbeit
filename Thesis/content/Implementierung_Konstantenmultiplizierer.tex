@@ -9,22 +9,16 @@
   immer um ein Bit breiter sein - von 12 Bit ausgehend also 13 Bit.
   Da dies bei jeder Addition geschieht, würde die benötigte Bitbreite ohne Gegenmaßnahmen immer 
   weiter anwachsen. Die einfachste Möglichkeit dies zu verhindern ist die Divison eines Summationsergebnises
-  durch Zwei. Diese Operation ist in Hardware mittels eines Bitshifts um Eins nach rechts sehr einfach
-  umzusetzen.
+  durch Zwei. 
   So kann beliebig oft auf den selben Vektor eine Addition ausgeführt werden, ohne einen Überlauf zu provozieren.
   Die Kehrseite dieser Vorgehensweise ist, dass durch den Bitshift die Genauigkeit des Ergebnisses sinkt.
-  Dies ist immer dann der Fall, wenn das hinausgeschobene Bit eine Eins war, was im Mittel mit
-  einer Wahrscheinlichkeit von 50$\%$ angenommen werden kann.
-  In der Hälfte aller Fälle wird also der Wert um ein halbes LSB zu viel verringert. 
-    
+  Auf die Folgen wird in Abschnitt \ref{sec:NumerischeUngenauigkeiten} kurz eingegangen.
   Für die verlustfreie Multiplikation zweier Zahlen wird sogar die doppelte Breite des Vektors 
   benötigt. Hier kann sich der Bitbereich vor und nach dem Komma ändern.
-  Aus diesem Grund müssen die positiven Ergebnisse der 2D-DFT als etwas zu klein und
-  die negativen vom Betrag her etwas zu groß angenommen werden.
   
-  Wenn diese Maßnahme jedoch nicht ergriffen würde und alle entstehenden Bits beibehalten 
-  werden sollen, müsste mit etwa 70 Bit je Ausgangswert gerechnet werden. Sollte wenigstens
-  auf die bei der Multiplikation entstehenden zusätzlichen Nachkommabits verzichtet werden, 
+  Wenn diese Maßnahme jedoch nicht ergriffen und alle zusätzlichen Bits beibehalten 
+  würden, müsste mit etwa 70 Bit je Ausgangswert gerechnet werden. Sollte wenigstens
+  auf die bei der Multiplikation entstehenden Nachkommabits verzichtet werden, 
   würde die benötigte Bitbreite immer noch bei über 40 liegen.
   Auch dies würde noch eine immense Vergrößerung der Schaltung alleine schon wegen der zusätzlichen
   Leitungen bedeuten. Desweiteren würden sich hierdurch die benötigten Zeiten aller Berechnungen erhöhen, 
@@ -37,49 +31,50 @@
 
  
  
- \subsection{Bibliotheken}
-\texttt{library ieee;}
-
-\texttt{use ieee.std\_logic\_1164.all;}
-
-\texttt{use ieee.numeric\_std.all;}
-
-\texttt{use ieee.std\_logic\_arith.all;}
-
-\texttt{use ieee.std\_logic\_unsigned.all;}
-
-
-\texttt{library STD;}
-
-\texttt{use STD.TEXTIO.ALL;}
-
-\texttt{use ieee.std\_logic\_textio.all;}
-
-VHDL 2008 kann auch Kommazahlen darstellen ( signed fixed : sfixed(2 downto -10) )
+ \subsection{VHDL-Bibliotheken}
+ Cadence unterstützt die VHDL-Versionen von 1987 und 1993. 
+ Enthalten ist unter anderem die Bibliothek \texttt{std\_logic\_arith}, welche von der Firma Synopsys entwickelt wurde. Hierbei handelt es sich um die erste Bibliothek
+ für mathematische Berechnungen wie Addition und Multiplikation mit VHDL, weshalb sie eine große Verbreitung erlangt hat.
+ Die Bibliothek basiert auf der vom Konsortium des Institute of Electrical and Electronics Engineers (IEEE) spezifizierten Bibliothek \texttt{std\_logic}. Anders als angenommen werden könnte, handelt es sich hierbei zwar um einen weitverbreiteten aber eben keinen offiziellen Standard.
+ Ähnliches gilt auch für die Bibliotheken \texttt{std\_logic\_unsigned} und \texttt{std\_logic\_signed}.
+ Leider hat Synopsys nicht konsequent die strenge Typisierung von VHDL eingehalten, weshalb es bei überladenen Funktionen möglich ist, die Datentypen \texttt{signed} und \texttt{unsigned} zu mischen, was zu einem unerwarteten Verhalten führt.
+ Aus diesem Grund wird in diesem Projekt die Bibliothek \texttt{numeric\_std} verwendet, welche einen vergleichbaren Funktionsumfang bietet, vom IEEE-Konsortium spezifiziert wurde und dieses Problem nicht aufweist. Zu ihrem 
+ Umfang gehört auch die \texttt{resize}-Funktion, welche es ermöglicht einen Vektor vorzeichengerecht zu erweitern.
  
+Für den Standardsatz der Datentypen zu dem beispielsweise \texttt{std\_logic} gehört, wird 
+\texttt{std\_logic\_1164.all} verwendet.
+Um Textdateien lesen und schreiben zu können, wird die Bibliothek \texttt{std.textio.all} sowie 
+\texttt{std\_logic\_textio.all} benötigt.
 
+%Die im Jahr 2008 veröffentlichte VHDL-Version führt Unterstütztung mit den Datentypen \texttt{ufixed} und 
+%\texttt{sfixed} die Möglichekeit ein, (vorzeichenbehaftete) Kommazahlen zu verwenden. Die 
  
+\subsection{Vorüberlegungen zum Programmablauf}
+Über die Parallelität der Berechnungen wird auch bei gleicher Funktion der Komponenten maßgeblich die benötigten Takte der Berechnung der 2D-DFT sowie die benötigte
+Logik und deren Größe bestimmt. 
+Für die Aufwandsabschätzung wird angenommen, dass alle Eingangswerte zeitgleich zur Verfügung stehen.
+
+Um einen guten Kompromiss aus benötigter Zeit und Chipfläche zu erzielen,
+sollen  Real- und Imaginärteil aller Elemente der 1D- bzw. 2D-DFT gleichzeitig, die einzelnen Elemente aber nacheinander berechnet werden.
+
+
+
 \subsection{Struktureller Aufbau}
- Das Programm wurde, wie üblich, auf verschiedene Dateien aufgeteilt. Es wurden alle Konstanten in einem Paket deklariert, welches in allen anderen Dateien
- eingebunden werden muss. So ist es möglich insbesondere die Bitbreiten eines Vektors an einer zentralen Stelle zu setzen. Die Bitbreiten liegen für 
- Eingangswerte bei 12 Bit, Summen 13 Bit und Produkte 26 Bit. Da alle anderen Dateien auf diese
+ Das Programm wurde, wie bei umfangreicheren Projekten üblich, auf verschiedene Dateien aufgeteilt. Alle Konstanten werden in einem Paket deklariert, welches in allen anderen Dateien
+ eingebunden werden muss. So ist es möglich z.B. die Bitbreiten eines Vektors an einer zentralen Stelle zu setzen. Diese liegen für 
+ Eingangswerte bei 12, Summen 13 und Produkte 26 Bit. Da alle anderen Dateien auf diese
  Konstanten zugreifen, muss dieses Paket zuerst kompiliert werden. In einem weiteren Paket findet die Deklaration der eigenen Datentypen statt. Hier sei
- insbesondere die 8x8 Matrix mit ihren 12 Bit Vektoren vom Typ \texttt{signed} erwähnt. Da die weiteren Dateien diese Datentypen verwenden, ist es 
+ insbesondere die 8x8 Matrix mit ihren 12 Bit Vektoren vom Typ \texttt{signed} erwähnt, welche für die eingelesenen 
+ Daten, die Zwischenergebnisse (1D-DFT) sowie die Ausgangswerte verwendet wird.
+ Da die weiteren Dateien diese Datentypen verwenden, ist es 
  erforderlich, dass dieses Paket als zweites kompiliert wird. Alle weiteren Pakete können in beliebiger Reihenfolge kompiliert werden, da sie erst später ineinander
  greifen. 
  Zum Testen bzw. für die Simulation müssen Eingangswerte geladen werden. Hierfür wurde die Komponente \texttt{read\_input\_matrix} geschrieben. Die Werte müssen
  in einer Datei mit dem Namen \texttt{InputMatrix\_komplex.txt} stehen und im dualen Zahlenformat vorliegen. 
-  
- writefile (write\_results)
- 
- resize-Funktion
- 
+ Die Datei besteht aus 16 Spalten und acht Zeilen, in den leerzeichengetrennten Spalten stehen immer im Wechsel der Real- und der Imaginärteil einer Zahl.
+  Die berechneten Ergebnisse werden mit der Komponente \texttt{write\_results} im gleichen Format in eine Datei geschrieben, wie sie in der Input-Datei stehen. 
  
 
- Matlab fi
- 
- 
- NC Sim, nur Integerdarstellung möglich, bei Vektoren sogar nur positiv
 
 
 \section{Entwicklungsstufen}

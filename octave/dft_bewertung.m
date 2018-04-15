@@ -67,7 +67,7 @@ function dft_bewertung(N)
   end
   
   
-  % nicht triviale Werte der reellen Matrix zählen 
+  % nicht triviale Werte der reellen Matrix zaehlen 
   nontrivial_nums_real = 0;
   for k = 1:length(different_nums_real)
     if abs(different_nums_real(k)) != 1
@@ -79,7 +79,7 @@ function dft_bewertung(N)
     end
   end
   
-  % nicht triviale Werte der imaginären Matrix zählen 
+  % nicht triviale Werte der imaginaeren Matrix zaehlen 
   nontrivial_nums_imag = 0;
   for k = 1:length(different_nums_imag)
     if abs(different_nums_imag(k)) != 1

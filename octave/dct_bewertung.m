@@ -46,7 +46,7 @@ function dct_bewertung(N)
   end
 
   
-  % nicht triviale Werte der Matrix zählen 
+  % nicht triviale Werte der Matrix zaehlen 
   nontrivial_nums = 0;
   for k = 1:length(different_nums)
     if abs(different_nums(k)) != 1
