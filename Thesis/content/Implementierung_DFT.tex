@@ -9,9 +9,13 @@
 %\includepdf{content/Struktogramm.pdf}
 
 \section{Schema der Zustandsfolge}
-test test
+In Abbildung \ref{pic:Automatengraf} sind die Zustände des in VHDL implemetierten Zustandsautomaten zu sehen. Da es sich um einen sehr strikten Ablauf handelt und
+keine Eingangssignale Einfluss auf die Zustandsfolge haben, wurde sich gegen die Darstellung als klassichen Automatengraph entschieden. 
+Stattdessen ist in Abschnitt \ref{sec:UML-Diagramm} ergänzend das UML-Diagramm mit der detaillierten Abfolge der Berechnung zu sehen, welches einen wesentlich höheren 
+Informationsgehalt besitzt. Es wurde so gestaltet, dass daraus hervorgeht, welches der aktuelle Zustand ist.
 
- \begin{figure}[t!]
+
+\begin{figure}[t!]
  \centering
 \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=4.5cm,
                     semithick,initial text=nReset, initial where=above]
@@ -43,8 +47,10 @@ test test
 \label{pic:Automatengraf}
 \end{figure}
 
+Der Zustand \texttt{set\_ready\_bit} wird nach dem zweiten Durchlauf der DFT-Einheit, also wenn die 2D-DFT berechnet ist, erreicht. Dieser setzt für einen Takt
+das Signal \texttt{result\_ready} auf Eins.
 
-\section{UML-Diagramm}
+\section{UML-Diagramm}\label{sec:UML-Diagramm}
 
 % Define block styles
 \tikzstyle{decision} = [diamond,                    draw, fill=blue!20, text width=6em, text badly centered, node distance=4cm, inner sep=0pt]

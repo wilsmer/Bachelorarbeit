@@ -90,6 +90,11 @@ Im zweiten Schritt wird untersucht, wie die 8x8-\gls{dft}, welche als Favorit au
 
 
  \section{Testumgebung}
+
+In Matlab muss hierfür entweder die Funktion \texttt{transpose()} oder \texttt{.'} verwendet werden. Letzteres muss elementweise angewandt werden, da das Apostroph
+alleine die komplex konjugiert Transponierte bildet.
+
+ 
  \subsection{Struktogramm des Testablaufs}
  \subsection{Reale Eingangswerte}
  

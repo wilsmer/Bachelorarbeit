@@ -1,6 +1,16 @@
 
 
+In diesem Kapitel wird die Theorie aus dem Kapitel Analyse in ein funktionsfähiges VHDL-Programm mit den geforderten Eigenschaften
+umgesetzt.
+Es werden weitere Vorüberlegungen getroffen, die sich speziell an der Implementation als Hardwarekomponente orientieren.
+Wenn die Komponente Teil eines Chips werden würde, wurde dieser in $\SI{350}{nm}$ Technologie gefertigt werden. Entprechend beziehen
+sich die Größenangaben der Syntheseergebnisse auf diesen Prozess. Der Auftragsfertiger, bei dem der Chip in Auftrag gegeben werden würde, ist
+Austria Micro Systems (AMS). Dementsprechend sind die Standarzellen von dieser Firma.
+
+
 \section{Projekt- und Programmstruktur}
+In diesem Abschnitt werden Entscheidungen zum Einhalten der Bitbreite der Vektoren, den verwendeten VHDL-Bibliotheken und der Aufteilung des Programmcodes zusammengetragen.
+
  \subsection{Vorüberlegungen aus Hardwaresicht}
  Für die binäre Darstellung der Eingangswerte sind zwölf Bit vorgesehen, wovon zehn auf die 
  Nachkommastellen entfallen. Bei den beiden Rechenoperationen Addition und Subtraktion
@@ -74,85 +84,68 @@ sollen  Real- und Imaginärteil die die Berechnung der Matrixelemente jeweils gl
 
 
 
-\section{Entwicklungsstufen}
-Bis zur endgültigen Umsetzung wurden verschieden Stadien durchlaufen, von denen die Relevanten nachfolgend näher beleuchtet werden sollen.
+\section{Entwicklung der 2D-DFT-Komponente}
+Bis die Berechnung der 2D-DFT realisiert war, wurden verschiedene Stadien durchlaufen. Im ersten Schritt wurde die 1D-DFT implementiert, wobei die im Kapitel
+Analyse behandelten Optimierungsmöglichkeiten näher betrachtet werden. Desweiteren wird das Berechnungsschema der geraden sowie ungeraden Zeilen der 
+Twiddlefaktormatrix und die daraus resultierende Anzahl an Takten vorgestellt.
+Ein weiterer wichtiger Punkt ist die Umsetzung der 2D-DFT auf Basis der vorhandenen 1D-DFT-Einheit.
+Abschließend wird gezeigt, dass es auf einfache Weise möglich ist, die vorhandene DFT-Einheit um die Funktion der IDFT zu ergänzen.
+
 
 
 
 \subsection{Optimierte 8x8 DFT als Matrixmultiplikation}\label{sec:OptimierteMatrixmultiplikation}
-
-
 Anfangs wurde angenommen, dass Multiplikationen mit den Twiddlefaktoren $\pm 1$ und $\pm\frac{\sqrt{2}}{2}$ durchgeführt werden müssen. 
-Dass bei einer optimierten 8x8-DFT wegen des explizieten ausprogrammierens der Berechnungen die Multiplikation mit $\pm1$ wegfällt, wurde recht schnell klar.
-Erst bei genauer Betrachtung der Twiddlefaktor-Matrix viel auf, dass in jeder Zeile gleich viele Additionen wie Subtraktionen vorhanden sind. Durch Umsortieren 
-ist es dadurch möglich auf das Invertieren der Eingangswerte sowie den hierfür benötigten Takt und die Inverter zu verzichten. Weiter wird auch nur die Multiplikation
-mit $+\frac{\sqrt{2}}{2}$ benötigt.
+Dass bei einer optimierten 8x8-DFT wegen des explizieten ausprogrammierens der Berechnungen die Multiplikation mit $\pm1$ wegfällt, war schnell klar.
+Wegen der betragsmäßig identischen nicht trivialen Twiddlefaktoren wurde zu Beginn der Entwicklung in Betracht gezogen das 1er-Komplement zu verwenden, da sich negative und positive Zahlen mit gleichem Betrag nur durch ihr höchstwertigstes 
+Bit unterscheiden. Auf diese Weise könnte das selbe Resultat für den Imaginär- wie für den Realteil verwendet werden. Das Vorzeichen würde sich über eine 
+einfache XOR-Verknüpfung beider MSB der Multiplikanden ergeben.
+Diesem Vorteil steht jedoch eine aufwändigere Subtraktion (bzw. Addition negativer Zahlen) gegenüber. Der zusätzliche Aufwand entspricht 
+etwa dem der Negierung von Zahlen im 2er-Komplement. Aus diesem Grund wurde sich hierfür entschieden.
 
-Anfangs wurde in Betracht gezogen das 1er-Komplement zu verwenden, da hierbei zwei betragsmäßig identische Zahen sich nur durch ihr höchstwertigstes 
- Bit unterscheiden. Auf diese Weise könnte das selbe Resultat für den Imaginär- wie für den Realteil verwendet werden, das Vorzeichen würde sich über eine 
- einfache XOR-Verknüpfung beider MSB der Multiplikanden ergeben.
- Diesem Vorteil steht jedoch eine aufwändigere Subtraktion (bzw. Addition negativer Zahlen) gegenüber. Der zusätzliche Aufwand entspricht 
- etwa dem der Bildung des 2er-Komplements. Aus diesem Grund und da das 2er-Komplement deutlich verbreiteter ist sowie weitere Vorteile bringt wie 
- beispielsweise keine Doppeldeutigkeit durch eine negative Null hat, wurde sich hierfür entschieden.
- 
- 
- In späteren Analysen konnte festgestellt werden, dass sowohl für den Real- als auch den Imaginärteil gleichviele Multiplikationen mit positiven wie mit negativen Faktoren 
- durchgefürht werden müssen. Dies lässt sich anhand des Einheitskreises in Abb. \ref{pic:Einheitskreis_Faktoren} und der Abbildung \ref{pic:Twiddlefaktoren_Darstellung8x8}
- nachvollziehen. Aus Abschnitt \ref{sec:Matrixmultiplikation} ist bekannt, dass bei einer Matrixmultiplikation Elemente multipliziert und anschließend die Ergebnisse 
- aufsummiert. Da es das Kommutativgesetz erlaubt die berechneten Ergebnisse auch in einer anderen Reihenfolge zu addieren, 
-
- 
-   
- In Abbildung \ref{pic:MatrizenDarstellungTwiddlefaktoren} ist zu sehen, dass die 2., 4., 6., und 8. Zeile je vier nicht triviale und komplexe Faktoren enthält. 
- Darüber hinaus ist ersichtlich, dass für komplexe Eingangswerte in den genannten Zeilen 12 und in den übrigen 8 Multiplikationen erfolgen müssen. Dies kann anhand der 
+Bei der genaueren Betrachtung der Twiddlefaktormatrix konnte in Abschnitt \ref{sec:KomplexeEingangswerte} festgestellt werden, dass, abgesehen von der ersten, in jeder Zeile gleich viele Additionen wie Subtraktionen vorhanden sind. Dies trifft auch ausschließlich auf die jeweils vier nicht trivialen Faktoren der geraden Zeilen zu. 
+Dies lässt sich anhand des Einheitskreises in Abb. \ref{pic:Einheitskreis_Faktoren}, der Abbildung \ref{pic:Twiddlefaktoren_Darstellung8x8}
+ und der grafischen Darstellung der Twiddlefaktormatrix in Abb. \ref{pic:MatrizenDarstellungTwiddlefaktoren} nachvollziehen. 
+% In der letztgenannten ist zu sehen, dass die 2., 4., 6., und 8. Zeile je vier nicht triviale und komplexe Faktoren enthält. 
+ Darüber hinaus ist ersichtlich, dass für komplexe Eingangswerte in den Zeilen 2, 4, 6 und 8 zwölf und in den übrigen acht Multiplikationen erfolgen müssen. Dies kann anhand der 
  Gleichungen (\ref{eq:komplexe_Multiplikation}) und (\ref{eq:halb_komplexe_Multiplikation}) nachvollzogen werden.
- Das lässt sich ausnutzen, um keine Negationen der Eingangs- und Zwischenwerte durchführen zu müssen. 
+ %Das lässt sich ausnutzen, um keine Negationen der Eingangs- und Zwischenwerte durchführen zu müssen. 
  
+Aus Abschnitt \ref{sec:Matrixmultiplikation} ist bekannt, dass bei einer Matrixmultiplikation Elemente multipliziert und anschließend die Ergebnisse 
+ aufsummiert werden.
+ Hieraus kann abgeleitet werden, dass es das Assoziativgesetz erlaubt die Eingangswerte umzusortieren, wenn auch die Twiddlefaktoren entsprechend umsortiert werden. 
+Geschickt aufgeteilt auf triviale und nicht triviale Berechnungen, 
+ist es dadurch möglich auf das Invertieren der Eingangswerte, also den hierfür benötigten Takt und die Inverter zu verzichten und um nur noch die Multiplikation
+mit $+\frac{\sqrt{2}}{2}$ durchführen zu müssen. Letztere muss wegen des Distributivgesetzes nur ein Mal pro Zeile und Real- bzw. Imaginärteil erfolgen.
 
- 
- Darüber hinaus
- minimiert sich bei geschickter Anordnung das Risiko eines Überlaufs. Wie in Abschnitt \ref{sec:NumerischeUngenauigkeiten} erwähnt, ist dies nicht Gegenstand dieser Arbeit,
- weshalb der Einfachheit wegen zur Sicherheit dennoch nach jeder Addition oder Subtraktion das Ergebnis durch einen Bitshift halbiert wird. 
- Es sei an dieser Stelle lediglich angemerkt, dass über die Eingangswerte die Annahme getroffen werden kann, dass aufeinanderfolgende Werte das selbe Vorzeichen haben. 
- Dies ließe sich ausnutzen, um noch weiter die Wahrscheinlichkeit zu reduzieren, dass es zu einem Überlauf kommt. 
- 
-
-
-% Später wohl besser ins Kapitel Entwicklung
-Dies hat zur Folge, dass ein sehr großer Wert entstehen kann, welcher Maßgebend für die Anzahl der Vorkommabits sein kann.
-%
-Wegen der Null im Imaginärteil der ersten Zeile der Twiddlefaktormatrix sind auch alle Imaginärteile der ersten Spalte der Ausgangsmatrix Null.
-Bezogen auf den Imaginärteil gilt das Gleiche auch für die fünfte Zeile der Twiddlefaktormatrix. 
-%
-Da sich beim Realteil der fünften Zeile der Twiddlefaktormatrix der fünften Zeile positive und negative Einsen abwechseln, sind hier auch keinerlei Multiplikationen nötig.
-
-Aus der anfänglichen Implementation bei der alle nicht trivialen Werte einer Berechnung die entweder mit $+\frac{\sqrt{2}}{2}$ oder $-\frac{\sqrt{2}}{2}$ multipliziert wurden,
-einzelnd berechnet werden, wird mittels des Distributivgesetzes der gemeinsame Faktor ausgeklammert, sodass nur noch jeweils eine Multiplikation erforderlich ist.
-
-
-Bei den weiteren Zeilen sind hingegen die Zahlen zur Hälfte positiv und zur anderen negativ. Außerdem enthalten die geraden Zeilen den Faktor $\pm\frac{\sqrt{2}}{2}$. 
-Dies lässt sich ausnutzen, um die Anzahl der der Multiplikationen zu reduzieren. Zunächst können die 
-
-Für jede gerade Zeile der DFT ist jeweils für den Real- und den Imaginärteil eine Multiplikation nötig, so dass sich insgesamt acht Multiplikationen ergeben
- 
-
-
-%\subsection{Erwartete Anzahl benötigter Takte}
+ Darüber hinaus minimiert sich bei dieser Anordnung das Risiko eines Überlaufs, da zumindest im ersten Schritt eine Subtraktion erfolgt. In den weiteren muss unweigerlich die 
+ Akkumulation stattfinden. 
+ Wegen der Einsen in der ersten Zeile der Twiddlefaktormatrix müssen für die erste Zeile der Ausgangsmatrix alle Spalten einmal aufsummiert werden.
+ Dies hat zur Folge, dass ein großer Wert entstehen kann, welcher Maßgebend für die Anzahl der Vorkommabits ist.
+ Aus diesem Grund wird zur Sicherheit, der einheitlichen Skalierung der Zahlen und der Einfachheit wegen nach jeder Addition oder Subtraktion das Ergebnis durch einen Bitshift halbiert. 
+ Es sei an dieser Stelle lediglich angemerkt, dass über die Eingangswerte die Annahme getroffen werden kann, dass aufeinanderfolgende Werte das selbe Vorzeichen haben oder, nach Abzug eines evtl. vorhandenen Offsets, nahe Null sind. 
+ Basierend auf diesem Wissen ist es denkbar die Wahrscheinlichkeit weiter zu reduzieren, dass es zu einem Überlauf kommt. 
+Wegen der Null im Imaginärteil der ersten und fünften Zeile der Twiddlefaktormatrix sind auch alle Imaginärteile dieser Spalte der Ausgangsmatrix Null.
+Wie in Abschnitt \ref{sec:NumerischeUngenauigkeiten} erwähnt, ist die Optimierung bezüglich numerischer Ungenauigkeiten nicht Gegenstand dieser Arbeit.
 
  
  
 \subsection{Berechnungsschema und benötigte Takte der Ergebnisse}\label{sec:Berechnungsschema}
 
-In Abbildung \ref{pic:AkkumulationUngeradeSpalten} ist die Berechnung der ungeraden Zeilen am Beispiel der ersten zu sehen.
+In Abbildung \ref{pic:AkkumulationUngeradeSpalten} ist die Berechnung der ungeraden Spalten der Eingangsmatrix am Beispiel der ersten zu sehen. Für die 3. und 7. müssen die 
+Eingangswerte so angeordnet werden, dass die Vorzeichen, beginnend mit einer Subtraktion, immer im Wechsel auftreten. Für die 5. Zeile ist dies bereits gegeben.
+$r$ steht für den Realteil der Eingangswerte, $i$ stünde für dessen Imaginärteil. Der Index gibt die Postition des Elements in einer Spalte an, angewandt werden muss die
+Berechnung auf alle Spalten.
+
 
 \begin{figure}[htbp]
 \centering
-$a_{0} + a_{1} + a_{2} + a_{3} + a_{4} + a_{5} + a_{6} + a_{7}$\\
+1. Spalte:\quad $r_{0} + r_{1} + r_{2} + r_{3} + r_{4} + r_{5} + r_{6} + r_{7}$\\
 
 \vspace{0.5cm}
 \begin{tabular}{ccccccccc}
 Takt&\multicolumn{6}{l}{ } & & Bit\\
-1&$\underbrace{a_{k0} + a_{k1}}$ &  &$ \underbrace{a_{k2} + a_{k3}}$ &  &$\underbrace{a_{k4} + a_{k5}}$ &  &$\underbrace{a_{k6} + a_{k7}}$ & 12\\
+1&$\underbrace{r_{0} + r_{1}}$ &  &$ \underbrace{r_{2} + r_{3}}$ &  &$\underbrace{r_{4} + r_{5}}$ &  &$\underbrace{r_{6} + r_{7}}$ & 12\\
 &\multicolumn{7}{l}{$\hspace{0.65cm} \Downarrow \hspace{2.3cm} \Downarrow \hspace{2.3cm} \Downarrow \hspace{2.3cm}\Downarrow$}&13\\
 2&\multicolumn{3}{c}{$\underbrace{sum\_1\_1 \quad + \quad sum\_1\_2}$} & & \multicolumn{3}{c}{$\underbrace{sum\_1\_3 \quad + \quad sum\_1\_4}$} & 12\\
 &\multicolumn{3}{c}{$\Downarrow$} & & \multicolumn{3}{c}{$\Downarrow$}&13\\
@@ -166,23 +159,29 @@ Takt&\multicolumn{6}{l}{ } & & Bit\\
 \end{figure}
 %\end{center}
 
-\vspace{0.5cm}
-
-Wie der linken Spalte zu entnehmen ist, werden 3 Takte für die Berechnungen der Werte aus den ungeraden Spalten der Eingangsmatrix bzw. ungeraden Zeilen der 1D-DFT-Matrix benötigt.
-1. Takt für Additionen bzw. Subtraktionen und 2. sowie 3. Takt für das Aufsummieren. Der Bitvektor des Ergebnisses ist zwar 12 Bit breit, aber beim letzten Bitshift von 13 auf 12
+Wie der linken Spalte der Abb. \ref{pic:AkkumulationUngeradeSpalten} zu entnehmen ist, werden 3 Takte für die Berechnungen der Werte aus den ungeraden Spalten der Eingangsmatrix benötigt.
+Der 1. Takt für Additionen bzw. Subtraktionen und 2. sowie 3. Takt für das Aufsummieren. Der Bitvektor des Ergebnisses ist zwar 12 Bit breit, aber beim letzten Bitshift von 13 auf 12
 werden nur 11 Bit übernommen. Es wird alo ein doppelter Bitshift vollzogen. Dies erfolgt, damit sowohl in den geraden als auch den ungeraden Zeilen gleich viele Bitshifts erfolgen
 und die Werte somit identisch skaliert sind.
 
-Die Berechnung der geraden Zeilen wird in Abbildung \ref{pic:AkkumulationGeradeSpalten} am Beispiel der zweiten Zeile gezeigt
+Die Berechnung der geraden Zeilen wird in Abbildung \ref{pic:AkkumulationGeradeSpalten} am Beispiel der zweiten Zeile gezeigt.
+$r$ steht wieder für den Realteil der Eingangswerte, $i$ für dessen Imaginärteil. 
+Auch hier ist der linken Spalte die Anzahl der benötigten Takte zu entnehmen. In diesem Fall dauert die Berechnung 5 Takte. Diese setzen sich zusammen aus
+ein Takt für Additionen bzw. Subtraktionen, 2.-3. sowie 5. Takt für das Aufsummieren und der 4. Takt für die Multiplikationen.
+In Abschnitt \ref{sec:Konstantenmultiplizierer} wird gezeigt, dass die Multiplikation mit einer Konstanten innerhalb eines Taktes mit einem Schaltnetz erfolgen kann. 
+
 \begin{figure}[htbp]
  \centering
- $a_0 - x_1 + x_0 - b_2 + x_2 - x_3 + a_4 - x_5 + x_4 - b_6 + x_6 - x_7$\\
+ 
+2. Spalte:  $r_1 - r_3 + i_1 - i_7 + i_3 - r_5 + r_7 - i_5 + r_0 - r_4 + i_2 - i_6$
+ 
+ %$a_0 - x_1 + x_0 - b_2 + x_2 - x_3 + a_4 - x_5 + x_4 - b_6 + x_6 - x_7$\\
 
  \vspace{0.3cm}
  
 \begin{tabular}{ccccccccccccc}
 Takt&\multicolumn{11}{c}{}&Bit\\
-1 &$\underbrace{a_0 - x_1}$ &        &$ \underbrace{x_0 - b_2}$ &  &$\underbrace{x_2 - x_3}$ &  &$\underbrace{a_4 - x_5}$ &  &$\underbrace{x_4 - b_6}$ &$\underbrace{x_6 - x_7}$& &12\\
+1 &$\underbrace{r_1 - r_3}$ &        &$ \underbrace{i_1 - i_7}$ &  &$\underbrace{i_3 - r_5}$ &  &$\underbrace{r_7 - i_5}$ &  &$\underbrace{r_0 - r_4}$ &$\underbrace{i_2 - i_6}$& &12\\
   &\multicolumn{11}{l}{$\hspace{0.5cm} \Downarrow \hspace{1.75cm} \Downarrow \hspace{2.4cm} \Downarrow \hspace{1.8cm}\Downarrow \hspace{1.8cm}\Downarrow \hspace{1.4cm}\Downarrow$}&13\\
 2 &\multicolumn{3}{c}{$\underbrace{sum1\_1 \: + \: sum1\_2}$} & & \multicolumn{3}{c}{$\underbrace{sum1\_3 \: + \: sum1\_4}$} &\multicolumn{3}{c}{$\: \underbrace{sum1\_5 \: + \: sum1\_6}$}& &12\\
   &\multicolumn{3}{c}{$\Downarrow$}  & & \multicolumn{3}{c}{$\Downarrow$} & & \multicolumn{2}{c}{$\Downarrow$}& &13\\
@@ -200,48 +199,29 @@ Takt&\multicolumn{11}{c}{}&Bit\\
 \label{pic:AkkumulationGeradeSpalten}
 \end{figure}
 
-\vspace{1cm}
-Auch hier ist der linken Spalte die Anzahl der benötigten Takte zu entnehmen. In diesem Fall werden 5 Takte für die Berechnungen benötigt. Diese setzen sich zusammen aus
-1 Takt für Additionen bzw. Subtraktionen, 2.-3. sowie 5. Takt für das Aufsummieren und der 4. Takt für die Multiplikationen.
 
-Wie rechts am Rand zu sehen, ergibt sich durch die Addition eine Bitbreitenerweiterung um 1 bzw. bei der Multiplikation eine Verdoppelung. Bei einer früheren 
-Implementierung, die nur die 1D-DFT beherrschte, wurde zumindest die Erweiterung bei der Addition umgesetzt. Da bei der 2D-DFT die selbe Recheneinheit genutzt 
-werden soll, wurde in Absprache mit dem ISAR-Team entschieden, dass die Summanden vor jeder Summation durch einen Bitshift nach rechts halbiert werden. Auf diese
-Weise hat ein Additionsergebnis immer 13 Bit Breite. Durch den Bitshift kann das Resultat der 1D-DFT direkt als Eingang für die 2D-DFT verwendet werden. 
 
-Zu bedenken gilt es bei einem Bitshift, dass das Ergebnis mit jedem Mal eine Division durch 2 erfährt. Bei hintereinander erfolgenden Bitshifts wird demnach durch $2^{N_B}$ geteilt, 
-wobei $N_B$ die Anzahl der Bitshifts ist. Den beiden obigen Darstellungen der Summationen kann entnommen werden, dass, um ein Überlaufen des Bitvektors zu vermeiden es nötig ist,
+Der rechten Spalte aus Abb. \ref{pic:AkkumulationGeradeSpalten} kann entnommen werden, dass sich durch die Addition eine Bitbreitenerweiterung um eins bzw. bei der Multiplikation eine Verdoppelung ergibt. 
+% Bei einer früheren 
+% Implementierung, die nur die 1D-DFT beherrschte, wurde zumindest die Erweiterung bei der Addition umgesetzt. Da bei der 2D-DFT die selbe Recheneinheit genutzt 
+% werden soll, wurde in Absprache mit dem ISAR-Team entschieden, dass die Summanden vor jeder Summation durch einen Bitshift nach rechts halbiert werden. Auf diese
+% Weise hat ein Additionsergebnis immer 13 Bit Breite. Durch den Bitshift kann das Resultat der 1D-DFT direkt als Eingang für die 2D-DFT verwendet werden. 
+Durch die hintereinander erfolgenden Bitshifts wird durch $2^{n_B}$ geteilt, 
+wobei $n_B$ die Anzahl der Bitshifts ist. Den beiden Darstellungen der Summationen kann entnommen werden, dass, um ein Überlaufen des Bitvektors zu vermeiden es nötig ist,
 drei respektive vier Bitshifts durch zu führen. Wie bereits erläutert erfolgt bei den ungeraden Zeilen abschließend ein doppelter Bitshift. Auf diese Weise ergibt sich für die
-1D-DFT, dass das Ergebnis um den Faktor 16 kleiner ist, als beispielsweise bei der Berechnung mit Matlab. Da bei bei dem zweiten Durchlauf, um die 2D-DFT zu berechnen, ebenfalls 
+1D-DFT, dass das Ergebnis um den Faktor 16 kleiner ist. Da beim zweiten Durchlauf, um die 2D-DFT zu berechnen, ebenfalls 
 durch 16 geteilt wird, ergibt sich insgesamt eine Division durch $2^{2\cdot4} = $ 256.
 
-
-Aus den Abbildungen \ref{pic:AkkumulationUngeradeSpalten} und \ref{pic:AkkumulationGeradeSpalten} können die Takte die zur Berechnung der 1D- bzw. 2D-DFT benötigt werden 
+Aus den Abbildungen \ref{pic:AkkumulationUngeradeSpalten} und \ref{pic:AkkumulationGeradeSpalten} können die Takte, die zur Berechnung der 1D- bzw. 2D-DFT benötigt werden, 
 abgeleitet werden.
-
-Für ungeraden Zeilen sind je Element 3 Takte nötig und mit 8 Elementen pro Zeile und 4 ungeraden Zeilen errechnen sich so 3$\cdot$8$\cdot$4=96 Takte.
-Analog errechnet sich für die ungeraden Zeilen mit je 5 Takten pro Element 5$\cdot$8$\cdot$4=160 Takte.
+Für ungeraden Zeilen sind je Element drei Takte nötig und mit acht Elementen pro Zeile und vier ungeraden Zeilen errechnen sich so 3$\cdot$8$\cdot$4=96 Takte.
+Analog errechnet sich für die geraden Zeilen mit je fünf Takten pro Element 5$\cdot$8$\cdot$4=160 Takte.
 In der Summe ergeben sich so 96+160=256 Takte für die 1D-DFT. Da die 2D-DFT ohne Takte fürs Umspeichern oder ähnliches sofort im Anschluss berechnet werden kann, 
 verdoppelt sich die Anzahl der Takte auf 512 für die vollständige Berechnung.
 
-
-
-
-
-
-
-
-
-Wie in Abschnitt \ref{sec:Konstantenmultiplizierer} gezeigt wird, kann die Multiplikation mit einer Konstanten innerhalb eines Taktes mit einem Schaltnetz erfolgen. 
-
-In Abschnitt \ref{sec:Syntheseergebnisse} wird gezeigt, dass der kritische Pfad der Negierung sogar etwas länger als beim Konstantenmultiplizierer ist.
-Um keine zu langen Signal- und Gatterlaufzeiten hervorzurufen, sollte hierfür unbedingt ein eigener Takt eingeplant werden. Dadurch relativiert sich der zeitliche Gewinn allerdings 
-etwas. 
-
-
 \begin{table}[ht!]
 \centering
-\caption{Takte für die komplexe DFT}
+\caption{Benötigte Takte für die komplexe DFT}
 \label{tab:TakteKomplexeDFT}
 \begin{tabular}{ccccc}
 \hline
@@ -264,81 +244,79 @@ Anhand der rechten Spalte ergeben sich so (3+5)$\cdot$4$\cdot$8 = 256 Takte sowo
 werden parallel berechnet und sind somit zeitgleich fertig.
 
 
-\subsection{2D-DFT-Implementierung in VHDL}
+\subsection{Programmablauf der 1D-DFT}\label{sec:Programmablauf1D}
+Im ersten Takt der Berechnung werden die für die jeweilige Zeile der Twiddlefaktormatrix spezifischen Additionen und Subtraktionen durchgeführt. 
+Für die geraden Zeilen werden die Werte, die eine Multiplikation benötigen, getrennt von den übrigen zusammengefasst.
+Im darauffolgenden Takt werden die Zwischenwerte, für die geraden Zeilen wieder getrennt nach Multiplikation oder nicht, akkumuliert.
+Der dritte Takt ist für die ungeraden Zeilen der letzte, da nur acht Werte aufsummiert werden müssen (siehe Abb. \ref{pic:AkkumulationUngeradeSpalten}). 
+Im darauffolgenden Takt wird in den ungeraden Zeilen mit der Berechnung der nächsten Zahl begonnen.
+Die geraden Zeilen haben acht Werte, die mit $\nicefrac{\sqrt{2}}{2}$ multipliziert werden müssen. Die vier Werte, die nur addiert werden müssen, sind bereits im zweiten Takt 
+aufsummiert. Deshalb kann im vierten Takt die Konstantenmultiplikation erfolgen und abschließend im fünften die Summation der Zwischenergebnisse erfolgen (siehe Abb. \ref{pic:AkkumulationGeradeSpalten}).
 
-In Tabelle \ref{tab:TakteKomplexeDFT} ist eine Auflistung der für die Berechnung veranschlagten Takte für die Multiplikation einer beliebigen Matrix mit der
-Twiddlefaktormatrix für die 8x8-DFT auf Basis der in Abschnitt \ref{sec:OptimierteMatrixmultiplikation} genannten Optimierungen zu sehen. Grundlage ist, dass in einem Takt Summanden 
-paarweise aufaddiert werden und in einer Variablen zwischengespeichert werden. Dieses Verfahren kann auch als Baumstruktur aufgefasst werden. 
-Wie das Aufsummieren erfolgt, kann in Abschnitt \ref{sec:Berechnungsschema} detaillierter nachgelesen werden.
+Die Zuordnung der aktuellen Zeile der Twiddlefaktormatrix erfolgt über einen Zähler, der von 0 bis 63 zählt. Er ist als 6 Bit Vektor realisiert, der bei 63 einen beabsichtigten Überlauf hat und wieder bei 0 anfängt.
+Der Vektor kann als zwei aufeinanderfolgende 3 Bit Vektoren gesehen werden. Auf den vorderen wird immer eine Eins aufaddiert, wenn der hintere einen Überlauf hat und wieder bei Null zu zählen beginnt. Beide Vektoren können für sich als Modulo-8-Zähler betrachtet werden.
+Die vorderen drei Bit des gesamten Vektors entsprechen der aktuellen Zeile, die hinteren drei der Spalte, also dem Index in der aktuellen Zeile.
+Mit der Funktion \texttt{to\_integer} der VHDL-Bibliothek \texttt{numeric\_std} lassen sich die Teilvektoren nutzen, um die Elemente der Eingangsmatrix anzusprechen.
+Das letzte Bit des ersten Teilvektors ist für ungerade Zeilen Null und für gerade Zeilen Eins.
+Da sich die Eigenschaften der Twiddlefaktormatrix in gerade und ungerade Zeilen aufteilen lassen, kann dies genutzt werden, um die entsprechenden Operationen durchzuführen und den passenden Folgezustand des Zustandsautomaten zu setzen.
 
 
-
-
-\subsection{Weiterentwickelung zur 2D-DFT}
+\subsection{Entwickelung von der 1D-DFT zur 2D-DFT}
 In Abschnitt \ref{sec:VorueberlegungenProgrammablauf} wurde entschieden, dass nach Möglichkeit die selbe Recheneinheit
 für die 1D- wie auch die 2D-DFT genutzt werden soll. 
-
-Zähler für 64 Werte kann als 6 Bit Vektor realisiert werden, der bei 63 einen Überlauf hat und wieder bei 0 anfängt.
-
-Vorderen 3 Bit sind die der Zeile, die hinteren für die Spalte.
-
-Das dritte Bit von vorne sagt einem, ob es eine gerade oder ungerade Zeile ist.
-
-Zweite interne Matrix erforderlich, da sonst die Werrte oberhalb? der
-Nebendiagonalen  überschrieben wurden
- 
- 
- 
-Die in Gleichung (\ref{eq:2D-DFT_MatrixMult}) beschriebene Berechnung der 2D-DFT lässt sich auch wie folgt schreiben:
+Aus Abschnitt \ref{sec:2d-dft} ist bekannt, dass für die 2D-DFT einer Matrix die Twiddlefaktormatrix einmal links und einmal rechts von der Eingangsmatrix steht.
+Als 1D-DFT-Matrix (Zwischenwertematrix) wird die Multiplikation der ersten Twiddlefaktormatrix mit der Eingangsmatrix betrachtet. Anschließend wird die 1D-DFT-Matrix mit der 
+Twiddlefaktormatrix multipliziert. Aus der vertauschten Reihenfolge resultiert, dass die Zeilen und Spalten getauscht durchlaufen werden. 
+Da die Eingangsmatrix spaltenweise durchlaufen werden soll, müsste  für jedes Element eine aus Hardwaresicht aufwändige Fallunterscheidung erfolgen.
+Umgehen lässt sich dass, indem das Kommutativgesetz angewandt wird und die Matrizen transponiert werden. Belegt wird das mit der Gleichung (\ref{eq:MatMultTranspose}). Wie zu sehen ist, muss auch die Ausgangsmatrix transponiert werden. Für die Twiddlefaktormatrix erübrigt sich dies, da ihre Transponierte identisch ist.
+Es konnte gezeigt werden, dass beide Berechnungen mit der selben Einheit durchführbar sind. In Grafik (\ref{pic:MatMultTranspose}) ist das beschriebene veranschaulicht.
+Das Transponieren der Zwischen- und der Ausgangsmatrix erfolgt mit vertauschtem Zeilen- und Spaltenindex. 
+Für die Unterscheidung zwischen 1D- und 2D-DFT wird ein Bit-Signal getoggelt, wenn der in Abscnitt \ref{sec:Programmablauf1D} eingeführte Vektor bis 63 gezählt hat.
 
 \begin{align}
  X &= W \cdot x \cdot W \nonumber \\
-   &= \left(x^T\cdot W\right)^T\cdot W \label{eq:MatMultTranspose1} \\
-   &= X^* \cdot W \nonumber\\
-   &= \left(\left(x\cdot W\right)^T\cdot W\right)^T \label{eq:MatMultTranspose2}\\
+   &= \left(\left(x\cdot W\right)^T\cdot W\right)^T \label{eq:MatMultTranspose}\\
    &= \left(X^{*T} \cdot W\right)^T \nonumber
 \end{align}
 
-In Matlab muss hierfür entweder die Funktion \texttt{transpose()} oder \texttt{.'} verwendet werden. Letzteres muss elementweise angewandt werden, da das Apostroph
-alleine die komplex konjugiert Transponierte bildet.
 
-Die alternativen Schreibweisen der 2D-DFT haben den Vorteil, dass in beiden Fällen die Eingangsmatrix auf der linken Seite steht. Möglich ist dies, da die 
-Twiddlefaktormatrix identisch mit ihrer Transponierten ist.
-Dass nun in den Gleichungen (\ref{eq:MatMultTranspose1}) und (\ref{eq:MatMultTranspose2}) sowohl die Eingangs- als auch die 1D-DFT-Matrix links steht, ist eine wichtige 
-Voraussetzung dafür, dass mit der selben Recheneinheit mit der die 1D-DFT berechnet wird auch die 2D-DFT berechnet werden kann.
-Die zweite Voraussetzung ist, dass  Transponieren einer Matrix. Diese lässt sich durch spaltenweises Abspeichern und zeilenweises Auslesen der Ergebnis-Matrix realisieren.
-Hierfür ist es lediglich notwendig die beiden Indizes, welche ein Matrixelement ansprechen, beim Speichern getauscht werden. Nun sind nun alle Voraussetzungen erfüllt, 
-um beide Berechnungen mit der selben Einheit durch zu führen. In Grafik (\ref{pic:MatMultTranspose}) ist das hier beschriebene veranschaulicht.
-
-(Auf diese Weise wird die direkte Weiterverarbeitung von Werten denkbar.)
- 
 \begin{figure}[htbp]
  \centering
  \includegraphics[width=0.95\textwidth]{img/MatMultTranspose2.png}
- \caption{Darstellung der Berechnung der 2D-DFT aus Gleichung (\ref{eq:MatMultTranspose2})}
+ \caption{Darstellung der Berechnung der 2D-DFT aus Gleichung (\ref{eq:MatMultTranspose})}
  \label{pic:MatMultTranspose}
 \end{figure}
 
 
-\subsection{Direkte Weiterverarbeitung der Zwischenergebnisse}
-Um die Anzahl an Gattern und somit den Flächenbedarf zu reduzieren ist es das Ziel, die Ergebnisse der \gls{1d-dft} aus der 1. Berechnungsstufe im nächsten Schritt direkt als 
-Eingangswerte für die \gls{2d-dft} zu verwenden. Auf diese Weise würden 64$\cdot$2$\cdot$12 Bit = 1536 Bit = 1,5kBit = 192 Byte an Speicher eingespart werden.
-Wie sich im Laufe der Entwicklung gezeigt hat, lässt sich das nicht nutzen. Das liegt daran, dass dazu übergegangen wurde, immer nur ein Element zur Zeit berechnet wird und die 
-bereits errechneten demnach zwischengespeichert werden müssen. Dieser Ansatz wurde verfolgt, da der Entwicklungsaufwand in VHDL für die spaltenweise Berechnung der Ausgangswerte 
-einfacher umzusetzen war und es zunächst nur um die mathematische Umsetzung und nicht um die Platzeffizienz auf einem Chip ging.
-
-Unklar war zu diesem Zeitpunkt noch, wie der Speicher realisiert werden soll. In der finalen Variante des Chips soll es einen \gls{ram} geben, der als zentraler
-Speicher von allen Komponenten genutzt wird. Da die Entwicklung im Projekt noch nicht soweit fortgeschritten ist und dies nicht zu den Aufgaben der vorliegenden Arbeit gehört,
-wurde auf das Speichern in lokalen Speicherzellen ausgewichen, welche als Variable oder Signal im VHDL-Code definiert und von der Software als Flip-Flop synthetisiert werden.
 
 
+Da die Matrizen transponiert werden, ist eine zweite interne Matrix erforderlich, da sonst die Werte oberhalb der
+Nebendiagonalen überschrieben werden.
+
+% 
+% \subsection{Direkte Weiterverarbeitung der Zwischenergebnisse}
+% Um die Anzahl an Gattern und somit den Flächenbedarf zu reduzieren ist es das Ziel, die Ergebnisse der \gls{1d-dft} aus der 1. Berechnungsstufe im nächsten Schritt direkt als 
+% Eingangswerte für die \gls{2d-dft} zu verwenden. Auf diese Weise würden 64$\cdot$2$\cdot$12 Bit = 1536 Bit = 1,5kBit = 192 Byte an Speicher eingespart werden.
+% Wie sich im Laufe der Entwicklung gezeigt hat, lässt sich das nicht nutzen. Das liegt daran, dass dazu übergegangen wurde, immer nur ein Element zur Zeit berechnet wird und die 
+% bereits errechneten demnach zwischengespeichert werden müssen. Dieser Ansatz wurde verfolgt, da der Entwicklungsaufwand in VHDL für die spaltenweise Berechnung der Ausgangswerte 
+% einfacher umzusetzen war und es zunächst nur um die mathematische Umsetzung und nicht um die Platzeffizienz auf einem Chip ging.
+% 
+% Unklar war zu diesem Zeitpunkt noch, wie der Speicher realisiert werden soll. In der finalen Variante des Chips soll es einen \gls{ram} geben, der als zentraler
+% Speicher von allen Komponenten genutzt wird. Da die Entwicklung im Projekt noch nicht soweit fortgeschritten ist und dies nicht zu den Aufgaben der vorliegenden Arbeit gehört,
+% wurde auf das Speichern in lokalen Speicherzellen ausgewichen, welche als Variable oder Signal im VHDL-Code definiert und von der Software als Flip-Flop synthetisiert werden.
+% 
+% 
 
 
-\subsubsection{Zusammenhang von DFT und IDFT bei der Matrixmultiplikation}
+\subsection{Zusammenhang von DFT und IDFT bei der Matrixmultiplikation}
 
 Durch die umgekehrte Drehrichtung des komplexen Zeigers in Gleichung (\ref{eq:idft}) werden in der Matrizenschreibweise die Zeilen 2 und 8, 3 und 7 sowie 4 und 6 vertauscht.
-Nachvollziehen lässt sich das gut anhand der Grafik (\ref{pic:Einheitskreis_Faktoren}). 
+Nachvollziehen lässt sich das gut anhand der Grafik \ref{pic:Einheitskreis_Faktoren}. 
 Verdeutlicht wird das vorgehen in Abbildung \ref{pic:IDFT_Zeilentausch}.
+
+Dies lässt sich nutzen, um auf einfache Weise die vorhandene DFT-Einheit um die IDFT-Funktionalität zu ergänzen. 
+Die DFT-Komponente wird dafür um das Eingangssignal \texttt{idft} ergänzt. Im Quelltext erfolgt eine Abfrage, ob \texttt{idft} gesetzt ist. Ist dies der Fall, wird der 
+in Abschnitt \ref{sec:Programmablauf1D} eingeführten Teilvektor für das Durchlaufen der Zeilen in seiner Integer-Interpretation von Acht subtrahiert.
 
 \begin{figure}[ht]
  \centering
@@ -347,30 +325,6 @@ Verdeutlicht wird das vorgehen in Abbildung \ref{pic:IDFT_Zeilentausch}.
  \label{pic:IDFT_Zeilentausch}
 \end{figure}
 
-
-
-\subsection{Test der Matrixmultiplikation}
-
-
-\subsubsection{1D-DFT mit Integer-Werten}
- 
-\subsubsection{2D-DFT mit Integer-Werten}
-
-\subsubsection{2D-DFT mit Werten SQ-Format}
-
-Unter anderem weil NC\,Sim bzw. dessen Unterprogramm SimVision zur Anzeige von Signalverläufen (Waveform) nur Integer darstellen kann und bei als Vektor gebündelten Signalen 
-diese nicht einmal als vorzeichenbehaftet (signed), wurde der Einfachheit halber zunächst die Berechnung als Ganzzahl-Multiplikation mit dem Faktor 3 betrachtet. 
-Da es bei diesem Faktor und den gewählten Eingangswerten nicht zu einem 
-Überlauf kommen kann, war es zu diesem Zeitpunkt noch nicht nötig, sich Gedanken über die Breite des Ergebnisvektors bzw. den Ausschnitt daraus für die weitere
-Berechnung zu machen. Deshalb konnte an dieser Stelle noch auf den Bitshift zur Halbierung der Werte verzichtet werden.
-
-Erst als der Faktor $\frac{\sqrt{2}}{2}$ übernommen wurde, wurden die Ergebnisse breiter als der Vektor für die weitere Berechnung an Bits zur Verfügung stellt.
-
-${\frac{\sqrt{2}}{2}}_{10}$ = $0001011010100_2$ in S2Q10, als Integer betrachtet jedoch $724_{10}$.
-
-Daraus folgt, dass ein Teil der Bits abgeschnitten werden müssen. Da die Dualzahlen jetzt im S1Q10-Format betrachtet werden, es sich also um Kommazahlen handelt,
-müssen die hinteren Bits abgeschnitten werden. Zudem können vorne Bits ohne Informationsverlust gestrichen werden, da durch die Multiplikation ein weiteres 
-Negations-Bit dazugekommen ist und auf Grund des gegebenen Faktors der Wertebereich vorne nie ganz ausgenutzt wird. (Verifizieren / Belegen!)
 
 
 
@@ -458,7 +412,7 @@ die forderen 12 Bit in die Berechnung ein.
 
 
 
-\subsubsection{Gegenüberstellung der Konstantenmultiplikation und der Bildung des 2er-Komplements}
+\subsection{Gegenüberstellung der Konstantenmultiplikation und der Bildung des 2er-Komplements}
 
 Unter diesem Punkt sollen die Konstantenmultiplikation und die Bildung des 2er-Komplements unter Aspekten der benötigten Zeit und des benötigten Platzes auf einem Chip 
 betrachtet werden. Um einen Eindruck hiervon zu erhalten, werden im Kapitel Entwurf in Abschnitt \ref{sec:Syntheseergebnisse} jeweils die Schaltnetzte 
@@ -468,3 +422,6 @@ Wie dort erläutert, lässt sich anhand dieser sagen, dass es bei dieser Art der
 sind. Für die knapp $4$ mal mehr Gatter bei der Multiplikation ist auch ein größerer Vertrahtungsaufwandt erforderlich, sodass die Konstantenmultiplizierer
 auf einem Chip eine etwas größere Fläche beanspruchen. Da es sich hier insgesamt aber um wenige Gatter handelt, wirkt sich dies erst bei sehr vielen Instanzen aus.
 Es kann an dieser Stelle deshalb festgehalten werden, dass dieser Unterschied nicht als entscheidend geltend gemacht werden kann.
+
+
+
