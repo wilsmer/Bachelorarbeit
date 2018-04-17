@@ -3,7 +3,7 @@
 \begin{document}
 
  \input{content/Deckblatt_Rueckseite.tex}
- %\input{content/abstract.tex}
+ \input{content/abstract.tex}
  %\inputpdf{content/abstract.pdf}
  
  \pagenumbering{Roman} 
@@ -100,6 +100,57 @@ alleine die komplex konjugiert Transponierte bildet.
  
  \section{Chipdesign}
  \subsection{Anzahl Standardzellen}
+ 
+ \subsection{Bilder}
+ In den folgenden Bildern \ref{pic:floorplan1} bis \ref{pic:floorplan4} ist zusehen, wie der Floorplan eine Stromversorgung für die Standardzellen erhält. 
+    \begin{figure*}
+        \centering
+        \begin{subfigure}[b]{0.475\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{img/DFT_FLOORPLAN/CROPPED_IMG/FP_1.png}
+            \caption{{\small Leerer Floorplan}}    
+            \label{pic:floorplan1}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}[b]{0.475\textwidth}  
+            \centering 
+            \includegraphics[width=\textwidth]{img/DFT_FLOORPLAN/CROPPED_IMG/FP_2.png}
+            \caption{{\small Floorplan mit Power-Ring}}    
+            \label{pic:floorplan2}
+        \end{subfigure}
+        \vskip\baselineskip
+        \begin{subfigure}[b]{0.475\textwidth}   
+            \centering 
+            \includegraphics[width=\textwidth]{img/DFT_FLOORPLAN/CROPPED_IMG/FP_3.png}
+            \caption{{\small Floorplan mit vertikaler Stromversorgung auf Metal-Layer 2}}    
+            \label{pic:floorplan3}
+        \end{subfigure}
+        \quad
+        \begin{subfigure}[b]{0.475\textwidth}   
+            \centering 
+            \includegraphics[width=\textwidth]{img/DFT_FLOORPLAN/CROPPED_IMG/FP_4.png}
+            \caption{{\small Floorplan mit horizontaler Stromversorgung auf Metal-Layer 1}}    
+            \label{pic:floorplan4}
+        \end{subfigure}
+        \caption{Schrittweise Entwurf der Stromversorgung des Floorplans} 
+        \label{fig:floorplanSpannungsversorgung}
+    \end{figure*}
+
+    \begin{figure}[ht!]
+     \centering
+     \includegraphics[width=0.98\textwidth]{img/DFT_FLOORPLAN/CROPPED_IMG/FP_5.png}
+     \caption{Floorplan mit platzierten Standardzellen}
+     \label{pic:floorplan1Standardzellen}
+    \end{figure}
+
+    
+    \begin{figure}[ht!]
+     \centering
+     \includegraphics[width=0.98\textwidth]{img/DFT_FLOORPLAN/CROPPED_IMG/Vias.png}
+     \caption{Vias für die Durchkontaktierung der der Stromversorgung auf den verschiedenen Metalllagen}
+     \label{pic:floorplanVias}
+    \end{figure}
+ 
  \subsubsection{Benötigte Standardzellen für 1D / 2D}
  \subsubsection{Benötigte Standardzellen bei 3 Lagen / 4 Lagen}
  \subsection{Visualisierung der Netzliste}
@@ -127,7 +178,13 @@ alleine die komplex konjugiert Transponierte bildet.
  \printbibliography
  \addcontentsline{toc}{chapter}{Literatur}
  
- \chapter{Anhang}
+ \appendix
+ \addcontentsline{toc}{chapter}{Anhang }
  \input{content/Anhang.tex}
-
+ \chapter{Cadence Tutorial}
+ \includepdf[pages={-}]{../Dokumentationen/Cadence/encounter_tutorial/encounter_tutorial.pdf}
+ \addcontentsline{toc}{chapter}{CD}
+ \includepdf[pages={-}]{../CD/CD.pdf}
+ \addcontentsline{toc}{chapter}{Selbstständigkeitserklärung}
+ \includepdf[pages={-}]{../Selbststaendigkeitserklaerung/Selbststaendigkeitserklaerung.pdf}
 \end{document}

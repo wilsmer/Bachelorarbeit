@@ -1,0 +1,64 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Author     : Thorben Schuethe        Date    : 10.03.2012                  %
+%  Filename   : deckbaltt.tex          Version : 1.0                          %
+%  Information: Deckblatt der Masterarbeit (Wird gestellt!)                   %
+%-----------------------------------------------------------------------------%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{preamble.tex}
+
+\begin{document}
+ 
+
+
+\thispagestyle{empty}
+\begin{titlepage}
+	\setlength{\TPHorizModule}{1mm}%
+	\setlength{\TPVertModule}{1mm}%
+	\textblockorigin{0mm}{0mm} % start everything near the top-left corner
+% Art der Arbeit
+	\begin{textblock}{111}(80,115)%
+		\begin{minipage}[c][1.78cm][c]{10.65cm}%
+  		\fontsize{22pt}{20pt}%
+  		\selectfont%
+  		\begin{center}%
+  			Bachelorthesis%
+  		\end{center}%
+		\end{minipage}%
+	\end{textblock}%
+	% Name & Titel
+	\begin{textblock}{111}(80,136)%
+		\begin{minipage}[c][4.81cm][t]{10.65cm}%
+		\linespread{1.2}%
+    		\fontsize{16pt}{14pt}%
+    		\selectfont%
+    		\begin{center}%
+    			\theauthor \\\medskip\medskip\medskip%
+    			\thetitle%
+    		\end{center}%
+    		\end{minipage}%
+	\end{textblock}%
+	\begin{textblock}{111}(35,260)%
+		\begin{minipage}[c][1.5cm][t]{7.0cm}%
+  		\fontsize{10pt}{10pt}%
+  		\selectfont%
+		\textit{%
+  		Fakultät Technik und Informatik \\%
+  		Department Informations- und \\%
+		Elektrotechnik}%
+		\end{minipage}%
+	\end{textblock}%
+\begin{textblock}{111}(125,260)%
+		\begin{minipage}[c][1.5cm][t]{7.0cm}%
+  		\fontsize{10pt}{10pt}%
+  		\selectfont%
+		\textit{%
+  		Faculty of Engineering and Computer Science\\%
+ 		Department of Information and \\%
+		Electrical Engineering}%
+		\end{minipage}%
+	\end{textblock}%
+	\includepdf{BAdbcolor} 		% zum Ausdruck auf blanko Papier
+\end{titlepage}
+
+
+\end{document}

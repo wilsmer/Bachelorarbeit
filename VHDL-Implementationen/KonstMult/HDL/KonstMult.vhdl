@@ -26,7 +26,7 @@ begin
   begin
   
     f_int := a*m;
-    x <= f_int(12 downto 0);
+    x <= f_int(21 downto 9);
     --x <= m*a;
     
     

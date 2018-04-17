@@ -150,19 +150,85 @@ Die Gleichungen (\ref{eq:1D-DFT_MatrixMult}) und (\ref{eq:2D-DFT_MatrixMult}) we
 
 
 Wie in Gleichung (\ref{eq:2D-DFT_MatrixMult}) beschrieben, kann die 2D-DFT als ``doppelte'' Matrizenmultiplikation geschrieben werden.
-Es wird also erst die 1D-DFT berechnet und die sich daraus ergebende Matrix $X^*$ (Abb. \ref{eq:matrix_F1}) wird anschließend mit der Twiddlefaktor-Matrix $W$ 
+Es wird also erst die 1D-DFT berechnet und die sich daraus ergebende Matrix $X^*$ (Abb. \ref{pic:1D-DFT_als_Matrixmultiplikation}) wird anschließend mit der Twiddlefaktor-Matrix $W$ 
 multipliziert. Man könnte es auch als zweite 1D-DFT betrachten, bei der Twiddlefaktor-Matrix und Eingangsmatrix vertauscht sind.
 
-Veranschaulicht wird dies in den Abbildungen \ref{eq:matrix_F1} und \ref{eq:matrix_F2}.
+Veranschaulicht wird dies in den Abbildungen \ref{pic:1D-DFT_als_Matrixmultiplikation} und \ref{pic:2D-DFT_als_Matrixmultiplikation}.
 
 
-\begin{center}
- 
-\begin{minipage}{0.2\textwidth}
+
+% \begin{figure}[ht!]
+% \centering
+% \begin{minipage}{0.2\textwidth}
+%  \begingroup
+%  \renewcommand*{\arraystretch}{1.1} % Zeilenabstand
+%  \renewcommand*{\arraycolsep}{0.0pt} % Spaltenabstand
+% 
+%  \[
+%   \stackrel{\mbox{$W$}}{
+%    \begin{bmatrix}
+%     \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
+%     \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+%     \myLightgrayBox 	& \myLightgrayBox	& \myLightgrayBox	& \myLightgrayBox \\
+%     \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
+%    \end{bmatrix}
+%   }
+%  \]
+%  \endgroup
+% \end{minipage}
+% \begin{minipage}{0.05\textwidth}
+%  \[
+%   \cdot
+%  \]
+% \end{minipage}
+% \begin{minipage}{0.2\textwidth}
+%  \begingroup
+%  \renewcommand*{\arraystretch}{0.0} % Zeilenabstand
+%  \renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
+% 
+%  \[
+%   \stackrel{\mbox{$x$}}{
+%    \begin{bmatrix}
+%     \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh \\
+%     \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh \\
+%     \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh \\
+%     \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 
+%    \end{bmatrix}
+%   }
+%  \]
+%  \endgroup
+% \end{minipage}
+% \begin{minipage}{0.05\textwidth}
+%  \[
+%   =
+%  \]
+% \end{minipage}
+% \begin{minipage}{0.3\textwidth}
+% \begingroup
+% \renewcommand*{\arraystretch}{1.1} % Zeilenabstand
+% \renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand 
+% \[
+%   \stackrel{\mbox{$X^*$}}{
+%    \begin{bmatrix}
+%     \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
+%     \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+%     \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+%     \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
+%    \end{bmatrix}
+%   }
+% \]
+%  \endgroup
+% \end{minipage}
+% \caption{1D-DFT als Matrixmultiplikation}
+% \label{pic:1D-DFT_als_Matrixmultiplikation}
+% \end{figure}
+
+
+\begin{figure}[ht!]
+\centering
  \begingroup
  \renewcommand*{\arraystretch}{1.1} % Zeilenabstand
  \renewcommand*{\arraycolsep}{0.0pt} % Spaltenabstand
-
  \[
   \stackrel{\mbox{$W$}}{
    \begin{bmatrix}
@@ -172,20 +238,9 @@ Veranschaulicht wird dies in den Abbildungen \ref{eq:matrix_F1} und \ref{eq:matr
     \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
    \end{bmatrix}
   }
- \]
- \endgroup
-\end{minipage}
-\begin{minipage}{0.05\textwidth}
- \[
-  \cdot
- \]
-\end{minipage}
-\begin{minipage}{0.2\textwidth}
- \begingroup
+  \quad \cdot \quad
  \renewcommand*{\arraystretch}{0.0} % Zeilenabstand
  \renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
-
- \[
   \stackrel{\mbox{$x$}}{
    \begin{bmatrix}
     \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh \\
@@ -194,19 +249,9 @@ Veranschaulicht wird dies in den Abbildungen \ref{eq:matrix_F1} und \ref{eq:matr
     \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 
    \end{bmatrix}
   }
- \]
- \endgroup
-\end{minipage}
-\begin{minipage}{0.05\textwidth}
- \[
-  =
- \]
-\end{minipage}
-\begin{minipage}{0.3\textwidth}
-\begingroup
+ \quad = \quad
 \renewcommand*{\arraystretch}{1.1} % Zeilenabstand
-\renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
-\begin{align}\label{eq:matrix_F1}
+\renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand 
   \stackrel{\mbox{$X^*$}}{
    \begin{bmatrix}
     \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
@@ -215,21 +260,88 @@ Veranschaulicht wird dies in den Abbildungen \ref{eq:matrix_F1} und \ref{eq:matr
     \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
    \end{bmatrix}
   }
-\end{align}
-
- 
+\]
  \endgroup
-\end{minipage}
-\end{center}
+\caption{1D-DFT als Matrixmultiplikation}
+\label{pic:1D-DFT_als_Matrixmultiplikation}
+\end{figure}
 
 
-\begin{center}
- 
-\begin{minipage}{0.2\textwidth}
+
+
+% 
+% \begin{figure}[ht!]
+% \centering 
+% \begin{minipage}{0.2\textwidth}
+%  \begingroup
+%  \renewcommand*{\arraystretch}{1.1} % Zeilenabstand
+%  \renewcommand*{\arraycolsep}{0.0pt} % Spaltenabstand
+% 
+%  \[
+%   \stackrel{\mbox{$X^*$}}{
+%    \begin{bmatrix}
+%     \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
+%     \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+%     \myLightgrayBox 	& \myLightgrayBox	& \myLightgrayBox	& \myLightgrayBox \\
+%     \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
+%    \end{bmatrix}
+%   }
+%  \]
+%  \endgroup
+% \end{minipage}
+% \begin{minipage}{0.05\textwidth}
+%  \[
+%   \cdot
+%  \]
+% \end{minipage}
+% \begin{minipage}{0.2\textwidth}
+%  \begingroup
+%  \renewcommand*{\arraystretch}{0.0} % Zeilenabstand
+%  \renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
+% 
+%  \[
+%   \stackrel{\mbox{$W$}}{
+%    \begin{bmatrix}
+%     \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh \\
+%     \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh \\
+%     \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh \\
+%     \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 
+%    \end{bmatrix}
+%   }
+%  \]
+%  \endgroup
+% \end{minipage}
+% \begin{minipage}{0.05\textwidth}
+%  \[
+%   =
+%  \]
+% \end{minipage}
+% \begin{minipage}{0.3\textwidth}
+% \begingroup
+% \renewcommand*{\arraystretch}{1.1} % Zeilenabstand
+% \renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
+% \[
+%   \stackrel{\mbox{$X$}}{
+%    \begin{bmatrix}
+%     \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
+%     \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+%     \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+%     \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
+%    \end{bmatrix}
+%   }
+%  \]
+%  \endgroup
+% \end{minipage}
+% \caption{2D-DFT als Matrixmultiplikation}
+% \label{pic:2D-DFT_als_Matrixmultiplikation}
+% \end{figure}
+
+
+\begin{figure}[ht!]
+\centering 
  \begingroup
  \renewcommand*{\arraystretch}{1.1} % Zeilenabstand
  \renewcommand*{\arraycolsep}{0.0pt} % Spaltenabstand
-
  \[
   \stackrel{\mbox{$X^*$}}{
    \begin{bmatrix}
@@ -239,20 +351,9 @@ Veranschaulicht wird dies in den Abbildungen \ref{eq:matrix_F1} und \ref{eq:matr
     \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
    \end{bmatrix}
   }
- \]
- \endgroup
-\end{minipage}
-\begin{minipage}{0.05\textwidth}
- \[
-  \cdot
- \]
-\end{minipage}
-\begin{minipage}{0.2\textwidth}
- \begingroup
+  \quad \cdot \quad
  \renewcommand*{\arraystretch}{0.0} % Zeilenabstand
  \renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
-
- \[
   \stackrel{\mbox{$W$}}{
    \begin{bmatrix}
     \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh \\
@@ -261,19 +362,9 @@ Veranschaulicht wird dies in den Abbildungen \ref{eq:matrix_F1} und \ref{eq:matr
     \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 
    \end{bmatrix}
   }
- \]
- \endgroup
-\end{minipage}
-\begin{minipage}{0.05\textwidth}
- \[
-  =
- \]
-\end{minipage}
-\begin{minipage}{0.3\textwidth}
-\begingroup
+  \quad = \quad
 \renewcommand*{\arraystretch}{1.1} % Zeilenabstand
 \renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
-\begin{align}\label{eq:matrix_F2}
   \stackrel{\mbox{$X$}}{
    \begin{bmatrix}
     \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
@@ -282,12 +373,11 @@ Veranschaulicht wird dies in den Abbildungen \ref{eq:matrix_F1} und \ref{eq:matr
     \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
    \end{bmatrix}
   }
- \end{align}
+ \]
  \endgroup
-\end{minipage}
-\end{center}
-
-
+\caption{2D-DFT als Matrixmultiplikation}
+\label{pic:2D-DFT_als_Matrixmultiplikation}
+\end{figure}
 
 
 

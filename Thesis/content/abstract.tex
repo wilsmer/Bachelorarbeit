@@ -1,0 +1,53 @@
+%---------------------------------------------------------------------------------------------------
+% Erstellung von Titelblatt (Seite 2) 
+% Anwendung:
+% \createAbstract{Art der Arbeit}{Typ der Arbeit}{Author}{Titel}{Titel Englisch}{Stichworte}{Keywords}{Zusammenfassung}{Abstract}
+%---------------------------------------------------------------------------------------------------
+	\thispagestyle{empty}
+	\pdfbookmark[1]{Kurzzusammenfassung}{Kurzzusammenfassung}
+	%\enlargethispage{1cm} % 2cm zuvor
+
+	%\begin{small}
+{
+%\makeatletter
+%%Größe von chapter direkt ändern:
+%   \renewcommand*{\size@section}{\small}%
+%\makeatother
+	\subsection*{Thomas Lattmann}%
+%
+	\subsubsection*{Thema der Bachelorarbeit}
+	\par \begingroup \leftskip=1cm % Parameter anpassen
+	\noindent {Chipimplementation einer zweidimensionalen Fouriertransformation für die Auswertung eines Sensor-Arrays}%
+	\par \endgroup
+	\subsubsection*{Stichworte}
+	\par \begingroup \leftskip=1cm % Parameter anpassen
+	\noindent {Cadence, ASIC, zweidimensionale diskrete Fouiertransformation (2D-DFT), Sensor-Array}%
+	\par \endgroup
+	\subsubsection*{Kurzzusammenfassung}
+	\par \begingroup \leftskip=1cm % Parameter anpassen
+	\noindent{In der Bachelorarbeit wird eine 8x8 zweidimensionale Fourier Transformation in VHDL für den Einsatz als Teilmodul auf einem ASIC entwickelt. Dabei kommt das Chipdesign-Tool Cademce zum Einsatz. Die Transformation wird durch eine Matrixmultiplikation realisiert und hinsichtlich Taktzyklen und Flächenbedarf optimiert, sodass ein minimaler Aufwand erforderlich ist. Ferner werden Tests zur Funktionalität und ... durchgeführt. }%
+	\par \endgroup
+%		
+	\vspace{1.1cm} % default 1.5
+	\selectlanguage{english}%
+	\subsection*{Thomas Lattmann}%
+%	
+	\subsubsection*{Title of the bachelor thesis}
+	\par \begingroup \leftskip=1cm % Parameter anpassen
+	\noindent {Chip implementation of a two dimensional Fourier transform for the analysis of a sensor array}%
+	\par \endgroup
+	\subsubsection*{Keywords}
+	\par \begingroup \leftskip=1cm % Parameter anpassen
+	\noindent {%
+	Cadence, ASIC, two dimensional discrete Fourier transform (2D-DFT), sensor array
+	}%
+	\par \endgroup
+	\subsubsection*{Abstract}
+	\par \begingroup \leftskip=1cm % Parameter anpassen
+	\noindent {%
+		In this bachelor thesis ...
+		  }
+	\par \endgroup
+	\selectlanguage{ngerman}
+}
+%\end{small}

@@ -1,8 +1,7 @@
+ \chapter{Matlab-Skripte}
  \section{Skript zur Bewertung von Twiddlefaktormatrizen}
  \lstinputlisting[language=matlab, caption={Octave-Skript zur Bewertung unterschiedlicher DCT-Twiddlefaktormatrizen}, label=src:dct_bewertung]{../octave/dct_bewertung.m}
  \lstinputlisting[language=matlab, caption={Octave-Skript zur Bewertung unterschiedlicher DFT-Twiddlefaktormatrizen}, label=src:dft_bewertung]{../octave/dft_bewertung.m}
- \section{Gate-Report des 12 Bit Konstatenmultiplizierers}
- \lstinputlisting[language=matlab, caption={RC Gate-Report}, label=src:rc_gate_report]{Skripte/Konstantenmultiplizierer_gate_report.txt}
 
  \section{Twiddlefaktormatrix im S1Q10-Format}
  \lstinputlisting[language=matlab, caption={Erstellen der Twiddlefaktormatrix-Datei}, label=src:twiddle2file]{Skripte/Matlab/twiddle2file.m}
@@ -12,22 +11,39 @@
  \lstinputlisting[language=matlab, caption={Binär-Vektor in Binär-Integer umwandeln}, label=src:bit_vector2integer]{Skripte/Matlab/bit_vector2integer.m}
  \lstinputlisting[language=matlab, caption={Kontroll-Skript für S1Q10 nach Dezimal}, label=src:s1q10_to_dec]{Skripte/Matlab/s1q10_to_dec.m}
  
-
+ \chapter{Gate-Reports der Syntheseergebnisse}
+\section{Gate-Report des 13 Bit Konstantenmultiplizierers}
+ \lstinputlisting[language=matlab, caption={RC Gate-Report des Konstanten multiplizierers}, label=src:rc_gate_report_KonstMult]{../VHDL-Implementationen/KonstMult/VERILOG/konstantenmultiplizierer_syn_cell.rep}
+\section{Gate-Report des 13 Bit Multiplizierers}
+ \lstinputlisting[language=matlab, caption={RC Gate-Report des Konstanten multiplizierers}, label=src:rc_gate_report_Mult]{../VHDL-Implementationen/Multiplikation/VERILOG/multiplizierer_syn_cell.rep} 
+ \section{Gate-Report des 12 Bit Addierers}
+ \lstinputlisting[language=matlab, caption={RC Gate-Report des 12 Bit Addierers}, label=src:rc_gate_report_Addierer]{../VHDL-Implementationen/Addierer/VERILOG/Addierer_Top_syn_cell.rep}
+ \section{Gate-Report des 13 Bit Negieres}
+ \lstinputlisting[language=matlab, caption={RC Gate-Report des 13 Bit Negieres}, label=src:rc_gate_report_Negierer]{../VHDL-Implementationen/Negierer/VERILOG/negierer_top_syn_cell.rep}
+ 
  %\input{Anhang/Ausmultipliziert.tex}
  
- \section{Programmcode}
+ \chapter{VHDL-Code}
+ \section{Konstantendeklarationen}
  \lstinputlisting[language=vhdl, caption={Deklaration der Konstanten}, label=src:konstanten_deklaration]{Skripte/HDL/constants.vhdl}
+ \section{Datentypendeklarationen}
  \lstinputlisting[language=vhdl, caption={Deklaration eigener Datentypen}, label=src:datentypen_deklaration]{Skripte/HDL/datatypes.vhdl}
+ \section{Testwerte aus Datei einlesen}
  \lstinputlisting[language=vhdl, caption={Eingangs-Matrix aus Textdatei einlesen}, label=src:read_input_matrix]{Skripte/HDL/read_input_matrix.vhdl}
  \lstinputlisting[language=vhdl, caption={Testbench für das Einlesen aus einer Textdatei}, label=src:read_input_matrix_TB]{Skripte/HDL/read_input_matrix_TB.vhdl}
+ \section{Ergebnisse in Datei schreiben}
  \lstinputlisting[language=vhdl, caption={Ergebnis-Matrix in Textdatei schreiben}, label=src:write_results]{Skripte/HDL/write_results.vhdl}
  \lstinputlisting[language=vhdl, caption={Testbensch für das schreiben in eine Textdatei}, label=src:write_tb]{Skripte/HDL/write_tb.vhdl}
+ \section{Berechnung der 2D-DFT}
  \lstinputlisting[language=vhdl, caption={Berechnung der 2D-DFT}, label=src:dft8optimiert]{Skripte/HDL/dft8optimiert.vhdl}
  \lstinputlisting[language=vhdl, caption={Top-Level-Entität der 2D-DFT}, label=src:dft8_optimiert_top]{Skripte/HDL/dft8_optimiert_top.vhdl}
  
- \section{Testumgebung}
+ \chapter{Testumgebung}
+ \section{Bash-Skript zum Ausführen des Tests}
  \lstinputlisting[language=bash, caption={Aufruf der Testumgebung, Vergleich von VHDL- und Matlab-Ergebnissen}, label=src:dft8optimiert_check]{Skripte/Shell/check.sh}
-tlab \lstinputlisting[language=bash, caption={Simulations des VHDL-Quelltextes}, label=src:vhdl_simulation]{Skripte/Shell/simulate.sh}
+ \section{Skript zum Kompilieren und Simulieren des VHDL-Programms}
+ \lstinputlisting[language=bash, caption={Simulations des VHDL-Quelltextes}, label=src:vhdl_simulation]{Skripte/Shell/simulate.sh}
  \lstinputlisting[language=tcl, caption={Dauer der Simulation}, label=src:simulationsdauer]{Skripte/Shell/testRUN.tcl}
+ \section{Matlab-Skript zur Berechnung der Referenzwerte}
  \lstinputlisting[language=matlab, caption={Berechnung der Differenzen der DFT in Matlab und VHDL}, label=src:binMat2decMat.m]{Skripte/Matlab/binMat2decMat.m}
  

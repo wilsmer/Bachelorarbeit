@@ -1,0 +1,61 @@
+% load the document class KOMA-Script Report
+\documentclass[	
+		a4paper,			% Papierformat waehlen
+		12pt,				% Schriftgroesse
+           	headsepline,			% Trennlinie zwischen Kopf und Text, schaltet automatisch 
+		onecolumn,			% Einspaltig
+		oneside,			% Einseitig
+		headings=normal,		% kleine ueberschriften, oder small-, oder big-headings.
+]{scrreprt}
+
+
+\usepackage[T1]{fontenc}			% Schriften fuer Europaeische Zeichen passend Kodiert
+\usepackage[utf8]{inputenc}        		% Eingabe von Umlauten, ss usw. - 
+\usepackage[					% Passt Konventionen an Sprache an
+	     english, 
+	     ngerman				% ngerman: Neue Deutsche Rechtschreibung
+	    ]{babel}				% z.B. UKenglish, USenglish, canadian, german, austrian, naustrian
+
+%---------------------------------------------------------------------------------------------------
+\usepackage{cmbright}                                  % serifenlose Schrift als Standard
+                                                       % + alle für TeX benötigten mathematischen
+                                                       %   Schriften einschließlich der AMS-Symbole
+\usepackage[scaled=.90]{helvet}                        % skalierte Helvetica als \sfdefault
+\usepackage{courier}                                   % Courier als \ttdefault
+%---------------------------------------------------------------------------------------------------
+
+
+\usepackage[final]{pdfpages}                           % include pages of external PDF documents
+
+									
+% Schriftfamilien Laden
+\usepackage{times}              	        % Schriften Paket
+\usepackage{lmodern}				% Laedt die Schriftart Latin-Modern fuer Text
+
+
+									
+\usepackage[a4paper]{geometry}			% Anpassung von Seitenraender per Hand
+\geometry{					% Wenn Zweiseitig-> left->inner : right->outer	
+	    top=2cm, 				% Weitere Moeglichkeiten: height - Texthoehe, width - Textbreite
+	    bottom=5cm,
+	    inner=2cm,
+	    outer=3cm
+         }	
+
+\setlength{\headheight}{1.5cm}
+\setlength{\voffset}{0.5cm}
+
+\usepackage[					% To set Text at a specific 
+		absolute,			% absolute - absolute position on the page
+		overlay,			% overlay - if using absolute option text is placed below other things
+%		showboxes,			% showboxes - shows boxes around the text
+%		noshowtext,			% noshowtext - just show the box if it is on
+%		verbose,			% verbose - package writing things to output like calculations
+%		quiet,				% quiet turns this off : verbose = default
+	    ]{textpos}
+
+
+\usepackage{titling}
+\author{Thomas Lattmann}
+\title{Chipimplementation einer zweidimensionalen Fouriertransformation für die Auswertung eines Sensor-Arrays}
+\date{23.4.2018}
