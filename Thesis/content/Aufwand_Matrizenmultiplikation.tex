@@ -57,7 +57,7 @@ Für die 2D-DFT sind mit $4096$ entsprechend doppelt so viele Multiplikationen n
 
 
 
-\subsection{Betrachung des Butterfly-Algorithmus für 8 Eingangswerte} 
+\subsection{Betrachung des Butterfly-Algorithmus für 8 Eingangswerte}\label{sec:AnalyseFFT}
 Abbildung \ref{pic:Butterfly} illustriert die FFT anhand eines Eingangsvektors mit acht Werten. 
 Um diesen Algorithmus anwenden zu können ist es erforderlich, dass die Werte im Eingangsvektor in umgekehrte Bitreihenfolge getauscht werden (bitreversed order).
 Dies geschieht nach dem Muster, dass die Indizes der Eingangswerte, wie
@@ -90,7 +90,7 @@ Für die 2D-DFT sind somit lediglich 32 komplexe, beziehungsweise 128 reelle Mul
 \begin{figure}[htbp]
  \centering
  \includegraphics[width=0.7\textwidth]{img/Butterfly.png}
- \caption{Berechnungsschema der DFT mit 8 Eingangswerten nach dem Butterfly-Verfahren}
+ \caption{Berechnungsschema der DFT mit 8 Eingangswerten nach dem Butterfly-Verfahren.}
  \label{pic:Butterfly}
 \end{figure}
 

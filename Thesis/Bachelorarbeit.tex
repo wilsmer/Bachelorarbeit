@@ -99,10 +99,50 @@ alleine die komplex konjugiert Transponierte bildet.
  \subsection{Reale Eingangswerte}
  
  \section{Chipdesign}
- \subsection{Anzahl Standardzellen}
+Um die Fertigung eines ASIC in Auftrag geben zu können, sind nach der Implementation in einer Hardwarebeschreibungssprache wie VHDL noch weitere Schritte notwendig.
+Der erste davon ist die Simulation des kompilierten Quelltextes ohne weitere Anpassungen an die Standarzellen oder den verwendeten Prozess zur Verifikation, ob alle 
+Komponenten für sich und auch das Gesamtsystem wie erwartet funktionieren.
+Darauf folgt eine Timingsimulation, in der für die Standardzellen spezifische Verzögerungszeiten des Herstellers eingebunden werden, welche gegebenenfalls vorhandene 
+symbolische Laufzeiten für die Logikgatter mit realistischeren Werten ersetzten.
+
+
+
  
- \subsection{Bilder}
- In den folgenden Bildern \ref{pic:floorplan1} bis \ref{pic:floorplan4} ist zusehen, wie der Floorplan eine Stromversorgung für die Standardzellen erhält. 
+ \subsection{Syntheseergebnis der 2D-DFT-Einheit}
+ In Abbildung \ref{pic:Netzliste2D-DFT} ist die mit dem Programm \texttt{rc} erzeugte Netzliste als Syntheseergebnis der 2D-DFT des VHDL-Codes zu sehen.
+ Auch wenn keine einzelnen Gatter erkennbar sind, wird deutlich, dass auf die Verdrahtung ein sehr hoher Anteil der Fläche entfällt.
+ Die Anzahl der benötigten Standardzellen liegt bei \num{15310}. Ihr Flächenbedarf wird von dem Synthesewerkzeug mit \SI{1524960}{\um^2} angegeben, also etwa 
+ \SI{1,5}{mm^2}. Darin ist der Bedarf für die Leitungen nicht mit eingerechnet. Ersichtlich ist, dass dieser deutlich höher liegt. 
+ Das Synthesewerkzeug \texttt{rc} platziert alle Standardzellen auf einer Ebene, für Verbindungen werden zwei Lagen genutzt.
+ Beim Floorplan werden die Standardzellen und Leitungen in unserem Fall auf drei und allgemein mit bis zu über zehn Lagen verteilt,
+ weshalb eine deutlich kleinere Fläche ausreicht. Wieviele Lagen genutzt werden können hängt von der verwendeten Technologie und somit Strukturgröße zusammen.
+ 
+    \begin{figure}[ht!]
+     \centering
+     \includegraphics[width=0.75\textwidth]{img/2D-DFT.png}
+     \caption{Netzliste der 2D-DFT-Einheit.}
+     \label{pic:Netzliste2D-DFT}
+    \end{figure} 
+ 
+ 
+%  \begin{table}[ht!]
+%   \centering
+%   \begin{tabular}{cc}
+%   \hline
+%   Anzahl der Standardzellen & Flächenbedarf\\
+%   \hline
+%    15310 & \SI{1524960}{\um^2}\\
+%    \hline
+%   \end{tabular}
+%   \caption{Anzahl der Standardzellen und deren Flächenbedarf}
+%   \label{tab:Standardzellen2D-DFT}
+%  \end{table}
+
+ 
+ 
+ \subsection{Floorplan der 2D-DFT-Einheit mit 3 Metalllagen und 350nm Strukturgröße}
+ 
+  In den folgenden Bildern \ref{pic:floorplan1} bis \ref{pic:floorplan4} ist zusehen, wie der Floorplan eine Stromversorgung für die Standardzellen erhält. 
     \begin{figure*}
         \centering
         \begin{subfigure}[b]{0.475\textwidth}
@@ -129,7 +169,7 @@ alleine die komplex konjugiert Transponierte bildet.
         \begin{subfigure}[b]{0.475\textwidth}   
             \centering 
             \includegraphics[width=\textwidth]{img/DFT_FLOORPLAN/CROPPED_IMG/FP_4.png}
-            \caption{{\small Floorplan mit horizontaler Stromversorgung auf Metal-Layer 1}}    
+            \caption{{\small Floorplan mit zusätzlicher horizontaler Stromversorgung auf Metal-Layer 1}}    
             \label{pic:floorplan4}
         \end{subfigure}
         \caption{Schrittweise Entwurf der Stromversorgung des Floorplans} 
@@ -140,7 +180,7 @@ alleine die komplex konjugiert Transponierte bildet.
     \begin{figure}[ht!]
      \centering
      \includegraphics[width=0.98\textwidth]{img/DFT_FLOORPLAN/CROPPED_IMG/Vias.png}
-     \caption{Vias für die Durchkontaktierung der der Stromversorgung auf den verschiedenen Metalllagen (blau: Layer 1, rot: Layer 2, grün: Layer 3)}
+     \caption{Vias für die Durchkontaktierung der der Stromversorgung auf den verschiedenen Metalllagen (blau: Layer 1, rot: Layer 2, grün: Layer 3).}
      \label{pic:floorplanVias}
     \end{figure}
     
@@ -148,25 +188,12 @@ alleine die komplex konjugiert Transponierte bildet.
     \begin{figure}[ht!]
      \centering
      \includegraphics[width=0.98\textwidth]{img/DFT_FLOORPLAN/CROPPED_IMG/FP_5.png}
-     \caption{Floorplan mit platzierten Standardzellen}
+     \caption{Floorplan mit platzierten Standardzellen der 2D-DFT-Einheit.}
      \label{pic:floorplan1Standardzellen}
     \end{figure}
 
-    
-
- 
- \subsubsection{Benötigte Standardzellen für 1D / 2D}
- \subsubsection{Benötigte Standardzellen bei 3 Lagen / 4 Lagen}
- \subsection{Visualisierung der Netzliste}
-%     \begin{figure}[ht!]
-%      \centering
-%      \includegraphics[width=0.75\textwidth]{img/2D-DFT.png}
-%      \caption{Netzliste der 2D-DFT}
-%      \label{pic:Netzliste2D-DFT}
-%     \end{figure} 
  
  
- \subsection{Floorplan, Padring}
  
  \chapter{Schlussfolgerungen}
  \section{Zusammenfassung}

@@ -45,7 +45,7 @@ In diesem Abschnitt werden Entscheidungen zum Einhalten der Bitbreite der Vektor
  Cadence unterstützt die VHDL-Versionen von 1987 und 1993. 
  Enthalten ist unter anderem die Bibliothek \texttt{std\_logic\_arith}, welche von der Firma Synopsys entwickelt wurde. Hierbei handelt es sich um die erste Bibliothek
  für mathematische Berechnungen wie Addition und Multiplikation mit VHDL, weshalb sie eine große Verbreitung erlangt hat.
- Die Bibliothek basiert auf der vom Konsortium des Institute of Electrical and Electronics Engineers (IEEE) spezifizierten Bibliothek \texttt{std\_logic}. Anders als angenommen werden könnte, handelt es sich hierbei zwar um einen weitverbreiteten aber eben keinen offiziellen Standard.
+ Die Bibliothek basiert auf der vom Konsortium des Institute of Electrical and Electronics Engineers (IEEE) spezifizierten Bibliothek \texttt{std\_logic}. Anders als angenommen werden könnte, handelt es sich hierbei nicht um einen offiziellen Standard.
  Ähnliches gilt auch für die Bibliotheken \texttt{std\_logic\_unsigned} und \texttt{std\_logic\_signed}.
  Leider hat Synopsys nicht konsequent die strenge Typisierung von VHDL eingehalten, weshalb es bei überladenen Funktionen möglich ist, die Datentypen \texttt{signed} und \texttt{unsigned} zu mischen, was zu einem unerwarteten Verhalten führt.
  Aus diesem Grund wird in diesem Projekt die Bibliothek \texttt{numeric\_std} verwendet, welche einen vergleichbaren Funktionsumfang bietet, vom IEEE-Konsortium spezifiziert wurde und dieses Problem nicht aufweist. Zu ihrem 
@@ -195,7 +195,7 @@ Takt&\multicolumn{11}{c}{}&Bit\\
   & & & \multicolumn{9}{c}{$\Downarrow$}&13\\
   & & & \multicolumn{9}{c}{$sum5\_1$}&12\\
 \end{tabular}
-\caption{Vorgehensweise der Akkumulation der geraden Spalten der Eingangswerte.}
+\caption{Vorgehensweise der Akkumulation und Multiplikation der geraden Spalten der Eingangswerte.}
 \label{pic:AkkumulationGeradeSpalten}
 \end{figure}
 
@@ -283,7 +283,7 @@ Für die Unterscheidung zwischen 1D- und 2D-DFT wird ein Bit-Signal getoggelt, w
 \begin{figure}[htbp]
  \centering
  \includegraphics[width=0.95\textwidth]{img/MatMultTranspose2.png}
- \caption{Darstellung der Berechnung der 2D-DFT aus Gleichung (\ref{eq:MatMultTranspose})}
+ \caption{Darstellung der Berechnung der 2D-DFT aus Gleichung (\ref{eq:MatMultTranspose}).}
  \label{pic:MatMultTranspose}
 \end{figure}
 
@@ -321,7 +321,7 @@ in Abschnitt \ref{sec:Programmablauf1D} eingeführten Teilvektor für das Durchl
 \begin{figure}[ht]
  \centering
  \includegraphics[width=0.4\textwidth]{img/IDFT_Zeilentausch.png}
- \caption{Um von der DFT zur IDFT zu kommen, müssen bei der Matrixmultiplikation die Zeilen 2 und 8, 3 und 7 sowie 4 und 6 der Twiddlefaktormatrix vertauscht werden.}
+ \caption{Vertauschen der Zeilen 2 und 8, 3 und 7 sowie 4 und 6 der Twiddlefaktormatrix, um von der DFT zur IDFT zu gelangen.}
  \label{pic:IDFT_Zeilentausch}
 \end{figure}
 
@@ -356,7 +356,7 @@ Zeigen, welche Bits heraus genommen werden müssen! und belegen warum.
  %\fbox{
   \includegraphics[width=1\textwidth]{img/13Bit_Konstantenmultiplizierer_neu.png}
   %}
-  \caption{Schaltnetz des 13 Bit Konstantenmultiplizierers für $\frac{\sqrt{2}}{2} = 0.70711 \simeq 0.70703125 = 0001011010100_2$ in Encounter; Eingang links, Ausgang rechts}
+  \caption{Schaltnetz des 13 Bit Konstantenmultiplizierers für $\frac{\sqrt{2}}{2} = 0.70711 \simeq 0.70703125 = 0001011010100_2$ in Encounter; Eingang links, Ausgang rechts.}
   \label{pic:Konstantenmultiplizierer}
 \end{figure}
 
@@ -372,7 +372,7 @@ In Abb. \ref{pic:13BitInverter} ist die nicht expliziet implementierte, aber in 
 \begin{figure}[htpb]
 \centering
 \includegraphics[width=0.99\textwidth]{img/13Bit_Negierer.png}
-\caption{Schaltnetz einer Einheit zur Bildung des 2er-Komplements eines 13 Bit Vektors; Eingang links, Ausgang rechts}
+\caption{Schaltnetz einer Einheit zur Bildung des 2er-Komplements eines 13 Bit Vektors; Eingang links, Ausgang rechts.}
 \label{pic:13BitInverter}
 \end{figure}
 
@@ -389,7 +389,7 @@ die forderen 12 Bit in die Berechnung ein.
 \begin{figure}[htbp]
  \centering
  \includegraphics[width=0.99\textwidth]{img/13Bit_Addierer.png}
- \caption{Schaltnetz eines 12 Bit Addierers, Eingänge links (12\,Bit), Ausgang rechts (13\,Bit)}
+ \caption{Schaltnetz eines 12 Bit Addierers, Eingänge links (12\,Bit), Ausgang rechts (13\,Bit).}
  \label{pic:13BitAddierer}
 \end{figure}
 
