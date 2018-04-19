@@ -197,14 +197,31 @@ symbolische Laufzeiten für die Logikgatter mit realistischeren Werten ersetzten
  
  \chapter{Schlussfolgerungen}
  \section{Zusammenfassung}
+ DFT und DCT wurden einander gegenübergestellt, DFT erwies sich als besser trotz komplexer Ausgangswerte. Wegen komplexem Eingangssignal (cos + j sin), 2D-DFT, also 
+ doppelte Matrixmultiplikation und gleiche Einheit für beides.
+ 8x8-DFT hat die besten Twiddlefaktoren, weil betragsmäßig nur einer, auch für Real- und Imaginärteil. Eingangswerte lassen sich wunderbar ausklammern.
+ Nur eine Multiplikation für Real- und Imaginärteil je Spalte erforderlich. Akkumulieren nach Baumstruktur, ungerade Zeilen / Spalten 8, gerade 12 Elemente.
+ Anzahl der Multiplikationen für eine DFT sind 4*8*2=64, (R+I) FFT auch.
+ Reelle Matrixmultiplikation wäre schneller, aber mehr Speicher und Leitungen.
+ Sogar die IDFT ist einfach möglich, durch vertauschen der Twiddlefaktorzeilen.
+ Transponieren ist durch Tauschen von Zeilen- und Spaltenindex einfach realisierbar. Kein Umspeichern erforderlich. Aber zweite interne Matrix, weil sonst die Hälfte wieder überschrieben wird.
+ Einfaches Transponieren ermöglicht weiterrechnen ohne Zeitverlust, ohne zusätzliche Gatter ist nicht ganz so einfach gesagt, wegen zweiter int. M.
+ Konstantenmultiplikation hat viele (18) Gatter hintereinander -> Flaschenhals. Aufteilen? Optimieren?
+ 
+ 
+ 
  \section{Bewertung und Fazit}
+ 512 Takte = 13,5\% der vorhandenen Takte für DFT evtl mal 2 für IDFT, 50-100 Takte Interpolation, 50-100 Takte Filterung, 150-200 Takte Winkelberechnung -> Summe 1350 von 3800 
+ -> die 15x15-DFT + IDFT kann auch doppelt so lange dauern, wenn keine IDFT erforderlich sein sollte sogar 4x
+ 
+ 
  Es konnte eine effiziente Berechnung implementiert werden, die der FFT in nichts nachsteht. Wenn nicht die Ausgangssituation gewesen wäre, dass eine möglichst flexibel gehaltene
  Matrixmultiplikation erstrebenswert ist, hätte auch eine FFT, dessen Berechnungsvorschrift bekannt ist, implementiert werden können. Für DFT anderer Größe als $2^N$ gilt dies nicht.
  
  
  \section{Ausblick}
  Möglicher Weise lässt sich das Schaltnetz des Konstantenmultiplizierers minimieren, wenn es optimiert wird. Die Annahme war, das Cadence das kann. Das Schaltnetz sieht aber nicht
- optimiert aus. Eine Multiplikation unter Anwendung des Wallace-Tree könnte die Anzahl der Gatter, insbesondere der hintereinander geschlteten reduzieren und so die Berechnung
+ optimiert aus. Eine Multiplikation unter Anwendung des Wallace-Tree könnte die Anzahl der Gatter, insbesondere der hintereinander geschalteten reduzieren und so die Berechnung
  beschleunigen~\autocite[8-10]{jdrechsler2008binMultWerke}.
  
  
