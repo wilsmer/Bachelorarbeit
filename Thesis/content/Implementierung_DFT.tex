@@ -17,30 +17,32 @@ Informationsgehalt besitzt. Es wurde so gestaltet, dass daraus hervorgeht, welch
 
 \begin{figure}[t!]
  \centering
-\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=4.5cm,
-                    semithick,initial text=nReset, initial where=above]
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=4.9cm,
+                    semithick,initial text=nReset, initial where=above, text width=3cm, align=center]
   \tikzstyle{every state}=[fill=white, text=black]
   %\tikzstyle{every initial where}=[above]
   
 
-  \node[initial,state, circle split,minimum size=70pt] (A)                   {Idle};
-  \node[state, circle split, minimum size=65pt]         (B) [below right of=A]{Twiddle\_Calc};
-  \node[state, circle split, minimum size=65pt]         (C) [below right of=B]      {Additions\_1};
-  \node[state, circle split, minimum size=65pt]         (D) [below of=C] {Additions\_2};
-  \node[state, circle split, minimum size=65pt]         (E) [below left of=D] {Const\_mult};
-  \node[state, circle split, minimum size=65pt]         (F) [above left of=E]      {Additions\_3};
-  \node[state, circle split, minimum size=65pt]         (G) [above of=F]      {set\_ready\_bit};
+  \node[initial,state, circle split,minimum size=10pt] (A)                   {Idle \nodepart{lower} {}\\ \_\_\_};
+  \node[state, circle split, minimum size=65pt]         (B) [below right of=A]{Twiddle\_Calc \nodepart{lower} {}\\ \_\_\_};
+  \node[state, circle split, minimum size=65pt]         (C) [below right of=B]      {Additions\_1 \nodepart{lower} {}\\ \_\_\_};
+  \node[state, circle split, minimum size=65pt]         (D) [below of=C] {Additions\_2 \nodepart{lower} {}\\ \_\_\_\_};
+  \node[state, circle split, minimum size=65pt]         (E) [below left of=D] {Const\_mult \nodepart{lower} {}\\ \_\_\_};
+  \node[state, circle split, minimum size=65pt]         (F) [above left of=E]      {Additions\_3 \nodepart{lower} {}\\ \_\_\_};
+  \node[state, circle split, minimum size=65pt]         (G) [above of=F]      {set\_ready\_bit \nodepart{lower} result\_ready=1};
 
   
    \path (A) edge (B) 
          (A) [loop left] edge(A)
          (B) [bend left=10] edge (C)
          (C) edge (D)
-         (D) edge (B)
-         (D) edge (E)
+         (D) edge node [sloped, anchor=center, below]{element(3)=0}(B)
+         %(D) edge node [sloped, anchor=center, below]{element(3)=1}(E)
+         (D) edge node [right=1.1cm, anchor=center, below]{element(3)=1}(E)
          (E) edge (F)
-         (F) [bend right=10] edge (B)
-         (F) [bend left=10] edge (G)
+         (F) [bend right=10] edge node [sloped, anchor=center, below]{element<63 $\vee$ dft\_1d\_2d=0 }(B)
+         (F) [bend left=10] edge node[left]{element=63 $\wedge$ dft\_1d\_2d=1}(G)
+         %(G) edge node [above left] {result\_ready=1} (B);
          (G) edge (B);
 \end{tikzpicture}
 \caption{Zustandsfolge der Berechnung der 1D- bzw. 2D-DFT.}
@@ -49,7 +51,7 @@ Informationsgehalt besitzt. Es wurde so gestaltet, dass daraus hervorgeht, welch
 
 Der Zustand \texttt{set\_ready\_bit} wird nach dem zweiten Durchlauf der DFT-Einheit, also wenn die 2D-DFT berechnet ist, erreicht. Dieser setzt für einen Takt
 das Signal \texttt{result\_ready} auf Eins.
-
+Wenn \texttt{element(3)=0} ist, ist es eine ungerade Zeile der Twiddlefaktormatrix. \texttt{dft\_1d\_2d=0} besagt, dass die 1D-DFT berechnet wird.
 \section{UML-Diagramm}\label{sec:UML-Diagramm}
 
 % Define block styles
