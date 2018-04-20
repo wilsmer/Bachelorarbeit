@@ -81,7 +81,7 @@ ncsim \
 -errormax $errormax \
 -exit \
 ${worklib}.${testbench}:${architecure} \
--input testRUN.tcl  
+-input simulationTime.tcl  
 #-status \
 
 
@@ -90,7 +90,7 @@ ${worklib}.${testbench}:${architecure} \
 
 #ncelab -work worklib -cdslib /home/tlattmann/cadence/mat_mult/cds.lib -logfile /home/tlattmann/cadence/mat_mult/ncelab.log -errormax 15 -access +wc worklib.dft8optimiert_top -status 
 
-#ncsim -cdslib /home/tlattmann/cadence/mat_mult/cds.lib -logfile /home/tlattmann/cadence/mat_mult/ncsim.log -errormax 15 worklib.dft8_optimiert_top:arch -input testRUN.tcl -status
+#ncsim -cdslib /home/tlattmann/cadence/mat_mult/cds.lib -logfile /home/tlattmann/cadence/mat_mult/ncsim.log -errormax 15 worklib.dft8_optimiert_top:arch -input simulationTime.tcl -status
 
 #database -open waves -into waves.shm -default
 #probe -create -shm :clk :input_imag :input_real :loaded :mult_im_out :mult_re_out :multState_out :nReset :result_imag :result_ready :result_real :sum1_stage1_3v6_re_out :sum1_stage2_2v3_re_out :sum1_stage2_3v3_re_out :sum1_stage3_1v1_re_out :sum3_stage1_im_out :sum3_stage1_re_out :sum3_stage2_im_out :sum3_stage2_re_out :sum3_stage3_im_out :sum3_stage3_re_out :sum3_stage4_im_out :sum3_stage4_re_out :write_done

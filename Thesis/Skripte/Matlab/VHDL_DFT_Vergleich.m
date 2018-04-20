@@ -2,8 +2,7 @@ filename_2 = 'InputMatrix_komplex.txt';
 filename_1 = 'Results.txt';
 
 delimiterIn = ' ';
-
-bit_width_extern = 13
+bit_width_extern = 12
 
 Input_bin = importdata(filename_2, delimiterIn);
 Input_bin_real = Input_bin(:,1:2:end);
@@ -13,13 +12,11 @@ Results_vhdl_bin = importdata(filename_1, delimiterIn);
 Results_vhdl_bin_real = Results_vhdl_bin(:,1:2:end);
 Results_vhdl_bin_imag = Results_vhdl_bin(:,2:2:end);
 
-
 Input_dec_imag = nan(8);
 Results_vhdl_dec_real = nan(8);
 Results_vhdl_dec_imag = nan(8);
 Result_octave_real_1d = nan(8);
 Result_octave_imag_1d = nan(8);
-
 
 a=fi(0,1,bit_width_extern,bit_width_extern-2);
 
@@ -40,12 +37,7 @@ end
 
 
 Input_dec=Input_dec_real+1i*Input_dec_imag;
-
-
 TW=exp(-i*2*pi*[0:7]'*[0:7]/8);
-
-
-
 
 %Result_octave_1d=TW*Input_dec;
 %Result_octave_real_1d=real(Result_octave_1d.')/16

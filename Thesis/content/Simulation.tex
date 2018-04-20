@@ -35,77 +35,43 @@ Die Darstellung von Festkoomazahlen ist in keinem Fall möglich.
   \caption{Edge Count des Taktsignals für die vollständige Simulation der 2D-DFT.}
  \end{figure}
 
- \section{Zeitabschätzung im Einsatz als ABS-Sensor}
- Anhand der nun bekannten Größe von 512 Takten kann ermittelt werden, ob diese Implemenatation vom zeitlichen Aspekt her akzeptabel ist.
- Da ein Einsatzszenario der ABS-Sensor ist, wird an dieser Stelle ein Blick hierauf geworfen. Da der ABS-Sensor an der Radnabe sitzt, wird 
- hierfür die Raddrehzahl benötigt. Um diese zu ermitteln, wird von einer maximalen Geschwindikeit von $v_{max}$ = 250\,KM/h ausgegangen. 
- Weiter wird ein realtiv kleiner Reifenumfang von ca. 1\,m angenommen. Als maximale Taktfrequenz des Sensors ist 1\,MHz vorgegeben.
+ \section{Zeitabschätzung als Winkelsesnor im Antriebsmotor eines Elektroautos}
+ Anhand der nun bekannten Größe von 512 Takten kann ermittelt werden, ob die Implemenatation vom zeitlichen Aspekt her akzeptabel ist.
+ Die maximale Drehzahl eines Elektromotors wird laut Datenblatt der Firma ABM Greiffenberger mit 8000\,U/min angegeben~\autocite[5]{greiffenberger},
+ als maximale Taktfrequenz des Sensors ist 100\,MHz vorgegeben.
  
- Der Reifen hat eine Breite von 175 cm, eine Flankenhöhe von 75\,$\%$ der Breite und die Felge einen Durchmesser von 14 Zoll. Somit errechnet sich der Reifenumfang
- gemäß (\ref{eq:Reifenumfang})
+%  \begin{equation*}
+%    RPM = 8000\, \textrm{min}^{-1}
+% \end{equation*}
+
+% \begin{equation}
+%  \begin{split}
+%   \frac{RPM}{60} = 1333,\bar{3}\,\texttt{sec}^{-1}  \\
+%  \end{split}
+% \end{equation}
+
+%  \begin{equation}
+%   \curvearrowright 1\, \textrm{Umdrehung} = 7,5\cdot 10^{-3}\,\textrm{sec}
+%  \end{equation}
  
- \begin{align}\label{eq:Reifenumfang}
+ \begin{equation}
  \begin{split}
-  U &= (\SI{175}{cm} \cdot 75\% \cdot 2 + 14 \cdot \SI{2.54}{cm})\cdot \pi\\
-    &\simeq \SI{0,94}{m}
- \end{split}
- \end{align}
-
- In Gleichung \ref{eq:Umdrehungen} wird die Anzahl der Radumdrehungen bei maximaler Geschwindigkeit berechnet
- 
- \begin{equation}\label{eq:Umdrehungen}
-  \begin{split}
-   RPM &= \dfrac{\dfrac{\SI{250}{Km/h}}{\SI{0,94}{m}}}{\SI{60}{sec}}\\
-       &= \SI{4386}{\frac{U}{min}}\\
-       &= \SI{73}{\frac{U}{sec}}
-  \end{split}
+    RPM &= 8000\, \textrm{min}^{-1}\\[10pt]
+    \frac{RPM}{60} &= 1333,\bar{3}\,\texttt{sec}^{-1}  \\[10pt]
+    \curvearrowright 1\, \textrm{Umdrehung} &= 7,5\cdot 10^{-3}\,\textrm{sec}\\[10pt]
+    1^\circ &\widehat{=} \frac{7,5\cdot 10^{-3}\,\textrm{sec}}{360}\\[10pt]
+    1^\circ & \widehat{=} 20,83\cdot10^{-6}\,\sec \\[10pt]
+    100\cdot10^6\,Hz &= 10\cdot10^{-9}\,\sec \\[10pt]
+    \frac{20,83\cdot10^{-6}}{10\cdot10^{-9}} &= 2083
+    \end{split}
  \end{equation}
 
- Durch die Taktfrequenz und die benötigten Takte kann in (\ref{eq:dft_sekunde}) die maximale Anzahl der 2D-DFTs pro Sekunde errechnet werden.
- 
- \begin{equation}\label{eq:dft_sekunde}
-  \begin{split}
-   N_{DFT, sec} &= \frac{\SI{100}{MHz}}{\SI{512}{Takte}}\\
-                &= 195312
-  \end{split}
- \end{equation}
 
- Somit ist es nun möglich die unter diesen Voraussetzungen maximale Zahl der 2D-DFTs während einer Umdrehung zu bestimmen (\ref{eq:max_dft_umdrehung})
- 
- \begin{equation}\label{eq:max_dft_umdrehung}
-  \begin{split}
-   N_{DFT,U}  &= \frac{\SI{195312}{\frac{2D-DFT}{sec}}}{\SI{73}{\frac{U}{sec}}}\\
-              &= \SI{2675}{\frac{2D-DFT}{U}}
-  \end{split} 
- \end{equation}
+ Um eine Aussage über die restliche zur Verfügung stehenden Zeit bzw. Takte machen zu können, wird gezeigt, dass pro Winkel 
+ etwa 2080 Takte für Berechnungen zu Verfügung stehen.
+ Da 512 etwa 25$\%$ von 2083 sind, resultiert hieraus, dass noch etwa 75$\%$ der Takte nutzbar sind. Wenn auch die IDFT durchgeführt werden muss, bleibt die Hälfte
+ der verfügbaren Takte für Interpolation, Filterung, Berechnung so wie Ausgbae bzw. Übertragung des Winkels.
 
- Nun kann in (\ref{eq:max_dft_winkel}) gezeigt werden, dass bei einer Winkelauflösung von $1^\circ$ knapp 7,5 2D-DFTs berechnet werden könnten. Die Dauer liegt somit 
- gut im zeitlichen Rahmen, der vorganden ist. Darüber hinaus kann an dieser Stelle bereits gesagt werden, dass noch reichlich Zeit für andere Berechnungen vorhanden ist.
- 
- \begin{equation}\label{eq:max_dft_winkel}
-  \begin{split}
-   N_{DFT,1^\circ} &= \frac{\SI{2675}{\dfrac{2D-DFT}{U}}}{360^\circ}\\
-                   &= \SI{7,43}{\dfrac{2D-DFT}{1^\circ}}
-  \end{split}
- \end{equation}
-
- 
- Um eine Aussage über die restliche zur Verfügung stehenden Zeit bzw. Takte machen zu können, wird in Gleichung (\ref{eq:takte_pro_winkel}) gezeigt, dass pro Winkel 
- etwa 3800 Takte für Berechnungen zu Verfügung stehen. Somit ist gezeigt, dass für andere Aufgaben ausreichen Zeit vorhanden ist und die Implemenatation 
- erfolgreich ist.
- 
- \begin{equation}\label{eq:takte_pro_winkel}
-  \begin{split}
-   N_{Takte, U} &= \frac{\SI{100}{MHz}}{73\dfrac{U}{sec}}\\
-                &= 1,37\cdot 10^6 \frac{Takte}{Umdrehung}\\
-   N_{Takte, 1^\circ} &= \frac{1,37\cdot 10^6 \dfrac{Takte}{Umdrehung}}{360^\circ}\\
-                      &\simeq 3800 \ \textrm{Takte}
-  \end{split}
- \end{equation}
-
- Da 512 etwa 13,5$\%$ von 3800 sind, resultiert hieraus, dass noch etwa 86,5$\%$ bzw. knapp 3300 Takte nutzbar sind.
-
- 
  
 \section{Test der Matrixmultiplikation}
 

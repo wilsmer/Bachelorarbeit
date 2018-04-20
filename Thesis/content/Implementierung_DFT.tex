@@ -23,7 +23,7 @@ Informationsgehalt besitzt. Es wurde so gestaltet, dass daraus hervorgeht, welch
   %\tikzstyle{every initial where}=[above]
   
 
-  \node[initial,state, circle split,minimum size=10pt] (A)                   {Idle \nodepart{lower} {}\\ \_\_\_};
+  \node[initial,state, circle split] (A)                   {Idle \nodepart{lower} {}\\ \_\_\_};
   \node[state, circle split, minimum size=65pt]         (B) [below right of=A]{Twiddle\_Calc \nodepart{lower} {}\\ \_\_\_};
   \node[state, circle split, minimum size=65pt]         (C) [below right of=B]      {Additions\_1 \nodepart{lower} {}\\ \_\_\_};
   \node[state, circle split, minimum size=65pt]         (D) [below of=C] {Additions\_2 \nodepart{lower} {}\\ \_\_\_\_};

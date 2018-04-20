@@ -1,44 +1,57 @@
 \section{Binäre Zahlendarstellung von Festkommazahlen}
 
-Im Rahmen dieses Projekts wird von Ein- sowie Ausgangswerten mit einer Genauigkeit von 12 Bit ausgegangen.
-Basierend auf älteren Sensoren wird von Werten im Bereich von $-2 < z < 2$ ausgegangen.
-Aus diesem Grund müssen sowohl ein Ganzzahlanteil, sowie Nachkommastellen repräsentiert werden können. Wie dies gelingt, wird in den nächsten Abschnitten gezeigt.
-Hierfür werden Festkommazahlen verwendet, aufgrund der Rechenoperationen haben diese dennoch unterschiedlich viele Vor- sowie Nachkommastellen.
+Die Eingangs- und Ausgangswerte für die Signalverarbeitung des Sensor-Arrays sollen mit einer Genauigkeit von 12 Bit aufgelöst sein.
+Basierend auf den bisherigen Sensoren wird von Spannungen von \SI{0}{V} bis \SI{3,3}{V} bzw. nach Abzug des Offsets $\pm$\SI{1,65}{V} 
+ausgegangen. Daraus folgt für die nachfolgenden Betrachtungen der Bereich von $-2 < z < 2$.
+Aus diesem Grund müssen sowohl ein Ganzzahlanteil, sowie Nachkommastellen repräsentiert werden können. 
+Hierfür werden Festkommazahlen verwendet. Aufgrund der durchzuführenden Rechenoperationen müssen die Zielvektoren eine größere
+Bitbreite als die Eingangswerte haben.
 
 
 \subsection{Integer-Zahl im 1er-Komplement}
 Bei der Interpretation des Bitvektors als Integerwert im Einerkomplement werden die Bits anhand ihrer Position im Bitvektor gewichtet, wobei das niederwertigste Bit 
-(LSB, least significant bit) dem Wert für den Faktor $2^0$ entspricht, das Bit links davon dem für $2^1$ und so weiter. Die Summe aller Bits, ohne das höchstwertigste, 
-multipliziert mit ihrer Wertigkeit (Potenz) ergibt den Betrag der Dezimalzahl. Das höchstwertigste Bit (MSB, most significant bit) gibt Auskunft darüber, ob es sich 
-um eine negative oder positive Zahl handelt, wobei eine 0 für eine positive Zahl steht. Entsprechend besagt die 1, dass die Zahl negativ ist.
-Dies hat zur Folge, dass es eine positive und eine negative Null und somit eine Doppeldeutigkeit gibt. Des Weiteren wird
-ein LSB an Auflösung verschenkt. Der Wertebereich erstreckt sich von $-2^{\mathrm{MSB}-1}+1\,\mathrm{LSB}$ bis $2^{\mathrm{MSB}-1}-1\,\mathrm{LSB}$
+(LSB, least significant bit) dem Wert des Faktors $2^0$ entspricht. Das Bit eine Position weiter links im Vektor entspricht dem für $2^1$ und so weiter. Die Summe aller Bits, ohne das höchstwertigste, 
+multipliziert mit ihrer Wertigkeit (Potenz) ergibt den Betrag der Dezimalzahl. Das höchstwertigste Bit (MSB, most significant bit) gibt Auskunft darüber, ob die 
+Zahl negativ (1) oder positive (0) ist. 
+Dies hat zur Folge, dass es eine positive und eine negative Null und somit eine Doppeldeutigkeit gibt. Daraus kann gefolgert werden, dass ein
+LSB an Auflösung verschenkt wird. Der Wertebereich erstreckt sich von $-2^{\mathrm{MSB}-1}+1\,\mathrm{LSB}$ bis $2^{\mathrm{MSB}-1}-1\,\mathrm{LSB}$
 
 Diese Darstellung hat den Vorteil, dass sich das Ergebnis einer Multiplikation der Zahlen $a \cdot b$ und $-a \cdot b$ nur im vordersten Bit unterscheidet. Darüber hinaus
-lässt sich das Vorzeichen des Ergebnisses durch eine einfache XOR-Verknüpfung der beiden MSB der Multiplikanden ermitteln. 
-Die eigentliche Multiplikation beschränkt sich auf die Bits MSB-1 bis LSB.
+lässt sich das Vorzeichen des Ergebnisses durch eine einfache XOR-Verknüpfung der beiden MSB der Multiplikanden ermitteln. Anhand der Wahrheitstabelle eines XOR-Gatters
+\ref{tab:xor} ist ersichtlich, dass das Ausgangssignal X nur gesetzt ist, wenn ausschließlich eines der beiden MSB der Eingangssignal A oder B gesetzt ist. 
+Aus dieser Tatsache leitet sich auch der Name ab, er steht für Exklusiv-Oder. Die eigentliche Multiplikation beschränkt sich auf die Bits MSB-1 bis LSB.
 
-Nachteile zeigen sich hingegen bei der Addition sowie Subtraktion negativer Zahlen. Auch hierfür gibt es schematische Rechenregeln, diese erfordern jedoch mehr 
+Nachteile zeigen sich hingegen bei der Addition und Subtraktion negativer Zahlen. Auch hierfür gibt es Berechnungsvorschriften, diese erfordern im Einerkomplement jedoch mehr 
 Zwischenschritte als im Zweierkomplement. 
+
+\begin{table}[ht!]
+ \centering
+ \begin{tabular}{cc|c}
+  A& B &X\\
+  \hline
+  0& 0&0\\
+  0& 1&1\\
+  1& 0&1\\
+  1& 1&0\\
+ \end{tabular}
+ \caption{Wahrheitstabelle eines XOR-Gatters. A und B sind Eingänge, X das Ausgangssignal}
+ \label{tab:xor}
+\end{table}
+
 
 
 \subsection{Integer-Zahl im 2er-Komplement}\label{sec:Integer2erKomplement}
-
-Bei der Interpretation als Zweierkomplement kann anhand es MSB ebenfalls erkannt werden, ob es sich um eine positive oder negative Zahl handelt. 
-Hie bedeutet ein gesetztes MSB $-2^{MSB-1}$, was der negativsten darstellbaren Zahl entspricht. Hierbei sind alle anderen 
-Bits auf 0. Für gesetzte Bits wird der Dezimalwert, wie beim Einerkomplement beschrieben, berechnet und auf den negativen Wert aufaddiert. Wenn das MSB nicht gesetzt
-ist, wird der errechnete Dezimalwert auf 0 addiert. Auf diese Weise lassen sich Zahlen im Wertebereich von $-2^{MSB-1}$ bis $2^{MSB-1}-1 \,LSB$ darstellen. Der positive
+Vorteil bei dieser Darstellung ist, dass die mathematischen Operationen Addition, Subtraktion und Multiplikation direkt angewandt werden können.
+Bei der Interpretation des Bitvektors als Zweierkomplement kann anhand es MSB ebenfalls erkannt werden, ob es sich um eine positive oder negative Zahl handelt. 
+Hier bedeutet ein gesetztes MSB $-2^{MSB-1}$, was der negativsten darstellbaren Zahl entspricht. 
+Alle anderen Bits müssen auf 0 sein. Für gesetzte Bits wird der Dezimalwert, wie beim Einerkomplement beschrieben, berechnet und auf den negativen Wert aufaddiert. Wenn das MSB nicht gesetzt
+ist, wird der errechnete Dezimalwert auf 0 addiert. Auf diese Weise lassen sich Zahlen im Wertebereich von $-2^{\textrm{MSB}-1}$ bis $2^{\textrm{MSB}-1}-1$\,LSB darstellen. Der positive
 Wertebereich ist also um ein LSB kleiner als der negative und es gibt keine doppelte Null.
-
-Um das Vorzeichen umzukehren müssen alle Bits invertiert werden. Auf das Resultat muss abschließend 1 LSB addiert werden.
-
-Vorteil bei dieser Darstellung ist, dass die mathematischen Operationen Addition, Subtraktion und Multiplikation direkt angewandt werden können. Unterstützt werden sie z.B. 
-von den Datentypen \texttt{unsigned} sowie \texttt{signed}, welche in der Bibliothek u.a. \texttt{ieee.numeric\_std.all} definiert sind.
-
+Um eine Zahl zu negieren, müssen alle Bits invertiert werden. Auf das Resultat muss abschließend 1 LSB addiert werden.
 
 \subsection{Darstellung dualer Zahlen im SQ-Format}
-Im SQ-Format werden Zahlen als vorzeichenbehafteter Quotient (signed quotient) dargestellt. Wie beim 2er-Komplement entscheidet das höchstwertigste Bit, ob es sich um eine
-positive oder negative Zahl handelt. In Abbildung \ref{pic:SQKreis} ist exemplarisch die Interpretation von Dualzahlen im SQ3-Format, also für vier Bit, zu sehen.
+Im SQ-Format werden Zahlen als vorzeichenbehafteter Quotient (signed quotient) dargestellt. Ein gesetztes MSB definiert wieder, dass die Zahl als negativ aufzufassen ist.
+In Abbildung \ref{pic:SQKreis} ist exemplarisch die Interpretation von Dualzahlen im SQ3-Format, also für vier Bit, zu sehen.
 
 \begin{figure}[ht!]
  \centering
@@ -48,31 +61,18 @@ positive oder negative Zahl handelt. In Abbildung \ref{pic:SQKreis} ist exemplar
 \end{figure}
 
 
-Der darstellbare Zahlenbereich liegt hier bei $-1\leq z < 1$. Benötigt werden Zahlen im Bereich von etwa $\pm2$, weshalb ein Vorkommabit benötigt wird. 
-Da 12 Bit zur Verfügung stehen, von denen eins für das Vorzeichen und ein weiteres für eine Vorkommastelle verwendet werden, bleiben 10 Bits für die Nachkommazahlen übrig.
-Die Aufteilung der Bits wird über die Bezeichnung S1Q10 definiert.
-Da für den Quotient 10 Bit zur Verfügung stehen, beträgt die maximale Auflösung $1\,LSB = 2^{-10} = {1024}^{-1} = 9,765625\cdot10^{-4}$.
-Der Wertebereich liegt in diesem Fall liegt bei \num{-2} bis \num{1,999023438}. 
+Der darstellbare Zahlenbereich liegt bei $-1\leq z < 1$. Für dieses Projekt werden Zahlen im Bereich von etwa $\pm2$ angenommen, weshalb ein Vorkommabit benötigt wird. 
+Zwölf Bit stehen zur Verfügung, von denen eins für das Vorzeichen und ein weiteres für eine Vorkommastelle verwendet werden. Die zehn übrigen Bits werden für die 
+Nachkommazahlen genutzt. Die Aufteilung der Bits wird über die Bezeichnung S1Q10 definiert.
+Für den Quotient stehen 10 Bit zur Verfügung, weshalb die maximale Auflösung $1\,LSB = 2^{-10} = {1024}^{-1} = 9,765625\cdot10^{-4}$ beträgt.
+Der Wertebereich liegt bei \num{-2} bis \num{1,999023438}. 
 
-Für die Addition oder Multiplikation zweier Zahlen müssen beide einerseits dieselbe Bitbreite und andererseits das gleiche Darstellungsformat besitzen.
+Für alle Rechenoperationen müssen die Zahlen, auf die sie angewandt wird, dieselbe Bitbreite und das gleiche Darstellungsformat besitzen.
 
-
-
- 
-\subsection{Numerisch bedingte Ungenauigkeiten}\label{sec:NumerischeUngenauigkeiten}
-Numerische Ungenauigkeiten entstehen immer dann, wenn die zur Verfügung stehenden Bits es nicht ermöglichen eine Zahl exakt abzubilden. 
-Bei einem Bitshift, welcher häufig für die Division durch Zwei oder Vielfachen von Zwei verwendet wird, kann immer Information verloren gehen. Dies ist immer dann der Fall,
-wenn die Bits die abgeschnitten werden eine 1 sind. Das hat zur Folge, dass beispielsweise
-bei einer Division durch Zwei der resultierende Wert um 1\,LSB kleiner ist, als er eigentlich sein sollte. 
-Dieses Problem kann bei jedem Bitshift auftreten. Die Wahrscheinlichkeit für eine 1 liegt im Mittel bei \SI{50}{\percent}, weshalb davon ausgegangen werden muss, dass ein 
-positives Ergebnis etwas kleiner und ein negatives vom Betrag her etwas größer ist, als bei verlustfreier Berechnung. 
-
-% Von Prof. Vollmer: 
-% \begin{equation}
-%  S_N = \frac{P_Q}{\left(2^0\right)^2} + \dfrac{P_Q}{\left(2^1\right)^2} + \dfrac{P_Q}{\left(2^2\right)^2} + \cdots + \dfrac{P_Q}{\left(2^{L-1}\right)^2}
-% \end{equation}
-% L : Stufe (Additionstakte?)
-
-Da diese Arbeit den Schwerpunkt in der Aufwandsabschätzung einer Chipimplementation einer 2D-DFT auf einem \gls{asic} hat, ist diese Problematik kein Gegenstand dieser Arbeit und
-wird an dieser Stelle nur in Grundzügen erwähnt. %Für eine 
-
+\subsection{Numerische Ungenauigkeiten}\label{sec:NumerischeUngenauigkeiten}
+Numerische Ungenauigkeiten entstehen immer dann, wenn die zur Verfügung stehenden Bits nicht ausreichen, eine Zahl exakt abzubilden. 
+Bei einem Bitshift, welcher häufig für die Division durch zwei oder Vielfachen von zwei verwendet wird, können immer Informationen verloren gehen. Dies ist immer dann der Fall,
+wenn die Bits die hinausgeschoben werden eine 1 sind. Das hat zur Folge, dass beispielsweise
+bei einer Division durch zwei der resultierende Wert um 1\,LSB kleiner ist, als er eigentlich sein sollte. 
+Dieses Problem kann bei jedem Bitshift auftreten. Die Wahrscheinlichkeit, dass das LSB 1 ist, liegt im Mittel bei \SI{50}{\percent}, weshalb davon ausgegangen werden muss, dass ein 
+positives Ergebnis kleiner und ein negatives vom Betrag größer ist, als bei verlustfreier Berechnung. 

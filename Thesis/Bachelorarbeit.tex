@@ -19,13 +19,23 @@
  \pagenumbering{arabic} 
  
  \chapter{Grundlagen}
- Um einen guten Ausgangspunkt für spätere Erläuterungen zu haben, sollen an dieser Stelle die wesentlichen Grundlagen zusammengefasst werden.
+ Um einen guten Ausgangspunkt für spätere Erläuterungen zu haben, werden an dieser Stelle die wesentlichen Grundlagen zusammengefasst.
+ Dazu zählen in dieser Arbeit die Interpretation von Binär-Zahlen, die Matrixmultiplikation. Da deren Zahlen komplexwertig sein können,
+ wird auch die komplexe Multiplikation erläutert. Abschließend werden die Berechnungen der 
+ %diskreten Fouriertransformation 
+ \gls{dft} und der 
+ %diskreten Kosinustransformation 
+ \gls{dct} behandelt. Um den Zusammenhang der \gls{dft} und der Fouriertransformation sowie der Fouriereihenentwicklung als Ursprung aufzuzeigen,
+ werden beide kurz angeschnitten.
+ 
  \input{content/Zahlendarstellung.tex}
  \section{Mathematische Grundlagen}
- Zu den mathematischen Grundlagen werden die komplexe Multiplikation sowie die Matrixmultiplikation gezählt, welche nachfolgen kurz behandelt werden.
- Auf die Fouriereihenentwicklung sowie insbesondere die Fouriertransformation und ihre diskrete Variante wird im Anschluss detaillierter eingegangen, da
+ In dieser Arbeit werden die komplexe Multiplikation sowie die Matrixmultiplikation genutzt, welche nachfolgen kurz behandelt werden.
+ Die Fouriereihenentwicklung sowie insbesondere die Fouriertransformation und ihre diskrete Variante werden im Anschluss erläutert, da
  sie elementarer Bestandteil dieser Arbeit sind.
- Da auch die diskrete Kosinustransformation als mögliche Transformationsart im Raum stand, um in den Bildbereich zu gelangen, wird diese ebenfalls kurz aufgegriffen.
+ Da auch die diskrete Kosinustransformation eine Möglichkeit darstellt, in den Bildbereich zu gelangen, wurde sie in den 
+ Vorüberlegungen dieser Arbeit betrachtet und wird hier gezeigt. 
+ 
  \input{content/Komplexe_Multiplikation.tex}
  \input{content/Matrixmultiplikation.tex}
  \input{content/Fouriertransformation.tex}
@@ -89,14 +99,14 @@ Im zweiten Schritt wird untersucht, wie die 8x8-\gls{dft}, welche als Favorit au
  \input{content/Simulation.tex}
 
 
- \section{Testumgebung}
+\input{content/Testumgebung.tex}
 
-In Matlab muss hierfür entweder die Funktion \texttt{transpose()} oder \texttt{.'} verwendet werden. Letzteres muss elementweise angewandt werden, da das Apostroph
-alleine die komplex konjugiert Transponierte bildet.
 
+ \subsection{Test der 2D-DFT mit realen Eingangswerten}
  
- \subsection{Struktogramm des Testablaufs}
- \subsection{Reale Eingangswerte}
+ Für den Test realer Eingangswerte wurden die im \texttt{.mat}-Format vorliegenden Messwerte aus dem Verzeichnis \texttt{messung\_7\_7\_25mm\_1\_31.05.2017} verwendet.
+ 
+\lstinputlisting[basicstyle=\footnotesize\ttfamily, frame=none, numbers=none, language={}, caption={Test mit Messwerten, die am Messplatz aufgenommenwurden.}, label=src:DFT_Vergleich]{Skripte/Vergleich.txt} 
  
  \section{Chipdesign}
 Um die Fertigung eines ASIC in Auftrag geben zu können, sind nach der Implementation in einer Hardwarebeschreibungssprache wie VHDL noch weitere Schritte notwendig.
@@ -140,89 +150,11 @@ symbolische Laufzeiten für die Logikgatter mit realistischeren Werten ersetzten
 
  
  
- \subsection{Floorplan der 2D-DFT-Einheit mit 3 Metalllagen und 350nm Strukturgröße}
- 
-  In den folgenden Bildern \ref{pic:floorplan1} bis \ref{pic:floorplan4} ist zusehen, wie der Floorplan eine Stromversorgung für die Standardzellen erhält. 
-    \begin{figure*}
-        \centering
-        \begin{subfigure}[b]{0.475\textwidth}
-            \centering
-            \includegraphics[width=\textwidth]{img/DFT_FLOORPLAN/CROPPED_IMG/FP_1.png}
-            \caption{{\small Leerer Floorplan}}    
-            \label{pic:floorplan1}
-        \end{subfigure}
-        \hfill
-        \begin{subfigure}[b]{0.475\textwidth}  
-            \centering 
-            \includegraphics[width=\textwidth]{img/DFT_FLOORPLAN/CROPPED_IMG/FP_2.png}
-            \caption{{\small Floorplan mit Power-Ring}}    
-            \label{pic:floorplan2}
-        \end{subfigure}
-        \vskip\baselineskip
-        \begin{subfigure}[b]{0.475\textwidth}   
-            \centering 
-            \includegraphics[width=\textwidth]{img/DFT_FLOORPLAN/CROPPED_IMG/FP_3.png}
-            \caption{{\small Floorplan mit vertikaler Stromversorgung auf Metal-Layer 2}}    
-            \label{pic:floorplan3}
-        \end{subfigure}
-        \quad
-        \begin{subfigure}[b]{0.475\textwidth}   
-            \centering 
-            \includegraphics[width=\textwidth]{img/DFT_FLOORPLAN/CROPPED_IMG/FP_4.png}
-            \caption{{\small Floorplan mit zusätzlicher horizontaler Stromversorgung auf Metal-Layer 1}}    
-            \label{pic:floorplan4}
-        \end{subfigure}
-        \caption{Schrittweise Entwurf der Stromversorgung des Floorplans} 
-        \label{fig:floorplanSpannungsversorgung}
-    \end{figure*}
-
-    
-    \begin{figure}[ht!]
-     \centering
-     \includegraphics[width=0.98\textwidth]{img/DFT_FLOORPLAN/CROPPED_IMG/Vias.png}
-     \caption{Vias für die Durchkontaktierung der der Stromversorgung auf den verschiedenen Metalllagen (blau: Layer 1, rot: Layer 2, grün: Layer 3).}
-     \label{pic:floorplanVias}
-    \end{figure}
-    
-    
-    \begin{figure}[ht!]
-     \centering
-     \includegraphics[width=0.98\textwidth]{img/DFT_FLOORPLAN/CROPPED_IMG/FP_5.png}
-     \caption{Floorplan mit platzierten Standardzellen der 2D-DFT-Einheit.}
-     \label{pic:floorplan1Standardzellen}
-    \end{figure}
+\input{content/Floorplan.tex}
 
  
  
- 
- \chapter{Schlussfolgerungen}
- \section{Zusammenfassung}
- DFT und DCT wurden einander gegenübergestellt, DFT erwies sich als besser trotz komplexer Ausgangswerte. Wegen komplexem Eingangssignal (cos + j sin), 2D-DFT, also 
- doppelte Matrixmultiplikation und gleiche Einheit für beides.
- 8x8-DFT hat die besten Twiddlefaktoren, weil betragsmäßig nur einer, auch für Real- und Imaginärteil. Eingangswerte lassen sich wunderbar ausklammern.
- Nur eine Multiplikation für Real- und Imaginärteil je Spalte erforderlich. Akkumulieren nach Baumstruktur, ungerade Zeilen / Spalten 8, gerade 12 Elemente.
- Anzahl der Multiplikationen für eine DFT sind 4*8*2=64, (R+I) FFT auch.
- Reelle Matrixmultiplikation wäre schneller, aber mehr Speicher und Leitungen.
- Sogar die IDFT ist einfach möglich, durch vertauschen der Twiddlefaktorzeilen.
- Transponieren ist durch Tauschen von Zeilen- und Spaltenindex einfach realisierbar. Kein Umspeichern erforderlich. Aber zweite interne Matrix, weil sonst die Hälfte wieder überschrieben wird.
- Einfaches Transponieren ermöglicht weiterrechnen ohne Zeitverlust, ohne zusätzliche Gatter ist nicht ganz so einfach gesagt, wegen zweiter int. M.
- Konstantenmultiplikation hat viele (18) Gatter hintereinander -> Flaschenhals. Aufteilen? Optimieren?
- 
- 
- 
- \section{Bewertung und Fazit}
- 512 Takte = 13,5\% der vorhandenen Takte für DFT evtl mal 2 für IDFT, 50-100 Takte Interpolation, 50-100 Takte Filterung, 150-200 Takte Winkelberechnung -> Summe 1350 von 3800 
- -> die 15x15-DFT + IDFT kann auch doppelt so lange dauern, wenn keine IDFT erforderlich sein sollte sogar 4x
- 
- 
- Es konnte eine effiziente Berechnung implementiert werden, die der FFT in nichts nachsteht. Wenn nicht die Ausgangssituation gewesen wäre, dass eine möglichst flexibel gehaltene
- Matrixmultiplikation erstrebenswert ist, hätte auch eine FFT, dessen Berechnungsvorschrift bekannt ist, implementiert werden können. Für DFT anderer Größe als $2^N$ gilt dies nicht.
- 
- 
- \section{Ausblick}
- Möglicher Weise lässt sich das Schaltnetz des Konstantenmultiplizierers minimieren, wenn es optimiert wird. Die Annahme war, das Cadence das kann. Das Schaltnetz sieht aber nicht
- optimiert aus. Eine Multiplikation unter Anwendung des Wallace-Tree könnte die Anzahl der Gatter, insbesondere der hintereinander geschalteten reduzieren und so die Berechnung
- beschleunigen~\autocite[8-10]{jdrechsler2008binMultWerke}.
+\input{content/Schlussfolgerungen.tex}
  
  
  \printglossary[title={Abkürzungsverzeichnis}] 

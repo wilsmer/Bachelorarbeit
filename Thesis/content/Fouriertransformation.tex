@@ -4,16 +4,16 @@ zusammengesetzt werden. Die Schreibweise als Summe von Sinus- und Kosinusfunktio
 der häufigsten Darstellungsformen.
 
 \begin{equation}\label{eq:Fourierreihenentwicklung}
- x(t) = \frac{a_0}{2} + \sum_{k=1}^\infty \left(a_k cos(kt) + b_k sin(kt)\right)
+ x(t) = \frac{a_0}{2} + \sum_{k=1}^\infty \left(a_k \cos(kt) + b_k \sin(kt)\right)
 \end{equation}
 
 Die Fourierkoeffizienten lassen sich über die Gleichungen (\ref{eq:a_k}) und (\ref{eq:b_k}) berechnen:
 
 \begin{equation}\label{eq:a_k}
- a_k = \frac{1}{\pi} \int_{-\pi}^{\pi} x(t) \cdot cos(kt) dt \quad \textrm{für} \quad k \geq 0 
+ a_k = \frac{1}{\pi} \int_{-\pi}^{\pi} x(t) \cdot \cos(kt) dt \quad \textrm{für} \quad k \geq 0 
 \end{equation}
 \begin{equation}\label{eq:b_k}
- b_k = \frac{1}{\pi} \int_{-\pi}^{\pi} x(t) \cdot sin(kt) dt \quad \textrm{für} \quad k \geq 1
+ b_k = \frac{1}{\pi} \int_{-\pi}^{\pi} x(t) \cdot \sin(kt) dt \quad \textrm{für} \quad k \geq 1
 \end{equation}
 
 Mit der Exponentialschreibweise lassen sich Sinus und Kosinus auch wie in (\ref{eq:cos_exp}) und (\ref{eq:sin_exp}) ausdrücken:
@@ -26,7 +26,7 @@ Mit der Exponentialschreibweise lassen sich Sinus und Kosinus auch wie in (\ref{
  \sin(k t) = \frac{1}{2j}\left(e^{j k t} - e^{-j k t} \right)
 \end{equation}
 
-und zusammengefasst ergibt sich in (Gl. \ref{eq:komplexerZeiger}) der komplexe Zeiger, der eine Rotation im Gegenuhrzeigersinn auf dem Einheitskreis beschreibt.
+Zusammengefasst ergibt (Gl. \ref{eq:komplexerZeiger}) den komplexe Zeiger, der eine Rotation im Gegenuhrzeigersinn auf dem Einheitskreis beschreibt.
 In Abbildung \ref{pic:Einheitskreis} wird dies grafisch dargestellt.
 
  \begin{align}
@@ -78,7 +78,7 @@ Die Fourierkoeffizienten $a_k$ und $b_k$ lassen sich auch als komplexe Zahl $c_k
 
 
 \section{Fouriertransformation}
-Mit der Fouriertransformation kann umgekert ein periodisches Signal $x(t)$ in eine Summe aus Sinus- und
+Mit der Fouriertransformation kann umgekehrt ein periodisches Signal $x(t)$ in eine Summe aus Sinus- und
 Kosinusfunktionen unterschiedlicher Frequenzen zerlegt werden. Da diese Funktionen jeweils mit nur einer Frequenz periodisch sind, entsprechen diese
 Frequenzen den Frequenzbestandteilen von $x(t)$. 
 
@@ -88,7 +88,7 @@ Grundlage für die Fouriertransformation ist das Fourierintegral (Gl. \ref{eq:Fo
  X(f) = \int^{\infty}_{-\infty} x(t) \cdot e^{-j 2 \pi f t}
 \end{equation}
 
-Wenn Sinus- und Kosinusfunktionen wie in Gl. (\ref{eq:cos_exp}) und (\ref{eq:sin_exp}) als Exponentialfunktion geschrieben werden,
+Wenn Sinus- und Kosinusfunktionen wie in Gl. (\ref{eq:cos_exp}) und (\ref{eq:sin_exp}) als Exponentialfunktionen geschrieben werden,
 können sie zu einer komplexen Exponentialfunktion zusammengefasst werden.
 Hieraus lässt sich ableiten, dass das Spektrum, also $X(f)$ komplexwertig sein muss.
 

@@ -23,3 +23,15 @@
 \newcommand{\myLightgrayBoxHigh}{\colorbox{lightgray}{\makebox(\boxWidthS,\boxHeightHigh){\textcolor{\textColorForSqrt}{}}}}
 \newcommand{\myLightgrayBoxWide}{\colorbox{lightgray}{\makebox(\boxWidthWide,\boxHeightS){\textcolor{\textColorForSqrt}{}}}}
 
+\usepackage{tcolorbox} 
+
+\newtcolorbox{mytextbox}[1]{%
+    tikznode boxed title,
+    enhanced,
+    arc=0mm,
+    interior style={white},
+    attach boxed title to top left= {xshift=0.5cm, yshift=-\tcboxedtitleheight/2},
+    fonttitle=\bfseries,
+    colbacktitle=white,coltitle=black,
+    boxed title style={size=normal,colframe=gray,boxrule=0pt},
+    title={#1}}
