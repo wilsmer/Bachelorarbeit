@@ -1,10 +1,20 @@
-\section{Simulation der 2D-DFT}
-Zur Simulation der Signalverläufe von Hardwarekomponenten dient in der Cadence-Umgebung das Programm NC\,Sim.
-Das Programm beherrscht lediglich bei einzelnen Vektoren die Umrechnung zu vorzeichenbehafteten Zahlen im Dezimalsystem.
-Bei der Bündelung von Vektoren können nur positive Dezimalzahlen dargestellt werden. Dies hat zur Folge, dass Vektoren, die eine negative Zahl repräsentieren, mittels $2^{n+1}+m$, $n=$ Bitbreite des Vektors und $m=$ angezeigte Zahl, bei Bedarf händisch umgerechnet werden müssten. 
-Die Darstellung von Festkoomazahlen ist in keinem Fall möglich.
+Nachdem die Implementation der 2D-DFT in VHDL erfolgt ist, werden anhand von Simulationen und eines selbstgeschriebenen Skripts Testdurchläufe durchgeführt, die die
+korrekte Berechnung überprüfen.
+Daran schließt sich die Chipimplementation an, bei der die Gatter in vorm von Standarzellen des Auftragsfertigers \gls{ams} auf dem Chip platziert werden.
 
- Anhand der Simulation kann die Anzahl der im Voraus ermittelten, zur Berechnung der 2D-DFT benötigten Takte, verifiziert werden, was nachfolgend geschen soll.
+\section{Simulation der 2D-DFT}
+Zur Simulation von Hardwarekomponenten dient in der Cadence-Umgebung das Programm NC\,Sim. Damit die Signalverläufe grafisch dargestellt werden, wird aus NC\,Sim 
+heraus SimVision gestartet.
+Es ermöglicht das Betrachten der Signalzustände, die im Top-Modul als externes Signal in der Entity (Eingang oder Ausgang einer Komponente) sowie internes Signal 
+(\texttt{signal}) deklariert wurden. Wenn in der Top Level Entity instanziierte Komponenten untereinander verbunden sein sollen, müssen entsprechende Signale 
+deklariert und ihnen zugewiesen werden. Diese Signale sind deshalb in der Simulation auch zu sehen. Signale die innerhalb einer eingebetteten Komponente verwendung finden, sind 
+nicht sichtbar und müssen gegebenfalls zumindest temporär zusätzlich als Ausgang der Komponente hinzugefügt werden.
+Das Programm beherrscht lediglich bei einzelnen Vektoren die Umrechnung zu vorzeichenbehafteten Zahlen im Dezimalsystem.
+Bei der Bündelung von Vektoren können nur positive Dezimalzahlen dargestellt werden. Dies hat zur Folge, dass Vektoren, die eine negative Zahl repräsentieren, 
+bei Bedarf händisch umgerechnet werden müssen. 
+Erfolgen kann das mittels $2^{n+1}+m$, $n=$ Bitbreite des Vektors und $m=$ angezeigte Zahl. Die Darstellung von Festkommazahlen ist in keinem Fall möglich.
+
+ Anhand der Simulation kann die Anzahl der im Voraus ermittelten, zur Berechnung der 2D-DFT benötigten Takte, verifiziert werden, was nachfolgend geschehen soll.
  
  Nachdem \texttt{nReset} auf '1' gesetzt wird, werden die Eingangswerte
  eingelesen. Wenn dieser Vorgang abgeschlossen ist, geht \texttt{loaded} auf '1'. Mit der nächsten steigenden Taktflanke, in Bild \ref{pic:Simulationsdauer} bei 
@@ -35,65 +45,7 @@ Die Darstellung von Festkoomazahlen ist in keinem Fall möglich.
   \caption{Edge Count des Taktsignals für die vollständige Simulation der 2D-DFT.}
  \end{figure}
 
- \section{Zeitabschätzung als Winkelsesnor im Antriebsmotor eines Elektroautos}
- Anhand der nun bekannten Größe von 512 Takten kann ermittelt werden, ob die Implemenatation vom zeitlichen Aspekt her akzeptabel ist.
- Die maximale Drehzahl eines Elektromotors wird laut Datenblatt der Firma ABM Greiffenberger mit 8000\,U/min angegeben~\autocite[5]{greiffenberger},
- als maximale Taktfrequenz des Sensors ist 100\,MHz vorgegeben.
- 
-%  \begin{equation*}
-%    RPM = 8000\, \textrm{min}^{-1}
-% \end{equation*}
-
-% \begin{equation}
-%  \begin{split}
-%   \frac{RPM}{60} = 1333,\bar{3}\,\texttt{sec}^{-1}  \\
-%  \end{split}
-% \end{equation}
-
-%  \begin{equation}
-%   \curvearrowright 1\, \textrm{Umdrehung} = 7,5\cdot 10^{-3}\,\textrm{sec}
-%  \end{equation}
- 
- \begin{equation}
- \begin{split}
-    RPM &= 8000\, \textrm{min}^{-1}\\[10pt]
-    \frac{RPM}{60} &= 1333,\bar{3}\,\texttt{sec}^{-1}  \\[10pt]
-    \curvearrowright 1\, \textrm{Umdrehung} &= 7,5\cdot 10^{-3}\,\textrm{sec}\\[10pt]
-    1^\circ &\widehat{=} \frac{7,5\cdot 10^{-3}\,\textrm{sec}}{360}\\[10pt]
-    1^\circ & \widehat{=} 20,83\cdot10^{-6}\,\sec \\[10pt]
-    100\cdot10^6\,Hz &= 10\cdot10^{-9}\,\sec \\[10pt]
-    \frac{20,83\cdot10^{-6}}{10\cdot10^{-9}} &= 2083
-    \end{split}
- \end{equation}
 
 
- Um eine Aussage über die restliche zur Verfügung stehenden Zeit bzw. Takte machen zu können, wird gezeigt, dass pro Winkel 
- etwa 2080 Takte für Berechnungen zu Verfügung stehen.
- Da 512 etwa 25$\%$ von 2083 sind, resultiert hieraus, dass noch etwa 75$\%$ der Takte nutzbar sind. Wenn auch die IDFT durchgeführt werden muss, bleibt die Hälfte
- der verfügbaren Takte für Interpolation, Filterung, Berechnung so wie Ausgbae bzw. Übertragung des Winkels.
-
- 
-\section{Test der Matrixmultiplikation}
-
-
-\subsubsection{1D-DFT mit Integer-Werten}
- 
-\subsubsection{2D-DFT mit Integer-Werten}
-
-\subsubsection{2D-DFT mit Werten SQ-Format}
-
-Unter anderem weil NC\,Sim bzw. dessen Unterprogramm SimVision zur Anzeige von Signalverläufen (Waveform) nur Integer darstellen kann und bei als Vektor gebündelten Signalen 
-diese nicht einmal als vorzeichenbehaftet (signed), wurde der Einfachheit halber zunächst die Berechnung als Ganzzahl-Multiplikation mit dem Faktor 3 betrachtet. 
-Da es bei diesem Faktor und den gewählten Eingangswerten nicht zu einem 
-Überlauf kommen kann, war es zu diesem Zeitpunkt noch nicht nötig, sich Gedanken über die Breite des Ergebnisvektors bzw. den Ausschnitt daraus für die weitere
-Berechnung zu machen. Deshalb konnte an dieser Stelle noch auf den Bitshift zur Halbierung der Werte verzichtet werden.
-
-Erst als der Faktor $\frac{\sqrt{2}}{2}$ übernommen wurde, wurden die Ergebnisse breiter als der Vektor für die weitere Berechnung an Bits zur Verfügung stellt.
-
-${\frac{\sqrt{2}}{2}}_{10}$ = $0001011010100_2$ in S2Q10, als Integer betrachtet jedoch $724_{10}$.
-
-Daraus folgt, dass ein Teil der Bits abgeschnitten werden müssen. Da die Dualzahlen jetzt im S1Q10-Format betrachtet werden, es sich also um Kommazahlen handelt,
-müssen die hinteren Bits abgeschnitten werden. Zudem können vorne Bits ohne Informationsverlust gestrichen werden, da durch die Multiplikation ein weiteres 
-Negations-Bit dazugekommen ist und auf Grund des gegebenen Faktors der Wertebereich vorne nie ganz ausgenutzt wird. (Verifizieren / Belegen!)
 
  

@@ -52,11 +52,10 @@
 \chapter{Analyse}
 Im diesem Kapitel werden zunächst die \gls{dft} und die \gls{dct} in verschiedenen Größen einander gegenübergestellt und eine Entscheidung darüber getroffen, welche
 sich besser dafür eignet, auf einem \gls{asic} implementiert zu werden. Hierbei spielen in erster Linie die Anzahl unterschiedlicher Faktoren eine Rolle, 
-da für identische Faktoren nur eine Multiplikationseinheit nötig ist. Gleiche Faktoren gehen also mit einer kleineren Chipfläche einher, was zusammen mit der schnellen 
+da für identische Faktoren nur eine Multiplikationseinheit erforderlich ist. Gleiche Faktoren gehen deshalb mit einer kleineren Chipfläche einher, was zusammen mit der schnellen 
 Berechnung, also geringe Zahl benötigter Takte, die beiden Hauptziele bei der Chipimplementierung darstellen.
-Als interessante Kandidaten wurden primär die Matrizen mit den Größen 8x8, 9x9 und 15x15 ausgewählt. 
-Die 8x8-Matrix hat dieselbe Anzahl der Sensoren wie das derzeitige Demo-Array, sodass die Eingangswerte
-direkt transformiert werden können. 
+Als interessante Kandidaten wurden die Matrizen mit den Größen 8x8, 9x9 und 15x15 ausgewählt. 
+Die 8x8-Matrix hat dieselbe Anzahl Faktoren, wie das derzeitige Demo-Array Sensore hat, sodass die Eingangswerte direkt transformiert werden können. 
 Die beiden anderen haben aufgrund ihrer ungeraden Zahl ihren Mittelpunkt zwischen den mittleren Sensorelementen, was für die 
 weitere Verarbeitung des transformierten Signals von Bedeutung ist. Die Matrix der Dimension 15x15 lässt sich durch Interpolation der Daten errechnen, während es für
 die 9x9-Matrix bisher keine Überlegungen gibt, wie sie errechnet werden könnte.
@@ -105,8 +104,61 @@ Im zweiten Schritt wird untersucht, wie die 8x8-\gls{dft}, welche als Favorit au
  \subsection{Test der 2D-DFT mit realen Eingangswerten}
  
  Für den Test realer Eingangswerte wurden die im \texttt{.mat}-Format vorliegenden Messwerte aus dem Verzeichnis \texttt{messung\_7\_7\_25mm\_1\_31.05.2017} verwendet.
+ Der Aufruf erfolgt wie in Abschnitt \ref{sec:automatisierterTestdurchlauf} beschrieben über das Skript \texttt{check.sh} in der Shell.
  
-\lstinputlisting[basicstyle=\footnotesize\ttfamily, frame=none, numbers=none, language={}, caption={Test mit Messwerten, die am Messplatz aufgenommenwurden.}, label=src:DFT_Vergleich]{Skripte/Vergleich.txt} 
+ 
+\lstinputlisting[basicstyle=\footnotesize\ttfamily, frame=none, numbers=none, language={}, caption={Test der VHDL-Implementation der 2D-DFT mit Messwerten, die am Sensor-Messplatz aufgenommenwurden.}, label=src:DFT_Vergleich]{Skripte/Vergleich.txt} 
+
+In der ersten der drei Matrizen stehen die in VHDL berechneten Werte, konvertiert und skaliert, damit sie mit den in \texttt{Matlab} (\texttt{Octave}) aus der zweiten 
+Matrix vergleichbar sind. In der dritten Matrix sind die Differenzen der jeweiligen Werte zu sehen, welche zwischen knapp 0,1 und knapp 0,4 liegen. 
+Auf die Darstellung der Eingangswerte sowie der prozentualen Differenz wurde aus Gründen der Übersicht verzichtet. 
+Gezeigt werden kann dennoch, dass trotz der insgesamt acht Bitshifts je Zahl die Abweichung zwar realtiv groß aber vermutlich noch in einen annehmbaren Rahen liegt.
+ 
+ 
+ \section{Zeitabschätzung als Winkelsesnor im Antriebsmotor eines Elektroautos}
+ Anhand der aus Abbildung \ref{pic:Simulationsdauer} bekannten Größe von 512 Takten für die 2D-DFT kann zusammen mit den gegebenen Informationen
+ ermittelt werden, ob die Implementation vom zeitlichen 
+ Aspekt her akzeptabel ist.
+ Die maximale Drehzahl eines Elektromotors wird im Datenblatt der Firma ABM Greiffenberger mit 8000\,U/min angegeben~\autocite[5]{greiffenberger},
+ als maximale Taktfrequenz des \gls{asic} ist 100\,MHz vorgesehen und es wird eine Winkelgenauigkeit von 1${}^\circ$ angestrebt.
+ Aus diesen Angaben lässt sich errechnen, ob die Vorgaben eingehalten werden und wieviele Takte für andere Berechnungen zur Verfügung stehen.
+ 
+%  \begin{equation*}
+%    RPM = 8000\, \textrm{min}^{-1}
+% \end{equation*}
+
+% \begin{equation}
+%  \begin{split}
+%   \frac{RPM}{60} = 1333,\bar{3}\,\texttt{sec}^{-1}  \\
+%  \end{split}
+% \end{equation}
+
+%  \begin{equation}
+%   \curvearrowright 1\, \textrm{Umdrehung} = 7,5\cdot 10^{-3}\,\textrm{sec}
+%  \end{equation}
+ 
+%  \begin{equation}
+%  \begin{split}
+\begin{align}
+    \nonumber RPM &= 8000\, \textrm{min}^{-1}\\[10pt] 
+    \frac{RPM}{60} &= 1333,\bar{3}\,\texttt{sec}^{-1}  \\[10pt]
+    \nonumber \curvearrowright 1\, \textrm{Umdrehung} &= \frac{1}{1333,\bar{3}\,\texttt{sec}^{-1}} \\[10pt] 
+    &= 7,5\cdot 10^{-3}\,\textrm{sec}\\[10pt]
+    \nonumber 1^\circ &\widehat{=} \frac{7,5\cdot 10^{-3}\,\textrm{sec}}{360}\\[10pt]
+    1^\circ & \widehat{=} 20,83\cdot10^{-6}\,\sec \\[10pt]
+    \nonumber 100\cdot10^6\,Hz &= 10\cdot10^{-9}\,\sec \\[10pt]
+    \frac{20,83\cdot10^{-6}\sec}{10\cdot10^{-9}\sec} &= 2083\, \textrm{Takte} \label{eq:Takte}
+\end{align}
+%     \end{split}
+%  \end{equation}
+
+
+ Um eine Aussage über zur Verfügung stehenden Zeit bzw. Takte machen zu können, wurde in Gleichung (\ref{eq:Takte}) gezeigt, dass für je 1${}^\circ$ Rotation des Motors
+ etwa 2080 Takte für Berechnungen zu Verfügung stehen.
+ Die 512 für die 2D-DFT sind etwa 25$\%$ von 2080. Daraus resultiert, dass noch etwa 75$\%$ der verfügbaren Takte nutzbar sind. Wenn auch die IDFT durchgeführt werden muss, bleibt 
+ zumindest die Hälfte der Takte für Interpolation, Filterung, Berechnung so wie Ausgbae bzw. Übertragung der gewonnenen Informationen. 
+ 
+ 
  
  \section{Chipdesign}
 Um die Fertigung eines ASIC in Auftrag geben zu können, sind nach der Implementation in einer Hardwarebeschreibungssprache wie VHDL noch weitere Schritte notwendig.
@@ -119,8 +171,9 @@ symbolische Laufzeiten für die Logikgatter mit realistischeren Werten ersetzten
 
  
  \subsection{Syntheseergebnis der 2D-DFT-Einheit}
- In Abbildung \ref{pic:Netzliste2D-DFT} ist die mit dem Programm \texttt{rc} erzeugte Netzliste als Syntheseergebnis der 2D-DFT des VHDL-Codes zu sehen.
+ In Abbildung \ref{pic:Netzliste2D-DFT} ist die mit dem Programm \texttt{RTL Compiler (rc)} erzeugte Netzliste als Syntheseergebnis der 2D-DFT des VHDL-Codes zu sehen.
  Auch wenn keine einzelnen Gatter erkennbar sind, wird deutlich, dass auf die Verdrahtung ein sehr hoher Anteil der Fläche entfällt.
+ In den bisherigen Darstellungen wurden die Leitungen schwarz und die Standardzellen rot eingefärbt, hierauf wurde in diesem Fall bewusst verzichtet.
  Die Anzahl der benötigten Standardzellen liegt bei \num{15310}. Ihr Flächenbedarf wird von dem Synthesewerkzeug mit \SI{1524960}{\um^2} angegeben, also etwa 
  \SI{1,5}{mm^2}. Darin ist der Bedarf für die Leitungen nicht mit eingerechnet. Ersichtlich ist, dass dieser deutlich höher liegt. 
  Das Synthesewerkzeug \texttt{rc} platziert alle Standardzellen auf einer Ebene, für Verbindungen werden zwei Lagen genutzt.
@@ -130,7 +183,7 @@ symbolische Laufzeiten für die Logikgatter mit realistischeren Werten ersetzten
     \begin{figure}[ht!]
      \centering
      \includegraphics[width=0.75\textwidth]{img/2D-DFT.png}
-     \caption{Netzliste der 2D-DFT-Einheit.}
+     \caption{Mit \texttt{RTL compiler (rc)} erstellte Netzliste der 2D-DFT-Einheit.}
      \label{pic:Netzliste2D-DFT}
     \end{figure} 
  
@@ -148,7 +201,7 @@ symbolische Laufzeiten für die Logikgatter mit realistischeren Werten ersetzten
 %   \label{tab:Standardzellen2D-DFT}
 %  \end{table}
 
- 
+ \clearpage
  
 \input{content/Floorplan.tex}
 
@@ -169,8 +222,31 @@ symbolische Laufzeiten für die Logikgatter mit realistischeren Werten ersetzten
  \printbibliography
  \addcontentsline{toc}{chapter}{Literatur}
  
+ %Seite für den Anhang
+ \clearpage
+ \pagestyle{empty}
+% \newgeometry{
+% 	      left=4cm,
+% 	      right=4cm,
+% 	      top=5cm,
+% 	      bottom=4cm
+% 	    }
+\vspace*{5cm}
+ \begin{center}
+  \LARGE{\textbf{Anhang}}
+ \end{center}
+ \clearpage
+ 
  \appendix
  \addcontentsline{toc}{chapter}{Anhang }
+
+ \ihead{\leftmark}
+%\ohead{\rightmark}
+%\chead{\thesection}
+%\chead{\sectionmark}
+ \pagestyle{scrheadings}
+ \automark{chapter}
+ 
  \input{content/Anhang.tex}
  \chapter{Cadence Tutorial}
  \includepdf[pages={-}]{../Dokumentationen/Cadence/encounter_tutorial/encounter_tutorial.pdf}

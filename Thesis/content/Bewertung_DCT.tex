@@ -1,15 +1,13 @@
 \section{Bewertung verschiedener DFT- und DCT-Größen}\label{sec:BewertungVerschiedenerGroessen}
-In diesem Abschnitt sollen Erkenntnisse gewonnen werden, auf denen basierend später die Wahl der Transformation und die Größe ihrer Matrix getroffen werden kann.
+In diesem Abschnitt sollen Erkenntnisse gewonnen werden, auf denen basierend die Wahl der Transformation und die Größe ihrer Matrix getroffen werden kann.
 Die Bewertung berücksichtigt wie bereits angedeutet die beiden Eigenschaften Anzahl verschiedener Faktoren und die gesamte Anzahl an Faktoren, wobei die erst genannte 
-größeren Einfluss auf eine negative Bewertung hat, da sich gleiche Faktoren mit Hilfe des Distributivgesetzes ausklammern lassen.
+größeren Einfluss auf eine negative Bewertung hat, da sich (betragsmäßig) gleiche Faktoren mit Hilfe des Distributivgesetzes ausklammern lassen.
 Bei den Faktoren wird zwischen solchen unterschieden, die als trivial erachtet werden, da sie nur einer Addition bedürfen ($\pm1$), zusätzlich
 zur Addition nur eine Division durch 2 erfolgt ($\pm0,5$) oder gar keine Berechnung nötig ist ($0$) und solchen, die als nicht trivial betrachtet werden müssen, da eine Multiplikation
-unumgänglich ist (beispielsweise $\tfrac{\sqrt{2}}{2}$). Begründet werden kann dies mit dem dualen Zahlensystem, da eine Multiplikation mit als trivial eingestuften Werten kein
-komplexes Schaltnetz erfordert.
+unumgänglich ist (beispielsweise $\tfrac{\sqrt{2}}{2}$). Begründet werden kann dies mit dem dualen Zahlensystem, da eine Multiplikation mit als trivial eingestuften Werten statt eines 
+komplexen Schaltnetzes im aufwändigsten Fall Bitshifts erfordern.
 
-Interessant ist die DFT trotz ihrer komplexen Ausgangsmatrix, da sich aus Real- und Imaginärteil direkt der Winkel berechnen lässt.
-Wie in der Einleitung beschrieben, handelt es sich hierbei um eine der Größen, die im Rahmen dieses Projekts anhand des Sensorarrays ermittelt werden soll.
-
+Interessant erscheint die DFT, da die Sensoren je ein Kosinus- und ein Sinussignal ausgeben, welches sich zu einem komplexen Signal zusammenfassen lässt. Der Nachteil der komplexen Ausgangsmatrix realtiviert sich dadurch deutlich. Darüberhinaus sind bei der DFT Symmetrien sowohl innerhalb der Spalten als auch der Zeilen vorhanden sind. Die DCT weist Symmetrien nur innerhalb der Zeilen auf.
 
 
 \subsection{Bewertung verschiedener DCT-Größen}
