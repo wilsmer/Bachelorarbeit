@@ -107,12 +107,12 @@ Im zweiten Schritt wird untersucht, wie die 8x8-\gls{df, welche als Favorit aus 
  Der Aufruf erfolgt wie in Abschnitt \ref{sec:automatisierterTestdurchlauf} beschrieben über das Skript \texttt{check.sh} in der Shell.
  
  
-\lstinputlisting[basicstyle=\footnotesize\ttfamily, frame=none, numbers=none, language={}, caption={Test der VHDL-Implementation der 2D-DFT mit Messwerten, die am Sensor-Messplatz aufgenommenwurden.}, label=src:DFT_Vergleich]{Skripte/Vergleich.txt} 
+\lstinputlisting[basicstyle=\footnotesize\ttfamily, frame=none, numbers=none, language={}, caption={Test der VHDL-Implementation der 2D-DFT mit Messwerten, die am Sensor-Messplatz aufgenommen wurden.}, label=src:DFT_Vergleich]{Skripte/Vergleich.txt} 
 
 In der ersten der drei Matrizen stehen die in VHDL berechneten Werte, konvertiert und skaliert, damit sie mit den in \texttt{Matlab} (\texttt{Octave}) aus der zweiten 
 Matrix vergleichbar sind. In der dritten Matrix sind die Differenzen der jeweiligen Werte zu sehen, welche zwischen knapp 0,1 und knapp 0,4 liegen. 
 Auf die Darstellung der Eingangswerte sowie der prozentualen Differenz wurde aus Gründen der Übersicht verzichtet. 
-Gezeigt werden kann dennoch, dass trotz der insgesamt acht Bitshifts je Zahl die Abweichung zwar realtiv groß aber vermutlich noch in einen annehmbaren Rahen liegt.
+Gezeigt werden kann dennoch, dass trotz der insgesamt acht Bitshifts je Zahl die Abweichung zwar realtiv groß aber vermutlich noch in einen annehmbaren Rahmen liegt.
  
  
  \section{Zeitabschätzung als Winkelsesnor im Antriebsmotor eines Elektroautos}
@@ -121,7 +121,7 @@ Gezeigt werden kann dennoch, dass trotz der insgesamt acht Bitshifts je Zahl die
  Aspekt her akzeptabel ist.
  Die maximale Drehzahl eines Elektromotors wird im Datenblatt der Firma ABM Greiffenberger mit 8000\,U/min angegeben~\autocite[5]{greiffenberger},
  als maximale Taktfrequenz des \gls{asic} ist 100\,MHz vorgesehen und es wird eine Winkelgenauigkeit von 1${}^\circ$ angestrebt.
- Aus diesen Angaben lässt sich errechnen, ob die Vorgaben eingehalten werden und wieviele Takte für andere Berechnungen zur Verfügung stehen.
+ Aus diesen Angaben lässt sich errechnen, ob die Vorgaben eingehalten werden und wie viele Takte für andere Berechnungen zur Verfügung stehen.
  
 %  \begin{equation*}
 %    RPM = 8000\, \textrm{min}^{-1}
@@ -153,19 +153,19 @@ Gezeigt werden kann dennoch, dass trotz der insgesamt acht Bitshifts je Zahl die
 %  \end{equation}
 
 
- Um eine Aussage über zur Verfügung stehenden Zeit bzw. Takte machen zu können, wurde in Gleichung (\ref{eq:Takte}) gezeigt, dass für je 1${}^\circ$ Rotation des Motors
+ Um eine Aussage über zur Verfügung stehende Zeit bzw. Takte machen zu können, wurde in Gleichung (\ref{eq:Takte}) gezeigt, dass für je 1${}^\circ$ Rotation des Motors
  etwa 2080 Takte für Berechnungen zu Verfügung stehen.
  Die 512 für die 2D-DFT sind etwa 25$\%$ von 2080. Daraus resultiert, dass noch etwa 75$\%$ der verfügbaren Takte nutzbar sind. Wenn auch die IDFT durchgeführt werden muss, bleibt 
- zumindest die Hälfte der Takte für Interpolation, Filterung, Berechnung so wie Ausgbae bzw. Übertragung der gewonnenen Informationen. 
+ zumindest die Hälfte der Takte für Interpolation, Filterung, Berechnung sowie Ausgbae bzw. Übertragung der gewonnenen Informationen. 
  
  
  
  \section{Chipdesign}
 Um die Fertigung eines ASIC in Auftrag geben zu können, sind nach der Implementation in einer Hardwarebeschreibungssprache wie VHDL noch weitere Schritte notwendig.
-Der erste davon ist die Simulation des kompilierten Quelltextes ohne weitere Anpassungen an die Standarzellen oder den verwendeten Prozess zur Verifikation, ob alle 
-Komponenten für sich und auch das Gesamtsystem wie erwartet funktionieren.
+Der erste davon ist die Simulation des kompilierten Quelltextes ohne weitere Anpassungen an die Standardzellen oder den verwendeten Prozess zur Verifikation, ob alle 
+Komponenten für sich und auch das Gesamtsystem, wie erwartet funktionieren.
 Darauf folgt eine Timingsimulation, in der für die Standardzellen spezifische Verzögerungszeiten des Herstellers eingebunden werden, welche gegebenenfalls vorhandene 
-symbolische Laufzeiten für die Logikgatter mit realistischeren Werten ersetzten.
+symbolische Laufzeiten für die Logikgatter mit realistischeren Werten ersetzen.
 
 
 
@@ -178,7 +178,7 @@ symbolische Laufzeiten für die Logikgatter mit realistischeren Werten ersetzten
  \SI{1,5}{mm^2}. Darin ist der Bedarf für die Leitungen nicht mit eingerechnet. Ersichtlich ist, dass dieser deutlich höher liegt. 
  Das Synthesewerkzeug \texttt{rc} platziert alle Standardzellen auf einer Ebene, für Verbindungen werden zwei Lagen genutzt.
  Beim Floorplan werden die Standardzellen und Leitungen in unserem Fall auf drei und allgemein mit bis zu über zehn Lagen verteilt,
- weshalb eine deutlich kleinere Fläche ausreicht. Wieviele Lagen genutzt werden können hängt von der verwendeten Technologie und somit Strukturgröße zusammen.
+ weshalb eine deutlich kleinere Fläche ausreicht. Wie viele Lagen genutzt werden können hängt von der verwendeten Technologie und somit Strukturgröße zusammen.
  
     \begin{figure}[ht!]
      \centering

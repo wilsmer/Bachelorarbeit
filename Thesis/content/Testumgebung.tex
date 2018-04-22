@@ -6,7 +6,7 @@ einer transponiert wiederholten DFT ergänzt und getestet.
 \subsection{Matrixmultiplikation mit ganzzahligen Faktoren, 1D-DFT und 2D-DFT}
 Der Faktor $\frac{\sqrt{2}}{2}_{10}$ ist im Quelltext als 13\,Bit Vektor im S2Q10-Format abgelegt und hat den Wert $0001011010100_2$.
 Das Waveform-Programm \texttt{SimVision} interpretiert diesen Wert als Ganzzahl. In der dezimalen Darstellung ist dies 724.
-Um die Simulationsergbnisse nachvollziehen zu können, wurden im ersten Schritt die Werte  $\frac{\sqrt{2}}{2}$ der 
+Um die Simulationsergebnisse nachvollziehen zu können, wurden im ersten Schritt die Werte  $\frac{\sqrt{2}}{2}$ der 
 Twiddlefaktormatrix mit dem Wert \num{2.9296875}$\cdot10^{-3}$ ersetzt. Dieser Wert entspricht im S2Q10-Format $0000000000011$ und als
 dezimale Ganzzahl 3. Hiermit lassen sich gut die in \texttt{SimVision} angezeigten Ergebnisse überprüfen.
 Ein weiterer Vorteil ist, dass bei diesem Faktor und den gewählten Eingangswerten der Wertebereich der 12\,Bit Vektoren der Ausgangsmatrix ausreichen und es nicht zu Überläufen kommt.
@@ -21,16 +21,16 @@ der 1D-DFT zu beenden.
 Um zu testen, ob Änderungen am Quelltext, welche zu fehlerhafte Berechnungen der 2D-DFT führten, auch Einfluss auf die 1D-DFT haben, war dies sehr hilfreich.
 
 Zum Test der IDFT muss das entsprechende Eingangssignal gesetzt sein. Nun werden die Zeilen der Twiddlefaktormatrix wie in Abschnitt \ref{sec:idft} beschrieben 
-in umgekehrter Reihenfalge durchlaufen. Auf diese Weise lässt sich auf den mit der 2D-DFT errechneten Werten die Rücktransformation anwenden und abschließend mit den
+in umgekehrter Reihenfolge durchlaufen. Auf diese Weise lässt sich auf den mit der 2D-DFT errechneten Werten die Rücktransformation anwenden und abschließend mit den
 ursprünglichen Werten vergleichen.
 
 \subsection{Automatisierter Testdurchlauf}\label{sec:automatisierterTestdurchlauf}
-Häufig ist nicht der Verlauf aller Signale von Interesse ist, sondern die auschließlich die der Ergebnismatrix. Diese lassen sich ebenfalls in \texttt{SimVision} betrachten.
-Da dies nicht komfortabel ist, wurde von vornherein geplant die Ergebnisse zusätzlich die Datei \texttt{Results.txt} zu schreiben.
+Häufig ist nicht der Verlauf aller Signale von Interesse ist, sondern ausschließlich die der Ergebnismatrix. Diese lassen sich ebenfalls in \texttt{SimVision} betrachten.
+Da dies nicht komfortabel ist, wurde von vornherein geplant, die Ergebnisse zusätzlich in die Datei \texttt{Results.txt} zu schreiben.
 In dieser Datei werden die logischen Pegel \texttt{High} und \texttt{Low} durch eine 1 respektive eine 0 repräsentiert. Diese Daten lassen sich beispielsweise mit
 dem Programm Matlab einlesen und mit der Funktion \texttt{fi()} in das gewünschte Dezimalformat konvertieren. Um die in Hardware erfolgten Bitshits zu kompensieren,
 werden die Werte mit 256 multipliziert. Die so erhaltenen Werte lassen sich nun mit der auf die Eingangswerte angewandte 1D- bzw. 2D-DFT vergleichen. Dazu müssen
-diese auf gleiche Weise eingelesen werden, wie die Ergbniswerte.
+diese auf gleiche Weise eingelesen werden wie die Ergbniswerte.
 %Um in Matlab eine komplexe Matrix zu transponieren, muss entweder die Funktion \texttt{transpose()} oder \texttt{.'} verwendet werden. 
 
 Damit nicht zwangsläufig der gesamte Test durchlaufen werden muss, sondern sich beispielsweise auf das Generieren neuer Ergbniswerte beschränkt werden kann,

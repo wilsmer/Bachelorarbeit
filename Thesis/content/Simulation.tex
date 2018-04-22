@@ -1,6 +1,6 @@
 Nachdem die Implementation der 2D-DFT in VHDL erfolgt ist, werden anhand von Simulationen und eines selbstgeschriebenen Skripts Testdurchläufe durchgeführt, die die
 korrekte Berechnung überprüfen.
-Daran schließt sich die Chipimplementation an, bei der die Gatter in vorm von Standarzellen des Auftragsfertigers \gls{ams} auf dem Chip platziert werden.
+Daran schließt sich die Chipimplementation an, bei der die Gatter in Form von Standardzellen des Auftragsfertigers \gls{ams} auf dem Chip platziert werden.
 
 \section{Simulation der 2D-DFT}
 Zur Simulation von Hardwarekomponenten dient in der Cadence-Umgebung das Programm NC\,Sim. Damit die Signalverläufe grafisch dargestellt werden, wird aus NC\,Sim 
@@ -19,8 +19,8 @@ Erfolgen kann das mittels $2^{n+1}+m$, $n=$ Bitbreite des Vektors und $m=$ angez
  Nachdem \texttt{nReset} auf '1' gesetzt wird, werden die Eingangswerte
  eingelesen. Wenn dieser Vorgang abgeschlossen ist, geht \texttt{loaded} auf '1'. Mit der nächsten steigenden Taktflanke, in Bild \ref{pic:Simulationsdauer} bei 
  \SI{340}{ns}, beginnt die Berechnung
- der \gls{2d-dft}. Beendet ist sie, nachdem die Matrizenmultiplikation auf die Eingangswerte und anschließend auf die \gls{1d-dft}-Werte angewandt wurde. Also nach $2 \cdot 64$
- einzelnen Berechnungen. Wenn dies erfolgt ist, wird \texttt{result\_ready} auf '1' gesetzt. Dies geschieht bei \SI{20\,820}{ns}. Bei einer Taktfrequenz von $(\SI{40}{ns})^{-1}$
+ der \gls{2d-dft}. Beendet wird sie, nachdem die Matrizenmultiplikation auf die Eingangswerte und anschließend auf die \gls{1d-dft}-Werte angewandt wurde. Also nach $2 \cdot 64$
+ einzelnen Berechnungen. Wenn dies erfolgt ist, wird \texttt{result\_ready} auf '1' gesetzt. Dies geschieht bei \SI{20\,820}{ns}. Bei einer Taktfrequenz von $(\SI{40}{ns})^{-1}=25\,\textrm{MHz}$
  (siehe \ref{src:dft8_optimiert_top}) ergeben sich so 512 Takte. Dies bestätigt auch der Edge Count, ebenfalls auf dem Bild zu sehen, welcher die Flanken des \texttt{clk}-Signals 
  zählt. In der Simulation ist zu erkennen, dass die Berechnung der Elemente 
  unterschiedlich viele Takte beansprucht. Hieran lässt sich ebenfalls sehen, dass die 1. (ungerade) Zeile weniger Takte gegenüber der 2. (geraden) Zeile benötigt. 
