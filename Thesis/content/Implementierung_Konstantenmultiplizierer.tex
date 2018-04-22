@@ -3,9 +3,11 @@
 In diesem Kapitel wird die Theorie aus dem Kapitel Analyse in ein funktionsfähiges VHDL-Programm mit den geforderten Eigenschaften
 umgesetzt.
 Es werden weitere Vorüberlegungen getroffen, die sich speziell an der Implementation als Hardwarekomponente orientieren.
-Wenn die Komponente Teil eines Chips werden würde, wurde dieser in $\SI{350}{nm}$ Technologie gefertigt werden. Entprechend beziehen
-sich die Größenangaben der Syntheseergebnisse auf diesen Prozess. Der Auftragsfertiger, bei dem der Chip in Auftrag gegeben werden würde, ist
-Austria Micro Systems (AMS). Dementsprechend sind die Standarzellen von dieser Firma.
+Für eine Chipimplementation wird eine \SI{350}{nm} Technologie vom \gls{ams} verwendet.
+Entprechend beziehen
+sich die Größenangaben der Syntheseergebnisse auf diesen Prozess. Der Auftragsfertiger, bei dem der Chip in Auftrag  gegeben werden würde, ist \gls{ams}
+%Austria Micro Systems (AMS)
+. Dementsprechend sind die Standarzellen von dieser Firma.
 
 
 \section{Projekt- und Programmstruktur}
@@ -20,25 +22,21 @@ In diesem Abschnitt werden Entscheidungen zum Einhalten der Bitbreite der Vektor
   Da dies bei jeder Addition geschieht, würde die benötigte Bitbreite ohne Gegenmaßnahmen immer 
   weiter anwachsen. Die einfachste Möglichkeit dies zu verhindern ist die Divison eines Summationsergebnises
   durch Zwei. 
-  So kann beliebig oft auf den selben Vektor eine Addition ausgeführt werden, ohne einen Überlauf zu provozieren.
+  Auf diese Weise kann beliebig oft auf den selben Vektor eine Addition ausgeführt werden, ohne einen Überlauf zu provozieren.
   Die Kehrseite dieser Vorgehensweise ist, dass durch den Bitshift die Genauigkeit des Ergebnisses sinkt.
-  Auf die Folgen wird in Abschnitt \ref{sec:NumerischeUngenauigkeiten} kurz eingegangen.
-  Für die verlustfreie Multiplikation zweier Zahlen wird sogar die doppelte Breite des Vektors 
+  Auf die Folgen wird in Abschnitt \ref{sec:NumerischeUngenauigkeiten} eingegangen.
+  Für die verlustfreie Multiplikation zweier Zahlen wird die doppelte Breite des Vektors 
   benötigt. Hier kann sich der Bitbereich vor und nach dem Komma ändern.
   
   Wenn diese Maßnahme jedoch nicht ergriffen und alle zusätzlichen Bits beibehalten 
-  würden, müsste mit etwa 70 Bit je Ausgangswert gerechnet werden. Sollte wenigstens
+  würden, müsste mit etwa 70\,Bit je Ausgangswert gerechnet werden. Sollte wenigstens
   auf die bei der Multiplikation entstehenden Nachkommabits verzichtet werden, 
-  würde die benötigte Bitbreite immer noch bei über 40 liegen.
-  Auch dies würde noch eine immense Vergrößerung der Schaltung alleine schon wegen der zusätzlichen
-  Leitungen bedeuten. Desweiteren würden sich hierdurch die benötigten Zeiten aller Berechnungen erhöhen, 
+  würde die benötigte Bitbreite immer noch bei über 40\,Bit liegen.
+  Auch dies würde noch eine immense Vergrößerung der Schaltung, alleine wegen der zusätzlichen
+  Leitungen, bedeuten. Desweiteren würden sich hierdurch die benötigten Zeiten aller Berechnungen erhöhen, 
   was eine langsamere Taktfrequenz oder eine eine Unterteilung in Teilschaltnetzte und somit in der Summe
   mehr Takte mit sich ziehen würde.
   
-
-
-
-
  
  
  \subsection{VHDL-Bibliotheken}
@@ -53,17 +51,17 @@ In diesem Abschnitt werden Entscheidungen zum Einhalten der Bitbreite der Vektor
  
 Für den Standardsatz der Datentypen zu dem beispielsweise \texttt{std\_logic} gehört, wird 
 \texttt{std\_logic\_1164.all} verwendet.
-Um Textdateien lesen und schreiben zu können, wird die Bibliothek \texttt{std.textio.all} sowie 
-\texttt{std\_logic\_textio.all} benötigt.
+Um eine funktionale Simulation des implementierten VHDL-Quelltextes optimal testen zu können, werden die Bibliotheken  \texttt{std.textio.all} und 
+\texttt{std\_logic\_textio.all} eingesetzt. Diese ermöglichen das Lesen und Schreiben von Werten in eine Textdatei.
 
 %Die im Jahr 2008 veröffentlichte VHDL-Version führt Unterstütztung mit den Datentypen \texttt{ufixed} und 
 %\texttt{sfixed} die Möglichekeit ein, (vorzeichenbehaftete) Kommazahlen zu verwenden. Die 
  
 \subsection{Vorüberlegungen zum Programmablauf}\label{sec:VorueberlegungenProgrammablauf}
-Über die Parallelität der Berechnungen wird auch bei gleicher Funktion der Komponenten maßgeblich die benötigten Takte der Berechnung der 2D-DFT sowie die benötigte
-Logik und deren Größe bestimmt. 
+Die Parallelität der Berechnungen bestimmt auch bei gleicher Funktion der Komponenten maßgeblich die benötigten Takte der Berechnung der 2D-DFT sowie die benötigte
+Logik und deren Größe. 
 % Für die Aufwandsabschätzung wird angenommen, dass alle Eingangswerte zeitgleich zur Verfügung stehen.
-Um einen guten Kompromiss aus benötigter Zeit und Chipfläche zu erzielen,
+Um einen guten Kompromiss aus erforderlicher Zeit und Chipfläche zu erzielen,
 sollen  Real- und Imaginärteil die die Berechnung der Matrixelemente jeweils gleichzeitig, die einzelnen Elemente aber nacheinander berechnet werden. Darüber hinaus ist geplant, die selbe Recheneinheit der 1D-DFT auch für die 2D-DFT zu nutzen. 
 
 
@@ -88,7 +86,7 @@ sollen  Real- und Imaginärteil die die Berechnung der Matrixelemente jeweils gl
 Bis die Berechnung der 2D-DFT realisiert war, wurden verschiedene Stadien durchlaufen. Im ersten Schritt wurde die 1D-DFT implementiert, wobei die im Kapitel
 Analyse behandelten Optimierungsmöglichkeiten näher betrachtet werden. Desweiteren wird das Berechnungsschema der geraden sowie ungeraden Zeilen der 
 Twiddlefaktormatrix und die daraus resultierende Anzahl an Takten vorgestellt.
-Ein weiterer wichtiger Punkt ist die Umsetzung der 2D-DFT auf Basis der vorhandenen 1D-DFT-Einheit.
+Ein wichtiger Punkt ist die Umsetzung der 2D-DFT auf Basis der vorhandenen 1D-DFT-Einheit.
 Abschließend wird gezeigt, dass es auf einfache Weise möglich ist, die vorhandene DFT-Einheit um die Funktion der IDFT zu ergänzen.
 
 
@@ -103,7 +101,7 @@ einfache XOR-Verknüpfung beider MSB der Multiplikanden ergeben.
 Diesem Vorteil steht jedoch eine aufwändigere Subtraktion (bzw. Addition negativer Zahlen) gegenüber. Der zusätzliche Aufwand entspricht 
 etwa dem der Negierung von Zahlen im 2er-Komplement. Aus diesem Grund wurde sich hierfür entschieden.
 
-Bei der genaueren Betrachtung der Twiddlefaktormatrix konnte in Abschnitt \ref{sec:KomplexeEingangswerte} festgestellt werden, dass, abgesehen von der ersten, in jeder Zeile gleich viele Additionen wie Subtraktionen vorhanden sind. Dies trifft auch ausschließlich auf die jeweils vier nicht trivialen Faktoren der geraden Zeilen zu. 
+Bei der genaueren Betrachtung der Twiddlefaktormatrix konnte in Abschnitt \ref{sec:KomplexeEingangswerte} festgestellt werden, dass in jeder Zeile, abgesehen von der ersten, gleich viele Additionen wie Subtraktionen vorhanden sind. Dies trifft auch ausschließlich auf die jeweils vier nicht trivialen Faktoren der geraden Zeilen zu. 
 Dies lässt sich anhand des Einheitskreises in Abb. \ref{pic:Einheitskreis_Faktoren}, der Abbildung \ref{pic:Twiddlefaktoren_Darstellung8x8}
  und der grafischen Darstellung der Twiddlefaktormatrix in Abb. \ref{pic:MatrizenDarstellungTwiddlefaktoren} nachvollziehen. 
 % In der letztgenannten ist zu sehen, dass die 2., 4., 6., und 8. Zeile je vier nicht triviale und komplexe Faktoren enthält. 
@@ -116,10 +114,9 @@ Aus Abschnitt \ref{sec:Matrixmultiplikation} ist bekannt, dass bei einer Matrixm
  Hieraus kann abgeleitet werden, dass es das Assoziativgesetz erlaubt die Eingangswerte umzusortieren, wenn auch die Twiddlefaktoren entsprechend umsortiert werden. 
 Geschickt aufgeteilt auf triviale und nicht triviale Berechnungen, 
 ist es dadurch möglich auf das Invertieren der Eingangswerte, also den hierfür benötigten Takt und die Inverter zu verzichten und um nur noch die Multiplikation
-mit $+\frac{\sqrt{2}}{2}$ durchführen zu müssen. Letztere muss wegen des Distributivgesetzes nur ein Mal pro Zeile und Real- bzw. Imaginärteil erfolgen.
+mit $+\frac{\sqrt{2}}{2}$ durchführen zu müssen. Letztere muss wegen des Distributivgesetzes nur ein mal pro Zeile und Real- bzw. Imaginärteil erfolgen.
 
- Darüber hinaus minimiert sich bei dieser Anordnung das Risiko eines Überlaufs, da zumindest im ersten Schritt eine Subtraktion erfolgt. In den weiteren muss unweigerlich die 
- Akkumulation stattfinden. 
+ Darüber hinaus minimiert sich bei dieser Anordnung das Risiko eines Überlaufs, da zumindest im ersten Schritt eine Subtraktion erfolgt. In den weiteren Berechnungen folgt dann die Akkumulation. 
  Wegen der Einsen in der ersten Zeile der Twiddlefaktormatrix müssen für die erste Zeile der Ausgangsmatrix alle Spalten einmal aufsummiert werden.
  Dies hat zur Folge, dass ein großer Wert entstehen kann, welcher Maßgebend für die Anzahl der Vorkommabits ist.
  Aus diesem Grund wird zur Sicherheit, der einheitlichen Skalierung der Zahlen und der Einfachheit wegen nach jeder Addition oder Subtraktion das Ergebnis durch einen Bitshift halbiert. 
@@ -132,7 +129,7 @@ Wie in Abschnitt \ref{sec:NumerischeUngenauigkeiten} erwähnt, ist die Optimieru
  
 \subsection{Berechnungsschema und benötigte Takte der Ergebnisse}\label{sec:Berechnungsschema}
 
-In Abbildung \ref{pic:AkkumulationUngeradeSpalten} ist die Berechnung der ungeraden Spalten der Eingangsmatrix am Beispiel der ersten zu sehen. Für die 3. und 7. müssen die 
+In Abbildung \ref{pic:AkkumulationUngeradeSpalten} ist die Berechnung der ungeraden Spalten der Eingangsmatrix am Beispiel der erstenSpalte zu sehen. Für die 3. und 7. müssen die 
 Eingangswerte so angeordnet werden, dass die Vorzeichen, beginnend mit einer Subtraktion, immer im Wechsel auftreten. Für die 5. Zeile ist dies bereits gegeben.
 $r$ steht für den Realteil der Eingangswerte, $i$ stünde für dessen Imaginärteil. Der Index gibt die Postition des Elements in einer Spalte an, angewandt werden muss die
 Berechnung auf alle Spalten.
@@ -207,17 +204,22 @@ Der rechten Spalte aus Abb. \ref{pic:AkkumulationGeradeSpalten} kann entnommen w
 % werden soll, wurde in Absprache mit dem ISAR-Team entschieden, dass die Summanden vor jeder Summation durch einen Bitshift nach rechts halbiert werden. Auf diese
 % Weise hat ein Additionsergebnis immer 13 Bit Breite. Durch den Bitshift kann das Resultat der 1D-DFT direkt als Eingang für die 2D-DFT verwendet werden. 
 Durch die hintereinander erfolgenden Bitshifts wird durch $2^{n_B}$ geteilt, 
-wobei $n_B$ die Anzahl der Bitshifts ist. Den beiden Darstellungen der Summationen kann entnommen werden, dass, um ein Überlaufen des Bitvektors zu vermeiden es nötig ist,
-drei respektive vier Bitshifts durch zu führen. Wie bereits erläutert erfolgt bei den ungeraden Zeilen abschließend ein doppelter Bitshift. Auf diese Weise ergibt sich für die
-1D-DFT, dass das Ergebnis um den Faktor 16 kleiner ist. Da beim zweiten Durchlauf, um die 2D-DFT zu berechnen, ebenfalls 
-durch 16 geteilt wird, ergibt sich insgesamt eine Division durch $2^{2\cdot4} = $ 256.
+wobei $n_B$ die Anzahl der Bitshifts ist.
+Um einen Überlauf zu verhindern, wird nach jder Summation ein Bitshift durchgeführt.
+Da in den ungeraden Spalten weniger Summationen notwendig sind, erfolgt abschließend ein doppelter Bitshift.
+Andernfalls wären die Ergebnisse nicht mit denen der geraden Zeilen vergleichbar.
+Auf diese Weise ergibt sich für die
+1D-DFT, dass das Ergebnis um den Faktor $2^4=16$ kleiner ist. 
+Bei der zweiten Matrixmultiplikation wird die 2D-DFT berechnet. Auch hier wird durch 16 geteilt. Insgesamt ergibt sich
+eine Division durch $2^{2\cdot4} = $ 256.
 
 Aus den Abbildungen \ref{pic:AkkumulationUngeradeSpalten} und \ref{pic:AkkumulationGeradeSpalten} können die Takte, die zur Berechnung der 1D- bzw. 2D-DFT benötigt werden, 
 abgeleitet werden.
-Für ungeraden Zeilen sind je Element drei Takte nötig und mit acht Elementen pro Zeile und vier ungeraden Zeilen errechnen sich so 3$\cdot$8$\cdot$4=96 Takte.
-Analog errechnet sich für die geraden Zeilen mit je fünf Takten pro Element 5$\cdot$8$\cdot$4=160 Takte.
-In der Summe ergeben sich so 96+160=256 Takte für die 1D-DFT. Da die 2D-DFT ohne Takte fürs Umspeichern oder ähnliches sofort im Anschluss berechnet werden kann, 
-verdoppelt sich die Anzahl der Takte auf 512 für die vollständige Berechnung.
+Für ungeraden Zeilen sind je Element drei Takte nötig und mit acht Elementen pro Zeile und vier ungeraden Zeilen errechnen sich so 96 ($3\cdot8\cdot4$) Takte.
+Analog errechnet sich für die geraden Zeilen mit je fünf Takten pro Element 160 ($5\cdot8\cdot4$) Takte.
+In Summe ergeben sich 256 ($96+160$) Takte für die 1D-DFT. Die 2D-DFT kann ohne Umspeichern berechnet werden, 
+weshalb keine weiteren Takte benötigt werden als die für die zweite Matrixmultiplikationn.
+Deshalb verdoppelt sich die Anzahl der Takte für die vollständige Berechnung auf 512.
 
 \begin{table}[ht!]
 \centering
@@ -245,6 +247,8 @@ werden parallel berechnet und sind somit zeitgleich fertig.
 
 
 \subsection{Programmablauf der 1D-DFT}\label{sec:Programmablauf1D}
+Der Programmablauf der 1D-DFT teilt sich für die ungerasen in drei bzw. für die geraden in fünf Takte für die 
+Berechnung eines Elements der Ausgangsmatrix.
 Im ersten Takt der Berechnung werden die für die jeweilige Zeile der Twiddlefaktormatrix spezifischen Additionen und Subtraktionen durchgeführt. 
 Für die geraden Zeilen werden die Werte, die eine Multiplikation benötigen, getrennt von den übrigen zusammengefasst.
 Im darauffolgenden Takt werden die Zwischenwerte, für die geraden Zeilen wieder getrennt nach Multiplikation oder nicht, akkumuliert.
@@ -255,7 +259,7 @@ aufsummiert. Deshalb kann im vierten Takt die Konstantenmultiplikation erfolgen 
 
 Die Zuordnung der aktuellen Zeile der Twiddlefaktormatrix erfolgt über einen Zähler, der von 0 bis 63 zählt. Er ist als 6 Bit Vektor realisiert, der bei 63 einen beabsichtigten Überlauf hat und wieder bei 0 anfängt.
 Der Vektor kann als zwei aufeinanderfolgende 3 Bit Vektoren gesehen werden. Auf den vorderen wird immer eine Eins aufaddiert, wenn der hintere einen Überlauf hat und wieder bei Null zu zählen beginnt. Beide Vektoren können für sich als Modulo-8-Zähler betrachtet werden.
-Die vorderen drei Bit des gesamten Vektors entsprechen der aktuellen Zeile, die hinteren drei der Spalte, also dem Index in der aktuellen Zeile.
+Die vorderen drei Bit des gesamten Vektors entsprechen der aktuellen Zeile, die hinteren drei Bit der Spalte, also dem Index in der aktuellen Zeile.
 Mit der Funktion \texttt{to\_integer} der VHDL-Bibliothek \texttt{numeric\_std} lassen sich die Teilvektoren nutzen, um die Elemente der Eingangsmatrix anzusprechen.
 Das letzte Bit des ersten Teilvektors ist für ungerade Zeilen Null und für gerade Zeilen Eins.
 Da sich die Eigenschaften der Twiddlefaktormatrix in gerade und ungerade Zeilen aufteilen lassen, kann dies genutzt werden, um die entsprechenden Operationen durchzuführen und den passenden Folgezustand des Zustandsautomaten zu setzen.
@@ -263,7 +267,7 @@ Da sich die Eigenschaften der Twiddlefaktormatrix in gerade und ungerade Zeilen 
 
 \subsection{Entwickelung von der 1D-DFT zur 2D-DFT}
 In Abschnitt \ref{sec:VorueberlegungenProgrammablauf} wurde entschieden, dass nach Möglichkeit die selbe Recheneinheit
-für die 1D- wie auch die 2D-DFT genutzt werden soll. 
+für die 1D- und die 2D-DFT genutzt werden soll. 
 Aus Abschnitt \ref{sec:2d-dft} ist bekannt, dass für die 2D-DFT einer Matrix die Twiddlefaktormatrix einmal links und einmal rechts von der Eingangsmatrix steht.
 Als 1D-DFT-Matrix (Zwischenwertematrix) wird die Multiplikation der ersten Twiddlefaktormatrix mit der Eingangsmatrix betrachtet. Anschließend wird die 1D-DFT-Matrix mit der 
 Twiddlefaktormatrix multipliziert. Aus der vertauschten Reihenfolge resultiert, dass die Zeilen und Spalten getauscht durchlaufen werden. 
@@ -329,7 +333,7 @@ in Abschnitt \ref{sec:Programmablauf1D} eingeführten Teilvektor für das Durchl
 
 
 \section{Syntheseergebnisse von Teilkomponenten}\label{sec:Syntheseergebnisse}
-Die Syntheseergebnisse werden mit dem Programm \texttt{rc} erstellt. Wenn 
+Die Syntheseergebnisse werden mit dem Programm  \texttt{RTL Compiler (rc)} erstellt. Wenn 
 Da das Schaltnetz der gesamten Schaltung zu groß und nicht nachvollziebar wäre, werden in diesem Abschnitt nur relevante Teilkomponenten gezeigt.
 
 \subsection{13 Bit Konstantenmultiplizierer}\label{sec:Konstantenmultiplizierer}
@@ -399,7 +403,7 @@ die forderen 12 Bit in die Berechnung ein.
 \centering
  \caption{Vergleich der Syntheseergebnisse der Teilkomponenten in Bezug auf Anzahl der Gatter und ihre Fläche}
  \label{tab:VergleichSyntheseergebnisse}
- \begin{tabular}{lcc}
+ \begin{tabular}{lrr}
  \hline
 				&Gatter  	&Fläche (Prozess: 350nm) \\
   \hline	
@@ -415,14 +419,14 @@ die forderen 12 Bit in die Berechnung ein.
 
 \subsection{Gegenüberstellung der Konstantenmultiplikation und der Bildung des 2er-Komplements}
 
-Unter diesem Punkt sollen die Konstantenmultiplikation und die Bildung des 2er-Komplements unter Aspekten der benötigten Zeit und des benötigten Platzes auf einem Chip 
-betrachtet werden. Um einen Eindruck hiervon zu erhalten, werden im Kapitel Entwurf in Abschnitt \ref{sec:Syntheseergebnisse} jeweils die Schaltnetzte 
+Unter diesem Punkt werden die Konstantenmultiplikation und die Bildung des 2er-Komplements unter Aspekten der benötigten Zeit und des benötigten Platzes auf einem Chip 
+betrachtet. Um einen Eindruck hiervon zu erhalten, werden im Kapitel Entwurf in Abschnitt \ref{sec:Syntheseergebnisse} jeweils die Schaltnetzte 
 %für die Negation mittels 2er-Komplement und die Multiplikation mit einem konstanten Faktor 
 gezeigt.
-Wie dort erläutert, lässt sich anhand dieser sagen, dass es bei dieser Art der Implementierung keinen zeitlichen Gewinn gibt, da beide kritischen Pfade etwa gleich lang 
-sind. Für die knapp $4$ mal mehr Gatter bei der Multiplikation ist auch ein größerer Vertrahtungsaufwandt erforderlich, sodass die Konstantenmultiplizierer
+Wie erläutert, kann gesagt werden, dass es bei dieser Art der Implementierung keinen zeitlichen Gewinn bezüglich der Taktfrequenz gibt, da beide kritischen Pfade etwa gleich lang 
+sind. Für die knapp $4$ mal mehr Gatter bei der Multiplikation ist auch ein größerer Verdrahtungsaufwandt erforderlich, sodass die Konstantenmultiplizierer
 auf einem Chip eine etwas größere Fläche beanspruchen. Da es sich hier insgesamt aber um wenige Gatter handelt, wirkt sich dies erst bei sehr vielen Instanzen aus.
-Es kann an dieser Stelle deshalb festgehalten werden, dass dieser Unterschied nicht als entscheidend geltend gemacht werden kann.
+Es kann an dieser Stelle festgehalten werden, dass dieser Unterschied nicht als entscheidend geltend gemacht werden kann.
 
 
 
