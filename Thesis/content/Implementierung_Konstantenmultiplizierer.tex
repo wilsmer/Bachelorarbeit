@@ -98,7 +98,7 @@ Abschließend wird gezeigt, dass es auf einfache Weise möglich ist, die vorhand
 Anfangs wurde angenommen, dass Multiplikationen mit den Twiddlefaktoren $\pm 1$ und $\pm\frac{\sqrt{2}}{2}$ durchgeführt werden müssen. 
 Dass bei einer optimierten 8x8-DFT wegen des explizieten ausprogrammierens der Berechnungen die Multiplikation mit $\pm1$ wegfällt, war schnell klar.
 Wegen der betragsmäßig identischen nicht trivialen Twiddlefaktoren wurde zu Beginn der Entwicklung in Betracht gezogen das 1er-Komplement zu verwenden, da sich negative und positive Zahlen mit gleichem Betrag nur durch ihr höchstwertigstes 
-Bit unterscheiden. Auf diese Weise könnte das selbe Resultat für den Imaginär- wie für den Realteil verwendet werden. Das Vorzeichen würde sich über eine 
+Bit unterscheiden. Auf diese Weise könnte dasselbe Resultat für den Imaginär- wie für den Realteil verwendet werden. Das Vorzeichen würde sich über eine 
 einfache XOR-Verknüpfung beider MSB der Multiplikanden ergeben.
 Diesem Vorteil steht jedoch eine aufwändigere Subtraktion (bzw. Addition negativer Zahlen) gegenüber. Der zusätzliche Aufwand entspricht 
 etwa dem der Negierung von Zahlen im 2er-Komplement. Aus diesem Grund wurde sich hierfür entschieden.

@@ -1,12 +1,12 @@
-\subsection{Berechnung mittels der schnellen Fouriertransformation}\label{sec:BerechnungFFT}
-Die Mathematiker Cooley und Tukey haben einen Algorithmus entwickelt und im Jahr 1965 veröffentlicht, mit dem sich die \gls{dft} mit vergleichsweise wenig Multiplikationen
-und somit deutlich schneller als bei der allgemeinen \gls{dft} berechnen lässt. Das Verfahren wird als \gls{fft} bezeichnet.
+\subsection{Berechnung der schnellen Fouriertransformation}\label{sec:BerechnungFFT}
+Die Mathematiker Cooley und Tukey haben einen Algorithmus entwickelt und im Jahr 1965 veröffentlicht, mit dem sich die \gls{dft} mit weniger Multiplikationen
+und dadurch schneller als bei der allgemeinen \gls{dft} berechnen lässt. Das Verfahren wird als \gls{fft} bezeichnet.
 Grundlage ist, dass sich eine DFT
 in kleinere Teil-DFTs aufspalten lässt, welche durch Ausnutzen von Symmetrieeigenschaften in der Summe weniger Koeffizienten haben. 
-Üblich ist die Radix-2 FFT, Ausgangspunkt ist also eine DFT mit 2 Eingangswerten.
-Da mit jeder weiteren Teil-DFT sich die Anzahl der Eingangswerte verdoppelt, eignet sich diese Methode nur für Eingangsvektoren der Größe $2^n$. Dieser
+Üblich ist die Radix-2 FFT, Ausgangspunkt ist eine DFT mit 2 Eingangswerten. 
+Diese Methode kann nur auf Eingangsvektoren der Größe $2^n$ angewandt werden. Dieser
 vermeintliche Nachteil lässt sich durch Auffüllen des Eingangsvektors mit Nullen (Zeropadding) eliminieren. Dies hat zur Folge, dass die Größe des Ausgangsvektors
-immer eine Potenz von Zwei ist. 
+immer eine Potenz von zwei ist. 
 Die Anzahl der benötigten komplexen Multiplikationen $m_{FFT}$ kann mit der Gleichung (\ref{eq:FFT_komplexMult}) abgeschätzt werden.
 
 

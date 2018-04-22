@@ -30,7 +30,7 @@
  
  \input{content/Zahlendarstellung.tex}
  \section{Mathematische Grundlagen}
- In dieser Arbeit werden die komplexe Multiplikation sowie die Matrixmultiplikation genutzt, welche nachfolgen kurz behandelt werden.
+ In dieser Arbeit werden die komplexe Multiplikation sowie die Matrixmultiplikation genutzt, welche nachfolgend kurz behandelt werden.
  Die Fouriereihenentwicklung sowie insbesondere die Fouriertransformation und ihre diskrete Variante werden im Anschluss erläutert, da
  sie elementarer Bestandteil dieser Arbeit sind.
  Da auch die diskrete Kosinustransformation eine Möglichkeit darstellt, in den Bildbereich zu gelangen, wurde sie in den 
@@ -50,20 +50,20 @@
  
  
 \chapter{Analyse}
-Im diesem Kapitel werden zunächst die \gls{dft} und die \gls{dct} in verschiedenen Größen einander gegenübergestellt und eine Entscheidung darüber getroffen, welche
-sich besser dafür eignet, auf einem \gls{asic} implementiert zu werden. Hierbei spielen in erster Linie die Anzahl unterschiedlicher Faktoren eine Rolle, 
-da für identische Faktoren nur eine Multiplikationseinheit erforderlich ist. Gleiche Faktoren gehen deshalb mit einer kleineren Chipfläche einher, was zusammen mit der schnellen 
-Berechnung, also geringe Zahl benötigter Takte, die beiden Hauptziele bei der Chipimplementierung darstellen.
-Als interessante Kandidaten wurden die Matrizen mit den Größen 8x8, 9x9 und 15x15 ausgewählt. 
+In diesem Kapitel werden zunächst die \gls{dft} und die \gls{dct} in verschiedenen Größen einander gegenübergestellt und eine Entscheidung darüber getroffen, welche
+sich besser dafür eignet, auf einem \gls{asic} implementiert zu werden. Hierbei sind in erster Linie die Anzahl unterschiedlicher Faktoren relevant, 
+da für identische  nur eine Multiplikationseinheit erforderlich ist.
+Als Interessant wurden die Matrizen mit den Größen 8x8, 9x9 und 15x15 ausgewählt. 
 Die 8x8-Matrix hat dieselbe Anzahl Faktoren, wie das derzeitige Demo-Array Sensore hat, sodass die Eingangswerte direkt transformiert werden können. 
 Die beiden anderen haben aufgrund ihrer ungeraden Zahl ihren Mittelpunkt zwischen den mittleren Sensorelementen, was für die 
 weitere Verarbeitung des transformierten Signals von Bedeutung ist. Die Matrix der Dimension 15x15 lässt sich durch Interpolation der Daten errechnen, während es für
 die 9x9-Matrix bisher keine Überlegungen gibt, wie sie errechnet werden könnte.
-Die 12x12 sowie die 16x16 werden zum besseren Einordnen der Bewertungen ebenfalls betrachtet.
+Die 12x12, sowie die 16x16 werden zum besseren Einordnen der Bewertungen ebenfalls betrachtet.
 Darüber hinaus ist aus Abschnitt \ref{sec:BerechnungFFT} bekannt, dass die \gls{fft} auf 2$^n$ Elementen basiert und es sich hierbei um ein sehr schnelles und 
 effizientes Verfahren handelt. 
 
-Im zweiten Schritt wird untersucht, wie die 8x8-\gls{dft}, welche als Favorit aus der ersten Betrachtung herausgegangen ist, optimiert werden kann.
+Im zweiten Schritt wird untersucht, wie die 8x8-\gls{df, welche als Favorit aus der ersten Betrachtung herausgegangen ist, t} optimiert werden kann.
+
 
 
  \input{content/Bewertung_DCT.tex}

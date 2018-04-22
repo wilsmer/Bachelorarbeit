@@ -1,5 +1,5 @@
 \section{Diskrete Kosinus Transformation (DCT)}
-Die mit dem Sensor-Array gewonnenen Daten lassen sich als Bild mit derzeit $8\times8=64$ Pixeln darstellen. Es ist denkbar anhand dieses Bildes die gesuchten
+Die mit dem Dmeo-Array gewonnenen Daten lassen sich als Bild mit $8\times8=64$ Pixeln darstellen. Es ist denkbar anhand dieses Bildes die gesuchten
 Informationen mittels Bildverarbeitungsalgorithmen zu errechnen.
 Zu den häufigsten Algorithmen zählt hier die \gls{dct}, das sie aus einem reellen Eingangssignal eine ebenfalls reelle Transformierte erzeugt~\autocite[355-359]{burger2006digBildverarbeitung}. 
 Ein weiterer Vorteil den sie gegenüber der \gls{dft} hat, ist dass bei der periodischen Wiederholung im Spektrum Unstetigkeiten aufgrund von Kanten umgangen werden können
@@ -7,7 +7,7 @@ Ein weiterer Vorteil den sie gegenüber der \gls{dft} hat, ist dass bei der peri
 
 Für die Berechnung der DCT gibt es verschiedene Varianten, die sich in der Symmetrie des Sepktrums unterscheiden. Die in der Bildverarbeitung häufigste ist 
 die sogenannte \textit{ungerade DCT}~\autocite[28-31]{psturm1999bildkompression}.
-Darüber hinaus wird häufig die erste Zeile der Twiddlefaktormatrix mit dem Faktor $\nicefrac{1}{\sqrt2}$, sowie die gesamte Matrix mit 
+Häufig wird die erste Zeile der Twiddlefaktormatrix mit dem Faktor $\nicefrac{1}{\sqrt2}$, sowie die gesamte Matrix mit 
 $\sqrt{\frac{2}{N}}$, $N =$ Anzahl Elemente in einer Zeile bzw. Spalte, skaliert~\autocite{wikiDCT}. Auf diese Weise ergibt sich eine ortohogonale Matrix, bei der Inverse und
  Transponierte identisch sind.  
 
@@ -18,10 +18,10 @@ X^*[k] = \sum_{n=0}^{N-1} x[n] \cos\left[\frac{\pi k}{N} \left(n+\frac{1}{2}\rig
 \end{equation}
 
 Wie Gleichung (\ref{eq:dct}) entnommen werden kann, basiert die Transformation nur auf Kosinusfunktionen, weshalb auch das Spektrum rein reell ist.
-Die Twiddlefaktormatrix kann in Matlab mit
- %\lstinputlisting[language=matlab, caption={}, frame=no, numbers=none, label=src:dct_faktoren]{Skripte/Matlab/DCT_Faktoren.m}
- \begin{equation}\label{eq:matlab_dct_faktoren}
-  W = \cos\left(\frac{\pi}{N}\cdot \left([0:N-1]')*([0:N-1]+\frac{1}{2}\right)\right)
- \end{equation}
-
-berechnet werden. Anschließend ist es, wie beschrieben, sinnvoll die Faktoren zu skalieren.
+% Die Twiddlefaktormatrix kann in Matlab mit
+%  %\lstinputlisting[language=matlab, caption={}, frame=no, numbers=none, label=src:dct_faktoren]{Skripte/Matlab/DCT_Faktoren.m}
+%  \begin{equation}\label{eq:matlab_dct_faktoren}
+%   W = \cos\left(\frac{\pi}{N}\cdot \left([0:N-1]')*([0:N-1]+\frac{1}{2}\right)\right)
+%  \end{equation}
+% 
+% berechnet werden.

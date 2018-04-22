@@ -5,10 +5,12 @@ Hochschule für angewandte Wissenschaften Hamburg.
  Bisherige Analysen und Versuche wurden überwiegend auf theoretischer Ebene mit der Simulationssoftware Matlab oder anhand einer ca. 7x7\,cm großen Sensormatrix mit 64 einzelnen Sensoren in Verbindung mit
  einem an den PC angeschlossenen Microkontroller vorgenommen. Auf diese Weise können reale Messwerte ermittelt und verschiedene Szenarien getestet werden.
  
- Damit letztlich die Sensoren und alle Berechnungen auf einem \gls{asic} erfolgen können, ist als nächstes die Entwicklung der signalverarbeitenden Komponenten in einer Hardwarebeschreibungssprache geplant.
- Ziel ist ein Sensormodul, mit dem eine kontinuierliche Winkelberechnung zur Positionsbestimmung möglich ist. Dieses soll beispielsweise die Rotorlage eines Elektromotors ermitteln und die Information als digitales Nutzsignal ausgeben können. Ein wesentliches Punkt ist das Unterdrücken von Störfeldern, welche in Form von Inhomogenitäten, unter anderem hervorgerufen durch Fehlpositionierung (Ablage) und Schrägstellung des Gebermagneten und den Magnetsensoren selbst, verursacht werden. 
+ Das Ziel des ISAR-Projekts ist, einen \gls{asic} zu fertigen, auf dem die Sensoren und alle Berechnungen erfolgen. 
+ zunächst ist die Entwicklung der signalverarbeitenden Komponenten in einer Hardwarebeschreibungssprache geplant.
+ Ziel ist ein Sensormodul, mit dem eine kontinuierliche Winkelberechnung zur Positionsbestimmung möglich ist. Dieses soll beispielsweise die Rotorlage eines Elektromotors ermitteln und die Information als digitales Nutzsignal ausgeben können. Ein wesentliches Aspekt ist das Unterdrücken von Störfeldern, welche in Form von Inhomogenitäten, unter anderem hervorgerufen durch Fehlpositionierung (Ablage) und Schrägstellung des Gebermagneten und den Magnetsensoren selbst, verursacht werden. 
 
- Den erste Schritt der Signalverarbeitung stellt die Berechnung der zweidimensionalen dirketen Fouriertransformation der Sensorsignale dar (Abb. \ref{pic:AblaufFourier}), da sich im Fourierraum Störanteile leichter filtern lassen. Derzeit ist offen, ob anschließend der Winkel direkt berechnet werden kann oder vorher eine Rücktransforation erfolgen muss.
+ Den erste Schritt der Signalverarbeitung stellt die Berechnung der zweidimensionalen dirketen Fouriertransformation der Sensorsignale dar (Abb. \ref{pic:AblaufFourier}), da sich im Fourierraum Störanteile leichter filtern lassen. 
+ Derzeit ist offen, ob anschließend der Winkel direkt berechnet werden kann oder vorher eine Rücktransforation erfolgen muss.
  
 
 \begin{figure}[ht!]
@@ -21,7 +23,7 @@ Hochschule für angewandte Wissenschaften Hamburg.
 
 \section{Stand der Technik}
 
-Zur Winkelberechnung auf Basis von Magnetsensoren lassen sich verschiedene Effekte nutzen. Hierzu zählt als Vorreiter der Hall-Effekt. Weiterentwicklungen gingen über den \gls{amr2}, den \gls{gmr2} hin zum \gls{tmr2}. Sensoren die den TMR-Effekt nutzen gibt es bereits seit mehreren Jahren, es werden aber weitere Fortschritte angestrebt und erzielt. 
+Zur Winkelberechnung auf Basis von Magnetsensoren lassen sich verschiedene Effekte nutzen. Als erstes gelang es Sensoren auf Basis des Hall-Effekts zu entwickeln. Fortschreitende Technik ermöglichte es, die schon länger bekannten Effekte \gls{amr2}, \gls{gmr2} und aktuell \gls{tmr2} herzustellen. Sensoren die den TMR-Effekt nutzen gibt es bereits seit mehreren Jahren, es werden aber weitere Fortschritte angestrebt und erzielt. 
 Die Entwicklung von Sensoren die die verschiedenen magnetoresistive Effekte nutzen, bringen Vorteile hinsichtlich des Strombedarfs, der Amplitude des Sensorsignals, Genauigkeit der Auflösung, Größe sowie benötigte Feldstärke~\autocite[2]{magSensTechOverview}. Darüber hinaus ist es nur mit den GMR- und TMR-Sensoren möglich 360${}^\circ$ aufzulösen. Die AMR-Sensoren erzeugen je Umdrehung zwei Sinusschwingungen, wodurch eine um 180${}^\circ$ versetzte Doppeldeuigkeit entsteht~\autocite{tsukakoshi2017tmrgmr}. Bei Hall-Sensoren sind die anderen genannten Schwächen deutlich stärker ausgeprägt, weswegen sie in diesem Bereich keine Verwendung finden.
 
 

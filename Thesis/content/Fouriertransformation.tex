@@ -16,7 +16,7 @@ Die Fourierkoeffizienten lassen sich über die Gleichungen (\ref{eq:a_k}) und (\
  b_k = \frac{1}{\pi} \int_{-\pi}^{\pi} x(t) \cdot \sin(kt) dt \quad \textrm{für} \quad k \geq 1
 \end{equation}
 
-Mit der Exponentialschreibweise lassen sich Sinus und Kosinus auch wie in (\ref{eq:cos_exp}) und (\ref{eq:sin_exp}) ausdrücken:
+Mit der Exponentialschreibweise lassen sich Sinus- und Kosinusfunktionen auch wie in (\ref{eq:cos_exp}) und (\ref{eq:sin_exp}) ausdrücken:
 
 \begin{equation}\label{eq:cos_exp}
  \cos(k t) = \frac{1}{2}\left(e^{j k t} + e^{-j k t} \right)
@@ -78,9 +78,8 @@ Die Fourierkoeffizienten $a_k$ und $b_k$ lassen sich auch als komplexe Zahl $c_k
 
 
 \section{Fouriertransformation}
-Mit der Fouriertransformation kann umgekehrt ein periodisches Signal $x(t)$ in eine Summe aus Sinus- und
-Kosinusfunktionen unterschiedlicher Frequenzen zerlegt werden. Da diese Funktionen jeweils mit nur einer Frequenz periodisch sind, entsprechen diese
-Frequenzen den Frequenzbestandteilen von $x(t)$. 
+Mit der Fouriertransformation kann ein periodisches Signal $x(t)$ in eine Summe aus Sinus- und
+Kosinusfunktionen unterschiedlicher Frequenzen zerlegt werden. Da diese Funktionen jeweils mit nur einer Frequenz periodisch sind, entsprechen diese den Frequenzbestandteilen von $x(t)$. 
 
 Grundlage für die Fouriertransformation ist das Fourierintegral (Gl. \ref{eq:Fouriertransformation})
 
@@ -90,13 +89,13 @@ Grundlage für die Fouriertransformation ist das Fourierintegral (Gl. \ref{eq:Fo
 
 Wenn Sinus- und Kosinusfunktionen wie in Gl. (\ref{eq:cos_exp}) und (\ref{eq:sin_exp}) als Exponentialfunktionen geschrieben werden,
 können sie zu einer komplexen Exponentialfunktion zusammengefasst werden.
-Hieraus lässt sich ableiten, dass das Spektrum, also $X(f)$ komplexwertig sein muss.
+Hieraus lässt sich ableiten, dass das Spektrum, $X(f)$ komplexwertig sein muss.
 
-Signalformen wie etwa ein Rechteck haben entsprechend sehr viele dieser Frequenzbeiträge. Deren Höhe ist Information darüber, wie groß ihr Anteil, also die Amplitude des 
-Zeitsignals, ist. Die Fouriertransformation kann als das Gegenteil der Fourierreihenentwicklung gesehen werden, mit ihr erhält man das Spektrum eines Zeitsignals. Eine
+Signalformen wie etwa ein Rechteck haben entsprechend sehr viele dieser Frequenzbeiträge. Deren Wert ist Information darüber, wie groß ihr Anteil, also die Amplitude des 
+Zeitsignals, ist. Eine
 Vertiefung dieses umfangreichen Gebiets der Fourier-Analyse findet sich u.a. in~\autocite[542\,ff]{papula15mathematik}.
 
 
 
-In der vorliegenden Arbeit wird künftig $X^*$ für die \gls{1d-dft} und $X$ für die \gls{2d-dft} stehen.
+In der vorliegenden Arbeit wird $X^*$ für die \gls{1d-dft} und $X$ für die \gls{2d-dft} stehen.
 

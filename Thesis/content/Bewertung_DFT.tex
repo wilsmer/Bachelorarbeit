@@ -1,10 +1,10 @@
 \subsection{Bewertung verschiedener DFT-Größen}\label{sec:AnalyseBewertungTwiddlefaktornMatrizen}
 
 In der Tabelle \ref{tab:DFT-TwiddlefaktorMatrizenBewertung} werden die DFT-Matrizen einander gegenüber gestellt.
-Anders als die \gls{dct} haben die Twiddlefaktormatrix und deshalb auch das Ergebnis der \gls{dft} einen Real- und einen Imaginärteil.
+Anders als bei der \gls{dct} haben die Twiddlefaktormatrizen und deshalb auch das Ergebnis der \gls{dft} einen Real- und einen Imaginärteil.
 Die Beurteilung basiert auf dem Matlab-Skript aus Anhang \ref{src:dft_bewertung}. 
-Wie zu sehen ist, schneiden vor allem die 8x8- und die 12x12-DFT gut ab. Da letztere nur zum Vergleich mit aufgenommen wurde, ist die 
-8x8-DFT der klare Favorit, welcher im folgenden Abschnitt genauer betrachtet werden soll.
+Wie zu sehen ist, haben die 8x8- und die 12x12-DFT die besten Verhältnisse aus trivialen und nicht trivialen Faktoren. Die letztere wurde nur betrachtet, um mehr Matrizen miteinander vergleichen zu können.  
+Aus diesem Grund wird die 8x8-DFT im folgenden Abschnitt genauer betrachtet.
 
 
  \vspace{1cm}
@@ -39,21 +39,22 @@ Wie zu sehen ist, schneiden vor allem die 8x8- und die 12x12-DFT gut ab. Da letz
  
  
  \subsection{Bewertungsfazit}
- Sowohl die \gls{dct} als auch die \gls{dft} finden häufig in der Bildverarbeitung Anwendung, so dass bereits diverse Algorithmen für die weiteren
- Berechnungen vorhanden sind. Beide haben symmetrische Twiddlefaktormatrizen.
- Der Vorteil der \gls{dct} gegenüber der \gls{dft} ist, dass sie rein reelle Ergebniswerte liefert. 
+ DCT und DFT haben symmetrische Twiddlefaktormatrizen. Bei der \gls{dft} lassen sie sich in vier Viertel
+ aufteilen, bei der DCT in zwei Hälften, weshalb bei der DFT gleiche Faktoren häufiger auftreten.
+ Weniger verschiedene Faktoren gehen mit einer kleineren Chipfläche einher, was zusammen mit der schnellen 
+ Berechnung, also geringe Zahl benötigter Takte, die Hauptziele der Chipimplementierung darstellen.
+ Aus diesem Grund ist unter diesem Aspekt die DFT zu präferieren.
+
+ Der Vorteil der \gls{dct} gegenüber der \gls{dft} ist, dass sie bei reellen Eingangswerten reelle Ergebniswerte liefert. 
  Dem steht als großer Nachteil gegenüber, dass beinahe alle ihrer Twiddlefaktoren zu den nicht trivialen gezählt werden müssen. 
- Des Weiteren verteilen sich ihre Werte auf mehr verschiedene Zahlen, sodass eine effiziente Implementierung gegenüber der DFT, trotz der rein reellen
- Werte, weniger praktikabel erscheint.
- 
- Als Ausschlag gebendes Kriterium wird letztlich der Vorteil eines komplexen Ergebnisses herangezogen, aus dem sich ohne Umwege der Winkel berechnen lässt.
-
- 
-
+ Da die Eingangswerte als komplex aufgefasst werden können, relativiert sich der einzige Vorteil der DCT, weshalb die DFT 
+ als Transformation gewählt wird.
+  
  
  
- \section{Genauere Betrachtung der 8x8-DFT}\label{sec:AnalyseGenauereBetrachtung8x8}
- Da die 8x8-DFT als Favorit aus der Betrachtung der Transformationsmatrizen herausgegangen ist, wird diese im nächsten Abschnitt auf ihre Eigenschaften
+ \section{Betrachtung der 8x8-DFT}\label{sec:AnalyseGenauereBetrachtung8x8}
+ In Abschnitt \ref{sec:AnalyseBewertungTwiddlefaktornMatrizen} wurde gezeigt, dass die Transformationsmatrix der 8x8-DFT    die geringste Anzahl verschiedener Faktoren hat.
+ Daran anknüfpend soll sie in diesem Abschnitt detaillierter auf ihre Eigenschaften
  hin untersucht. Dies wird die Grundlage für eine effiziente Implementierung sein. 
  Die Twiddlefaktormatrix der 8x8-DFT besteht, wie bereits aus Gleichung (\ref{eq:Twiddlefaktorenberechnung}) bekannt, aus komplexen Zeigern.
  Die möglichen Werte sind in Abbildung \ref{pic:Einheitskreis_Faktoren} zu sehen, 
@@ -67,8 +68,6 @@ Wie zu sehen ist, schneiden vor allem die 8x8- und die 12x12-DFT gut ab. Da letz
   \label{pic:Einheitskreis_Faktoren}
 \end{figure}
   
- 
-
 
 \begin{figure}[!ht]
  \centering
@@ -84,9 +83,9 @@ Wie zu sehen ist, schneiden vor allem die 8x8- und die 12x12-DFT gut ab. Da letz
  Ebenfalls ist ersichtlich, dass der Betrag aller Zahlen immer $1$ ist.
  In Abbildung \ref{pic:MatrizenDarstellungTwiddlefaktoren} ist die Twiddlefaktormatrix auf zwei Matrizen aufgeteilt, wobei die Zahlen durch Farben repräsentiert werden.
  Die linke enthält alle realen Anteile, die rechte alle imaginären. 
- Anhand der Grafik lässt sich gut die Symmetrie erkennen, mit der die Werte auftreten. Diese Grafik soll als 
+ Anhand der Grafik lässt sich die Symmetrie erkennen, mit der die Werte auftreten. Diese Grafik soll als 
  Ausgangspunkt für die folgende Betrachtung dienen.
- Es lässt sich auch gut erkennen, das die Kreise aus Abbildung \ref{pic:Twiddlefaktoren_Darstellung8x8} die Werte der korrespondierenden Zeilen wiederspiegeln.
+ Es lässt sich auch erkennen, das die Kreise aus Abbildung \ref{pic:Twiddlefaktoren_Darstellung8x8} die Werte der korrespondierenden Zeilen wiederspiegeln.
  
  \begin{minipage}{0.9\textwidth}
 \begingroup
@@ -131,16 +130,15 @@ Wie zu sehen ist, schneiden vor allem die 8x8- und die 12x12-DFT gut ab. Da letz
 
 \vspace{0.5cm}
  
- Auf den ersten Blick sticht die erste Zeile hervor, da sie im Realteil nur aus positiven Einsen und im Imaginärteil nur aus Nullen besteht.
+ In der ersten Zeile und der ersten Spalte ist der Realteil aller Elemente Eins und der Imaginärteil Null.
  Mit der fünften Zeile verhält es sich ähnlich. Anders ist hier, dass sich positive und negative Einsen abwechseln.
  In die gleiche Gruppe können noch die dritte und die siebte Zeile zusammengefasst werden. 
  %Beide haben gemeinsam, dass sie so wie die erste und fünfte nur Einsen und Nullen als Faktoren haben. 
  Im Unterschied zu den vorigen können hier aber auch die Imaginärteile eine positive bzw. negative Eins haben. Entsprechend ist dann der Realteil
- Null. Hier müssen zur Berechnung des Ergebnisses also auch Imaginärteile der Eingangsmatrix mit einbezogen werden.
+ Null. Hier müssen zur Berechnung des Ergebnisses auch die Imaginärteile der Eingangsmatrix mit einbezogen werden.
  Für die vier bisher betrachteten Zeilen gilt, dass zur Berechnung eines Elements der Ergebnismatrix ausschließlich Additionen oder Subtraktionen erforderlich sind. 
  
- 
- Alle Werte, die bis jetzt vorkamen, haben entweder nur einem Real- oder einem Imaginärteil. 
+ Alle Werte, die bis jetzt vorkamen, haben entweder nur einen Real- oder einen Imaginärteil. 
  Dies hat den Vorteil, dass weniger Berechnungen erfolgen müssen, da von einer vollständig komplexen Multiplikation nur eine Multiplikation einer komplexen Zahl mit einer
  rein reellen (bzw. imaginären) übrig bleiben. Auf diese Weise reduziert sich der in Gleichung (\ref{eq:komplexe_Multiplikation}) gezeigte Aufwand zu dem in Gleichung (\ref{eq:halb_komplexe_Multiplikation}).
  Darüber hinaus sind bei den bisherigen Zahlen keine Multiplikationen nötig, weshalb sich der Rechenaufwandt auf den Additionsteil der Gleichung beschränkt.
@@ -153,14 +151,10 @@ Wie zu sehen ist, schneiden vor allem die 8x8- und die 12x12-DFT gut ab. Da letz
  \end{align}
  
  Für die übrigen vier Zeilen gelten die bisherigen Beobachtungen nicht oder nur teilweise, weshalb sie nicht zur ersten Gruppe gezählt werden können.
- Dafür haben sie aber alle gemein, dass die Hälfte der Faktoren sowohl einen Real- als auch einen Imaginärteil besitzen, welche symmetrisch angeordnet sind.
+ Dafür haben sie alle gemeinsam, dass die Hälfte der Faktoren sowohl einen Real- als auch einen Imaginärteil besitzen, welche symmetrisch angeordnet sind.
  Für diese vier Faktoren sind deshalb jeweils die gesamten vier Multiplikationen aus Gleichung (\ref{eq:komplexe_Multiplikation}) nötig.
 
- Eine besondere Eigenschaft ist, dass der Faktor für nicht triviale Multiplikationen im Real- und Imaginärteil zumindest vom Betrag her identisch sind.
- Dies liegt daran, dass der Einheitskreis in acht Teile geteilt wird und für beispielsweise $\frac{2\cdot\pi}{8}=\frac{\pi}{4}$ der Sinus- und Kosinuswert identisch sind. 
- Hieraus resultiert, dass die Hälfte der Berechnungen der nicht trivialen Werte, die für die reelle Matrix gemacht werden müssen,
- direkt für den imaginären Anteil übernommen werden könnten. Die andere Hälfte müsste lediglich negiert werden. 
- Deshalb kann das berechnete Verhältnis von 3 in Tabelle \ref{tab:DFT-TwiddlefaktorMatrizenBewertung} als deutlich höher angenommen werden.
- 
-
-
+ Eine besondere Eigenschaft ist, dass der Faktor für nicht triviale Multiplikationen im Real- und Imaginärteil, zumindest vom Betrag her identisch ist.
+ Dies liegt daran, dass der Einheitskreis in acht Teile geteilt wird und für beispielsweise $\frac{2\cdot\pi}{8}=\frac{\pi}{4}$ der Sinus- und Kosinuswert identisch ist. 
+ Hieraus resultiert, dass die Hälfte der Berechnungen der nicht trivialen Werte, die für die reelle Matrix gemacht werden müssen, direkt für den imaginären Anteil übernommen werden kann. 
+ Die andere Hälfte muss lediglich negiert werden. 

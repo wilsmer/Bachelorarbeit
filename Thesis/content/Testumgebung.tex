@@ -1,0 +1,86 @@
+\section{Test des VHDL-Implementation der 2D-DFT}
+Zuerst wurde die Matrixmultiplikation mit Faktoren entworfen und getestet, die sich leicht nachvollziehen lassen. Anschließend wurden die Faktoren 
+mit den korrekten Werten ersetzt, sodass die berechneten Werte denen der 1D-DFT entsprechen. Zuletzt wurde das Programm um die Funktionalität 
+einer transponiert wiederholten DFT ergänzt und getestet.
+
+\subsection{Matrixmultiplikation mit ganzzahligen Faktoren, 1D-DFT und 2D-DFT}
+Der Faktor $\frac{\sqrt{2}}{2}_{10}$ ist im Quelltext als 13\,Bit Vektor im S2Q10-Format abgelegt und hat den Wert $0001011010100_2$.
+Das Waveform-Programm \texttt{SimVision} interpretiert diesen Wert als Ganzzahl. In der dezimalen Darstellung ist dies 724.
+Um die Simulationsergbnisse nachvollziehen zu können, wurden im ersten Schritt die Werte  $\frac{\sqrt{2}}{2}$ der 
+Twiddlefaktormatrix mit dem Wert \num{2.9296875}$\cdot10^{-3}$ ersetzt. Dieser Wert entspricht im S2Q10-Format $0000000000011$ und als
+dezimale Ganzzahl 3. Hiermit lassen sich gut die in \texttt{SimVision} angezeigten Ergebnisse überprüfen.
+Ein weiterer Vorteil ist, dass bei diesem Faktor und den gewählten Eingangswerten der Wertebereich der 12\,Bit Vektoren der Ausgangsmatrix ausreichen und es nicht zu Überläufen kommt.
+Aus diesem Grund konnte zu diesem Zeitpunkt auf Bitshifts nach den Additionen und Multiplikationen verzichtet werden.
+Erst als das binäre Äquivalent des Faktors $\frac{\sqrt{2}}{2}$ bzw. als Ganzzahl interpretiert 724 eingeführt wurde, hatten die Ergebnisse der Matrixmultiplikation mehr als die zwölf Stellen der Vektoren der Ausgangsmatrix.
+Mit der Änderung der Faktoren wurde es deshalb erforderlich durch Bitshifts zu verhindern, dass die Werte größer als $2^{12}=4096$ werden.
+Wann und wie viele Bitshifts erfolgen geht aus den beiden Abbildungen \ref{pic:AkkumulationUngeradeSpalten} und \ref{pic:AkkumulationGeradeSpalten} hervor.
+
+Nachdem der Entwurf der 1D-DFT abgeschlossen war und die richtigen Ergebnisse berechnet wurden, wurde die Funktionalität der 2D-DFT ergänzt. 
+Durch kleine Änderungen ist es leicht möglich den Programmablauf nach der Berechnung
+der 1D-DFT zu beenden. 
+Um zu testen, ob Änderungen am Quelltext, welche zu fehlerhafte Berechnungen der 2D-DFT führten, auch Einfluss auf die 1D-DFT haben, war dies sehr hilfreich.
+
+Zum Test der IDFT muss das entsprechende Eingangssignal gesetzt sein. Nun werden die Zeilen der Twiddlefaktormatrix wie in Abschnitt \ref{sec:idft} beschrieben 
+in umgekehrter Reihenfalge durchlaufen. Auf diese Weise lässt sich auf den mit der 2D-DFT errechneten Werten die Rücktransformation anwenden und abschließend mit den
+ursprünglichen Werten vergleichen.
+
+\subsection{Automatisierter Testdurchlauf}\label{sec:automatisierterTestdurchlauf}
+Häufig ist nicht der Verlauf aller Signale von Interesse ist, sondern die auschließlich die der Ergebnismatrix. Diese lassen sich ebenfalls in \texttt{SimVision} betrachten.
+Da dies nicht komfortabel ist, wurde von vornherein geplant die Ergebnisse zusätzlich die Datei \texttt{Results.txt} zu schreiben.
+In dieser Datei werden die logischen Pegel \texttt{High} und \texttt{Low} durch eine 1 respektive eine 0 repräsentiert. Diese Daten lassen sich beispielsweise mit
+dem Programm Matlab einlesen und mit der Funktion \texttt{fi()} in das gewünschte Dezimalformat konvertieren. Um die in Hardware erfolgten Bitshits zu kompensieren,
+werden die Werte mit 256 multipliziert. Die so erhaltenen Werte lassen sich nun mit der auf die Eingangswerte angewandte 1D- bzw. 2D-DFT vergleichen. Dazu müssen
+diese auf gleiche Weise eingelesen werden, wie die Ergbniswerte.
+%Um in Matlab eine komplexe Matrix zu transponieren, muss entweder die Funktion \texttt{transpose()} oder \texttt{.'} verwendet werden. 
+
+Damit nicht zwangsläufig der gesamte Test durchlaufen werden muss, sondern sich beispielsweise auf das Generieren neuer Ergbniswerte beschränkt werden kann,
+erfolgt der Aufruf der VHDL Simulation und die Verifikation mit Matlab in getrennten Dateien. Die Namen der Skripte lauten \texttt{simulate.sh} und \texttt{VHDL\_DFT\_Vergleich.m}. 
+Mit dem dritten Shell-Skript \texttt{check.sh} können beide aufeinanderfolgend ausgeführt werden. Der beschriebene Ablauf wird nachfolgend detaillierter und anschaulicher erläutert.
+
+In Matlab kann die Twiddlefaktormatrix mit
+%\begin{equation}\label{eq:matlab_dft_faktoren}
+\[ W = e^{-\frac{i 2 \pi}{N}\cdot[0:N-1]'\cdot[0:N-1]} \]
+%\end{equation}
+berechnet werden, wobei N die Anzahl der Elemente je Zeile bzw. Spalte ist. 
+
+\begin{mytextbox}{Bash - check.sh}
+\vspace{0.5cm}
+\# Dieses Skript ruft das Bash-Skript \texttt{simulate.sh} auf, mit dem neue Ergebnisdateien \\
+\# erzeugt werden. Anschließend wird Matlab im Shell-Modus gestartet und das Skript \\
+\# VHDL-DFT\_Vergleich.m ausgeführt.
+\vspace{0.5cm}
+ \begin{mytextbox}{Bash - simulate.sh}
+ \vspace{0.5cm}
+  \# Dieses Skript automatisiert die Simulation der 2D-DFT in VHDL.\\
+  \# \texttt{ncsim} muss ein \texttt{.tcl}-Skript übergeben werden, in dem die Simulationsdauer \\ \# angegeben ist.
+  
+  \begin{itemize}
+   \item kompilieren (alles)
+   \item elaborieren (Top)
+   \item simulieren (Top, alles) - \texttt{-f simulationTime.tcl} als Option übergeben
+    \begin{itemize}
+     \item Daten einlesen (\texttt{InputMatrix\_komplex.txt})
+     \item Berechnen der 2D-DFT
+     \item Ergebnisse in Datei schreiben (\texttt{Results.txt})
+    \end{itemize}
+    \vspace{0.5cm}
+  \end{itemize}
+ \end{mytextbox}
+ \vspace{0.5cm}
+ \begin{mytextbox}{Matlab - VHDL-DFT\_Vergleich.m}
+\vspace{0.5cm}
+  \% Dieses Skript vergleicht die Berechnung der 2D-DFT in VHDL mit der DFT 
+  \% nach Gl. (\ref{eq:2D-DFT_MatrixMult}).
+  
+  \begin{itemize}
+   \item Daten einlesen (\texttt{InputMatrix\_komplex.txt})
+   \item Daten von S1Q10 nach Dezimal konvertieren
+   \item Berechnen der 2D-DFT
+   \item Daten einlesen (\texttt{Results.txt})
+   \item Daten von S1Q10 nach Dezimal konvertieren
+   \item Multiplikation mit 256 zur Kompensation des 8-fachen Bitshift
+   \item Differenz beider Ergebnisse ausgeben
+  \end{itemize}
+ \end{mytextbox}
+ \vspace{0.5cm}
+\end{mytextbox}
