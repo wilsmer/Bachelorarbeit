@@ -13,7 +13,7 @@ und darauf die \gls{dft} angewandt werden, um beim Ausgangsvektor von Daten im F
 
 Statt zeitlich versetzt, werden beim Sensor-Array die Daten von mehreren Sensoren gleichzeitig erfasst. Da das Array zweidimensional ist, handelt es sich eine eine Matrix deren Sensoren verschiedene Koordinaten repräsentieren.
 Aus diesem Grund muss von Orts- anstatt von
-Zeitwerten gesprochen werden. Von der Transformation in das Frequenzspektrum spricht man bei Zeitwerten, da das Spektrum die Frequenzen darstellt, aus denen das Zeitsignal 
+Zeitwerten gesprochen werden~\autocite[69]{toennis2005bildverabeitung}. Von der Transformation in das Frequenzspektrum spricht man bei Zeitwerten, da das Spektrum die Frequenzen darstellt, aus denen das Zeitsignal 
 zusammengesetzt ist. Da bei der eben beschriebenen Datenerfassung Ortsdaten transformiert werden, wird von einer Transformation in den Bildbereich gesprochen. 
 
 In dieser Arbeit werden statt Orts- und Bildbereich auch die Begriffe Eingangs- und Ausgangsvektor bzw. -matrix verwendet.
@@ -62,7 +62,7 @@ Anhand der Summen die jeweils von 0 bis N-1 laufen, lässt sich die Anzahl der b
 
 
 \subsubsection{2D-DFT}\label{sec:2d-dft}
-Die \gls{2d-dft} wird in der Bildverarbeitung verwendet, um vom Orts- in den Fourierraum zu gelagen. Da es sich nicht um eine Abhängigkeit 
+Die \gls{2d-dft} wird in der Bildverarbeitung verwendet, um vom Orts- in den Bildbereich zu gelagen. Da es sich nicht um eine Abhängigkeit 
 der Zeit handelt, werden andere Indizes verwendet.
 \begin{align}
 \begin{split}
@@ -80,7 +80,7 @@ Auch hier lässt sich die Berechnung in Matrizenschreibweise darstellen:
 \end{split}
 \end{align}
 
-Die Gleichungen (\ref{eq:1D-DFT_MatrixMult}) und (\ref{eq:2D-DFT_MatrixMult}) sind inn dieser Arbeit wesentlicher Bestandteil der Umsetzung der 2D-DFT.
+Die Gleichungen (\ref{eq:1D-DFT_MatrixMult}) und (\ref{eq:2D-DFT_MatrixMult}) sind in dieser Arbeit wesentlicher Bestandteil der Umsetzung der 2D-DFT.
 
 
 Die 2D-DFT kann als ``doppelte'' Matrixmultiplikation geschrieben werden (Gleichung (\ref{eq:2D-DFT_MatrixMult})).

@@ -1,33 +1,70 @@
  
+
  \chapter{Schlussfolgerungen}
- \section{Zusammenfassung}
- DFT und DCT wurden einander gegenübergestellt, DFT erwies sich als besser trotz komplexer Ausgangswerte. Wegen komplexem Eingangssignal (cos + j sin), 2D-DFT, also 
- doppelte Matrixmultiplikation und gleiche Einheit für beides. Und transponierbarer Twiddlefaktormatrix.
- 8x8-DFT hat die besten Twiddlefaktoren, weil betragsmäßig nur einer, auch für Real- und Imaginärteil. Eingangswerte lassen sich wunderbar ausklammern.
- Nur eine Multiplikation für Real- und Imaginärteil je Spalte erforderlich. Akkumulieren nach Baumstruktur, ungerade Zeilen / Spalten 8, gerade 12 Elemente.
- Anzahl der Multiplikationen für eine DFT sind $4\cdot8\cdot2=64$, (R+I) FFT auch.
- Reelle Matrixmultiplikation wäre schneller, aber mehr Speicher und Leitungen.
- Sogar die IDFT ist einfach möglich, durch vertauschen der Twiddlefaktorzeilen.
- Transponieren ist durch Tauschen von Zeilen- und Spaltenindex einfach realisierbar. Kein Umspeichern erforderlich. Aber zweite interne Matrix, weil sonst die Hälfte wieder überschrieben wird.
- Einfaches Transponieren ermöglicht weiterrechnen ohne Zeitverlust, ohne zusätzliche Gatter ist nicht ganz so einfach gesagt, wegen zweiter int. M.
- Konstantenmultiplikation hat viele (18) Gatter hintereinander -> Flaschenhals. Aufteilen? Optimieren?
+ Abschließend werden die wichtigsten Aspekte und Erkenntnisse dieser Arbeit zusammengetragen und bewertet. Im Ausblick werden zwei Kritikpunkte aufgegriffen und Lösungsansätze
+ aufgezeigt.
  
+ \section{Zusammenfassung}
+ 
+ Diese Arbeit ist Teil des ISAR-Projekts der HAW-Hamburg, welches einen ASIC entwickelt, auf dem Signalgewinnung mittels magnetoresistiver Sensoren und deren Verarbeitung vereint werden.
+ Es wird eine 2D-DFT in VHDL implementiert, welche die Eingangssignale eines Sensor-Arrays zur Filterung in den Bildbereich transformiert.
+ 
+ Damit eine effiziente Nutzung der Chipfläche und der zur Verfügung stehenden Takte möglich sind, werden im ersten Schritt relevante Größen der DFT und der DCT bezüglich Anzahl nicht trivialer Faktoren der Twiddlefaktormatrix einander gegenübergestellt.
+ Die Entscheidung fällt auf die 8x8-DFT, da ihre Twiddlefaktormatrix nur einen nicht trivialen Faktoren hat. Real- und Imaginärteil sind darüber hinaus betragsmäßig identisch.
+ Dieser tritt nur in der Hälfte der Zeilen auf, weshalb die Anzahl vollwertiger Multiplikationen für
+ die 1D-DFT auf 64 reduziert werden kann. Dieser Wert ist identisch mit dem der benötigten Multiplikationen bei der Berechnung mittels FFT-Algorithmus.
+ Tauschen der Spalten- und Zeilenindizes der 1D-DFT-Matrix transponiert diese, was es ermöglicht, die 2D-DFT ohne Umspeichern zu berechnen.
+ Durch Tauschen der Zeilen der Twiddlefaktormatrix ist es auf einfache Weise möglich, die IDFT zu realisieren.
+ 
+ Eine Implementierung als FFT wird nicht in betracht gezogen, da sich die gewonnen Erkenntnisse nicht auf auf Transformationen mit einer ungeraden Anzahl Elemente übertragen ließen.
+ In einer auf diese Bachelorarbeit aufbauenden Masterarbeit wird eine 2D-DFT der Größe 15x15 entwickelt.
+ Ein Ansatz für eine schnellere Berechnung wäre die reelle Matrixmultiplikation. Bei ihr würden Eingangssignal und das Ergebnis der 1D-DFT in in Real- und Imaginärteil
+ aufgeteilt und separat transformiert werden. Wesentlicher Nachteil dieser Herangehensweise wäre, dass mehr Speicher und Leitungen benötigt würden.
+ 
+ Abschließend wird die Funktionalität des VHDL-Quelltextes anhand einer Simulation verifizert und der Floorplan als wesentlicher Schritt für die Chipimplementation durchgeführt.
  
  
  \section{Bewertung und Fazit}
- 512 Takte = 25\% der vorhandenen Takte für DFT evtl mal 2 für IDFT, 50-100 Takte Interpolation, 50-100 Takte Filterung, 150-200 Takte Winkelberechnung -> Summe 1350 von 2080 
- -> die 15x15-DFT + IDFT kann auch doppelt so lange dauern, wenn keine IDFT erforderlich sein sollte sogar 4x
+
+ Es wurde eine schnelle Berechnung der 2D-DFT implementiert, die mit der Effizienz der FFT vergleichbar ist, sich aber im Ansatz unterscheidet und besser auf andere Größen einer DFT übertragen lässt.
+ Mit dieser Aussage geht jedoch nicht einher, dass sich andere Größen genauso effizient implementieren lassen. 
+ Die wesentliche Erkenntnis ist, dass die Anzahl verschiedener nicht trivialer Faktoren ausschlaggebend für den Aufwand der Implementierung ist. 
+
  
+ Für die Berechnung der 1D-DFT kann auch die Einheit für die Berechnung der 2D-DFT verwendet, und  vollständig auszunutzet werden,
+ wenn die Eingangssignale, welche aus einer Sinus- und einer Kosinuskomponente bestehen, zu einem komplexen Signal zusammengefasst werden.
  
- Es konnte eine effiziente Berechnung implementiert werden, die der FFT in nichts nachsteht. Wenn nicht die Ausgangssituation gewesen wäre, dass eine möglichst flexibel gehaltene
- Matrixmultiplikation erstrebenswert ist, hätte auch eine FFT, dessen Berechnungsvorschrift bekannt ist, implementiert werden können. Für DFT anderer Größe als $2^N$ gilt dies nicht.
+ Voraussetzung für die effiziente Implementierung ist, dass die Twiddlefaktormatrix identisch mit ihrer Transponierten ist und die Ergebnismatrix durch vertauschen der Spalten- und Zeilenindizes erfolgen kann.
+ Die DFT hat  unter diesen Aspekten deutliche Vorteile gegenüber der DCT.
+  
+ Die DFT ist trotz ihrer komplexen Twiddlefaktoren besser als die DCT für die Transformation geeignet ist. Begründet wird dies mit der Anzahl nicht trivialer
+ Faktoren und mit der unterschiedlichen Symmetrie, die die beiden Arten von Twiddlefaktormatrizen aufweisen. Die der DFT lässt sich in vier Viertel, die der DCT in zwei Hälften
+ aufteilen, weswegen letztere nicht identisch mit ihrer Transponierten sein kann. Dies wiedrum erschwert es, die Berechnung der 2D-DFT mit der Einheit für die Berechnung der 1D-DFT
+ durchzuführen.
  
+  Es wird angenommen, dass für die gesamte Signalverarbeitung etwas 2800 Takte zur Verfügung stehen.
+ Für die 8x8-DFT werden 512 Takte benötigt, was  25\% der vorhandenen Takte entspricht. Wenn auch die IDFT berechnet werden soll, bleiben noch etwa die Hälfte aller Takte für die 
+ restliche Signalverarbeitung. Es kann davon ausgegangen werden, dass weniger Takte notwendig sein werden. Im Umkerschluss bedeutet dies, dass bei gleicher Anforderung die 
+ 15x15-DFT nur unwesentlich mehr Takte in Anspruch nehmen darf. Dies kann neben dem gewonnen Wissen als wichtigster Richtwert an die anküpfende Masterarbeit weitergegeben werden.
  
- Numerische Ungenauigkeiten: Da diese Arbeit den Schwerpunkt in der Aufwandsabschätzung einer Chipimplementation einer 2D-DFT auf einem \gls{asic} hat, ist diese Problematik kein Gegenstand dieser Arbeit und
-wird an dieser Stelle nur in Grundzügen erwähnt. %Für eine 
+ Für die nicht trivialen Faktoren ist eine Konstantenmultiplikation erforderlich, welche über ein Schaltnetz realisiert werden kann. Hierfür sind bei gleicher Bitbreite weniger
+ als halb so viele Standardzellen erforderlich. Dies bedeutet eine deutliche Reduzierung des benötigten Platzes. Diese Angabe trifft jedoch keine Aussage über die 
+ Anzahl von hintereinander geschalteten Gattern, welche um etwa 25\% höher als die Bitbreite ist. Dies ist ein entscheidender Wert zur ermittlung der maximalen Taktfrequenz.
+ Darüber hinaus ist es bei anderen Faktoren möglich, dass mehr verschachtelte Gatter erforderlich sind. Dieser Wert hängt mit der Anzahl der Einsen zusammen, die notwendig sind,
+ um eine Zahl binär zu repräsentieren. Basierend auf dem in den entsprechenden Vorlesungen Gelernten, ist davon auszugehen, dass dies als ein kritischer Pfad der gesamten Schaltung
+ angenommen werden kann.
  
+
  
  \section{Ausblick}
- Möglicher Weise lässt sich das Schaltnetz des Konstantenmultiplizierers minimieren, wenn es optimiert wird. Die Annahme war, das Cadence das kann. Das Schaltnetz sieht aber nicht
- optimiert aus. Eine Multiplikation unter Anwendung des Wallace-Tree könnte die Anzahl der Gatter, insbesondere der hintereinander geschalteten reduzieren und so die Berechnung
- beschleunigen~\autocite[8-10]{jdrechsler2008binMultWerke}.
+ Anders als angenommen, hat Cadence bezüglich der Multiplikationen keine tiefgreifende Optimierung vorgenommen.
+ Der durch die Konstantenmultiplikation auftretende kritische Pfad kann auf verschiedene Weise optimiert werden.
+ Die einfachste Lösung wäre es, das Schaltnetz mit dem Programm \texttt{RTL Compiler} zu ereugen, in zwei getrennte Schaltnetze aufzuteilen und die Ausgänge des ersten als Eingänge des zweiten zu nutzen. Auf diese Weise Ließen sich die Gatterlaufzeiten auf zwei Takte aufteilen. 
+ 
+ Denkbar ist ebenfalls, das Schaltnetz des Konstantenmultiplizierers zu minimieren. Ein vielversprechender Ansatz ist die Anwendung des Wallace-Tree-Verfahrens.
+ Mit ihm können die Anzahl der Gatter, insbesondere der hintereinander geschalteten, reduziert und so die Berechnung  beschleunigt werden~\autocite[8-10]{jdrechsler2008binMultWerke}.
+  
+ Um die numerische Ungenauigkeiten, die durch das Bitshiften autreten, zu reduzieren, ist es sinnvoll an dieser Stelle mehr Aufwandt zu investieren. Ein erster Ansatz wäre es, zu prüfen, 
+ ob der Bitshift nach der Subtraktion erforderlich ist. Da diese Arbeit den Schwerpunkt in der Aufwandsabschätzung einer Chipimplementation einer 2D-DFT auf einem \gls{asic} hat, ist diese Problematik kein Gegenstand dieser Arbeit und wird an dieser Stelle nur in Grundzügen erwähnt. %Für eine 
+ 
+ 
