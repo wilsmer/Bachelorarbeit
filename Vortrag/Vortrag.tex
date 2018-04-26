@@ -1,3 +1,12 @@
+\input{preamble.tex}
+
+\title[Chipimplementation einer 2D-DFT für die Auswertung eines Sensor-Arrays]{\textbf{Kolloquium}\\ 
+\medskip  \small{zur Bachelorarbeit mit dem Thema}\\
+\medskip \large{Chipimplementation einer zweidimensionalen Fouriertransformation für die Auswertung eines Sensor-Arrays}}  
+
+\author[TL]{Thomas Lattmann}
+\date[\today]{\today} 
+
 \begin{document}
 
 %==================================================================================================================================
@@ -7,25 +16,282 @@
 % Define a background image for the first page
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\usebackgroundtemplate{\includegraphics[]{backT.pdf}}
-\usebackgroundtemplate{}
+%\usebackgroundtemplate{}
 \begin{frame}[plain]
-	\titlepage
-	\hfill
-	\begin{center}
-		\figw{.3}{img/hawlogo.pdf}
-	\end{center}
+ 	\titlepage
+% 	\hfill
+% 	\begin{center}
+% 		\figw{.3}{img/hawlogo.pdf}
+% 	\end{center}
 \end{frame}
 
 \usebackgroundtemplate{\includegraphics[scale=1]{img/back.pdf}}
 
-\begin{frame}\frametitle{Einleitung: Umfeld}
- \begin{itemize}
-  \item hallo
- \end{itemize}
+
+\begin{frame}\frametitle{Einleitung}
+ \begin{figure}[ht!]
+ \centering
+ \includegraphics[width=0.8\textwidth]{img/AblaufFourier.pdf}
+ \caption{Ablauf der Signalvorverarbeitung}%~\autocite[9]{krrts2017freqfilt}}
+ \label{pic:AblaufFourier}
+\end{figure}
 
 \end{frame}
 
 
+\begin{frame}\frametitle{Grundlagen: Übersicht}
+
+
+ \begin{itemize}
+  \item Interpretation von Dualzahlen
+  \item Komplexe Multiplikation
+  \item Matrixmultiplikation
+  \item DFT
+  \item 2D-DFT
+  \item IDFT
+ \end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Interpretation von Dualzahlen}
+ Alleine anhand einer binären Zahlenfolge ist nicht ersichtlich, wie sie interpretiert werden soll.\\
+ \medskip
+ Mögliche Arten sind:
+ \begin{itemize}
+  \item positive Ganzahldarstellung (a)
+  \item Darstellung im Einerkomplement (b)
+  \item Darstellung im Zweierkoplement, um auch negative Zahlen darstellen zu können (c)
+  \item (voreichenbehaftete) Festkommazahlen mit und ohne Vorkommaanteil (d)
+ \end{itemize}
+
+ 
+%  \begin{align*}
+%    1001011010100_2 &=  4820_{10}   &\textrm{(a)}\\
+%                    &= -3372{10}   &\textrm{(b)}\\
+%                    &= -3.2930_{10} &\textrm{in S2Q10 (c)}
+%  \end{align*} 
+
+\medskip
+\hspace{1cm}$1001011010100_2$
+ \begin{align*}
+    4096+512+128+64+16+4 &=  4820_{10}   &\textrm{(a)}\\
+    - (512+128+64+16+4) & = -724_{10}   &\textrm{(b)}\\
+   -4096+512+128+64+16+4 &= -3372_{10}   &\textrm{(c)}\\
+   -4+0,5+0,125+0,062+0,015625+0,00390625 &= -3.29296875_{10} &\textrm{in S2Q10 (d)}
+ \end{align*} 
+ 
+\end{frame}
+
+\begin{frame}\frametitle{Komplexe Multiplikation}
+
+Komplexe Multiplikation sind 4 einfache Multiplikationen und 2 Additionen.
+
+ \begin{align*}\label{eq:komplexe_Multiplikation}
+\begin{split}
+ e + jf &= (a + jb) \cdot (c + jd)\\
+        &= a \cdot c + j(a \cdot d) + j(b \cdot c) + j^2(b \cdot d)\\
+        &= a \cdot c - b \cdot d + j(a \cdot d + b \cdot c)
+\end{split}
+  \end{align*}
+  
+  Wenn einer der beiden Multiplikanden keinen Imaginärteil haben, reduziert sich das zu 
+
+ \begin{align}\label{eq:halb_komplexe_Multiplikation}
+ \begin{split}
+  e + jf &= a \cdot (c + jd)\\
+         &= a \cdot c + j(a \cdot d)\\
+ \end{split}
+ \end{align}
+
+\end{frame}
+
+
+ 
+
+\begin{frame}\frametitle{Multiplikation im 1er-Komplemet}
+
+
+
+\begin{table}[ht!]
+ \centering
+ \begin{tabular}{cc|c}
+  A& B &X\\
+  \hline
+  0& 0&0\\
+  0& 1&1\\
+  1& 0&1\\
+  1& 1&0\\
+ \end{tabular}
+ \caption{Wahrheitstabelle eines XOR-Gatters. A und B sind Eingänge, X das Ausgangssignal}
+ \label{tab:xor}
+\end{table}
+
+ 
+\end{frame}
+
+
+\begin{frame}\frametitle{Matrixmultiplikation}
+ \begin{center}
+ \begin{figure}[ht!]
+ \centering
+\begin{minipage}{0.2\textwidth}
+ \begingroup
+ \renewcommand*{\arraystretch}{1.1} % Zeilenabstand
+ \renewcommand*{\arraycolsep}{0.6pt} % Spaltenabstand
+
+ \[
+    \begin{bmatrix}
+    \tikzmark{varrowtopleft} \myBlackBox  	& \myBlackBox 		& \myBlackBox 		& \tikzmark{varrowtopright} \myBlackBox \\
+                             \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+                             \myLightgrayBox 	& \myLightgrayBox	& \myLightgrayBox	& \myLightgrayBox \\
+    \tikzmark{varrowbottom}  \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
+   \end{bmatrix}
+ \]
+ \endgroup
+  \tikz[overlay,remember picture] {
+  \draw[->] ([yshift=1.5ex,xshift=-2ex]varrowtopleft) -- ([xshift=-2ex]varrowbottom)
+            node[midway,left] {$i$};
+  \draw[->] ([xshift=2ex,yshift=4ex]varrowtopleft) -- ([yshift=4ex]varrowtopright)
+            node[midway,above] {$k$};
+}
+\end{minipage}
+\begin{minipage}{0.1\textwidth}
+ \hspace{-.5cm}
+ \[
+  \cdot
+ \]
+\end{minipage}
+\begin{minipage}{0.2\textwidth}
+ \begingroup
+ \renewcommand*{\arraystretch}{1.1} % Zeilenabstand
+ \renewcommand*{\arraycolsep}{0.6pt} % Spaltenabstand
+ \[
+   \begin{bmatrix}
+    \tikzmark{varrowtopleft} \myLightgrayBoxHigh & \myBlackBoxHigh & \myLightgrayBoxHigh & \tikzmark{varrowtopright} \myLightgrayBoxHigh \\
+                             \myLightgrayBoxHigh & \myBlackBoxHigh & \myLightgrayBoxHigh & \myLightgrayBoxHigh \\
+                             \myLightgrayBoxHigh & \myBlackBoxHigh & \myLightgrayBoxHigh & \myLightgrayBoxHigh \\
+    \tikzmark{varrowbottom}  \myLightgrayBoxHigh & \myBlackBoxHigh & \myLightgrayBoxHigh & \myLightgrayBoxHigh 
+   \end{bmatrix}
+ \]
+ \endgroup
+   \tikz[overlay,remember picture] {
+  \draw[->] ([yshift=1.5ex,xshift=-2ex]varrowtopleft) -- ([xshift=-2ex]varrowbottom)
+            node[midway,left] {$k$};
+  \draw[->] ([xshift=2ex,yshift=4.5ex]varrowtopleft) -- ([yshift=4.5ex]varrowtopright)
+            node[midway,above] {$j$};
+}
+\end{minipage}
+\begin{minipage}{0.05\textwidth}
+ \[
+  =
+ \]
+\end{minipage}
+\begin{minipage}{0.3\textwidth}
+\begingroup
+\renewcommand*{\arraystretch}{1.1} % Zeilenabstand
+\renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
+\begin{align*}
+   \begin{bmatrix}
+    \tikzmark{varrowtopleft} \myLightgrayBox 	& \myBlackBox		& \myLightgrayBox 	& \tikzmark{varrowtopright} \myLightgrayBox \\
+                             \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+                             \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+    \tikzmark{varrowbottom}  \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
+   \end{bmatrix}
+ \end{align*} 
+ \endgroup
+    \tikz[overlay,remember picture] {
+  \draw[->] ([yshift=1.5ex,xshift=-2ex]varrowtopleft) -- ([xshift=-2ex]varrowbottom)
+            node[midway,left] {$i$};
+  \draw[->] ([xshift=2ex,yshift=4ex]varrowtopleft) -- ([yshift=4ex]varrowtopright)
+            node[midway,above] {$j$};
+}
+\end{minipage}
+
+\caption{Veranschaulichung der Matrixmultiplikation.}
+\label{fig:grafikMatrizenmultiplikation}
+\end{figure}
+\end{center}
+\end{frame}
+
+
+\begin{frame}\frametitle{Diskrete Fouriertransformation und IDFT}
+
+Die DFT findet Anwendung, um vom Zeit- bzw. Ortsbereich in den Frequenz- bzw. Bildbereich zu gelangen.
+\begin{equation}\label{eq:dft}
+ X^* \left[ m \right] = \frac{1}{N} \cdot \sum^{N-1}_{n=0} x[n] \cdot e^{-\frac{j 2 \pi m n}{N}}
+\end{equation}
+
+
+\begin{equation}\label{eq:1D-DFT_MatrixMult}
+X^* = W \cdot x
+\end{equation}
+
+\begin{equation}\label{eq:Twiddlefaktorenberechnung}
+W = \sum^{N-1 }_{m=0} \sum^{N-1 }_{n=0} e^{-\frac{j 2 \pi m n}{N}}
+\end{equation}
+
+\begin{equation}\label{eq:idft}
+ x \left[ n \right] = \frac{1}{N} \sum^{N-1}_{n=0} X^*[m] \cdot e^{\frac{j 2 \pi m n}{N}}
+\end{equation}
+ 
+\end{frame}
+
+
+
+\begin{frame}\frametitle{2D-DFT}
+ 
+\end{frame}
+
+
+
+\begin{frame}\frametitle{8x8-DFT}
+   \begin{figure}[!h]
+  \centering
+  \includegraphics[width=0.4\textwidth]{img/Einheitskreis-crop.pdf}
+  \caption{Einheitskreis mit relevanten Werten der 8x8-DFT.}
+  \label{pic:Einheitskreis_Faktoren}
+\end{figure}
+
+ \begin{minipage}{0.9\textwidth}
+\begingroup
+ \renewcommand*{\arraystretch}{0.95} % Zeilenabstand der Tabelle
+
+\begin{center}
+  \[
+   \stackrel{\mbox{$Re\{W\}$}}{
+    \begin{bmatrix}
+     \myboxOnePos 	& \myboxOnePos 		& \myboxOnePos 	& \myboxOnePos 		& \myboxOnePos 	& \myboxOnePos 		& \myboxOnePos 	& \myboxOnePos \\
+     \myboxOnePos 	& \myboxSqrtPos 	& \myboxZero 	& \myboxSqrtNeg		& \myboxOneNeg	& \myboxSqrtNeg		& \myboxZero	& \myboxSqrtPos \\
+     \myboxOnePos 	& \myboxZero 		& \myboxOneNeg 	& \myboxZero 		& \myboxOnePos 	& \myboxZero 		& \myboxOneNeg 	& \myboxZero \\
+     \myboxOnePos 	& \myboxSqrtNeg 	& \myboxZero 	& \myboxSqrtPos 	& \myboxOneNeg 	& \myboxSqrtPos 	& \myboxZero 	& \myboxSqrtNeg \\
+     \myboxOnePos 	& \myboxOneNeg 		& \myboxOnePos 	& \myboxOneNeg 		& \myboxOnePos 	& \myboxOneNeg 		& \myboxOnePos 	& \myboxOneNeg \\
+     \myboxOnePos 	& \myboxSqrtNeg 	& \myboxZero 	& \myboxSqrtPos 	& \myboxOneNeg 	& \myboxSqrtPos 	& \myboxZero 	& \myboxSqrtNeg \\
+     \myboxOnePos 	& \myboxZero 		& \myboxOneNeg 	& \myboxZero 		& \myboxOnePos 	& \myboxZero 		& \myboxOneNeg 	& \myboxZero \\
+     \myboxOnePos 	& \myboxSqrtPos 	& \myboxZero 	& \myboxSqrtNeg		& \myboxOneNeg	& \myboxSqrtNeg		& \myboxZero	& \myboxSqrtPos 
+    \end{bmatrix}
+   }
+   \hspace{1cm}
+   \stackrel{\mbox{$Im\{W\}$}}{
+    \begin{bmatrix}
+     \myboxZero 	& \myboxZero 		& \myboxZero 	& \myboxZero 		& \myboxZero 	& \myboxZero 		& \myboxZero 	& \myboxZero \\
+     \myboxZero 	& \myboxSqrtNeg 	& \myboxOneNeg 	& \myboxSqrtNeg		& \myboxZero	& \myboxSqrtPos		& \myboxOnePos	& \myboxSqrtPos \\
+     \myboxZero 	& \myboxOneNeg 		& \myboxZero 	& \myboxOnePos 		& \myboxZero 	& \myboxOneNeg 		& \myboxZero 	& \myboxOnePos \\
+     \myboxZero 	& \myboxSqrtNeg 	& \myboxOnePos 	& \myboxSqrtNeg 	& \myboxZero 	& \myboxSqrtPos 	& \myboxOneNeg 	& \myboxSqrtPos \\
+     \myboxZero 	& \myboxZero 		& \myboxZero 	& \myboxZero 		& \myboxZero 	& \myboxZero 		& \myboxZero 	& \myboxZero \\
+     \myboxZero 	& \myboxSqrtPos 	& \myboxOneNeg 	& \myboxSqrtPos		& \myboxZero 	& \myboxSqrtNeg 	& \myboxOnePos 	& \myboxSqrtNeg \\
+     \myboxZero 	& \myboxOnePos 		& \myboxZero 	& \myboxOneNeg 		& \myboxZero 	& \myboxOnePos 		& \myboxZero 	& \myboxOneNeg \\
+     \myboxZero 	& \myboxSqrtPos 	& \myboxOnePos 	& \myboxSqrtPos		& \myboxZero	& \myboxSqrtNeg		& \myboxOneNeg	& \myboxSqrtNeg 
+    \end{bmatrix}
+   }
+  \]
+\vspace{0.5cm}
+  Legende: $\myboxOnePos$ = 1 \quad $\myboxOneNeg$ = -1 \quad $\myboxZero$ = 0 \quad $\myboxSqrtPos$ = $\nicefrac{\sqrt{2}}{2}$ \quad $\myboxSqrtNeg$ = -$\nicefrac{\sqrt{2}}{2}$
+  \captionof{figure}{Matrix-Darstellung der 8x8-DFT-Twiddlefaktoren aufgeteilt nach Real- und Imaginärteil.}
+  \label{pic:MatrizenDarstellungTwiddlefaktoren}
+\end{center}
+\endgroup
+\end{minipage}
+
+\end{frame}
 
 
 \end{document}
