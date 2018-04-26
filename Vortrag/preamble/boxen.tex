@@ -1,0 +1,37 @@
+\newcommand{\boxHeightL}{9}
+\newcommand{\boxWidthL}{9}
+\newcommand{\boxHeightS}{9}
+\newcommand{\boxWidthS}{9}
+\newcommand{\boxWidthWide}{9}
+\newcommand{\boxHeightHigh}{9}
+
+
+
+\newcommand{\myboxOnePos}{\colorbox{\boxColorForOne}{\makebox(\boxWidthL,\boxHeightL){\textcolor{\textColorForOne}{}}}}
+\newcommand{\myboxOneNeg}{\colorbox{\boxColorForOne }{\makebox(\boxWidthL,\boxHeightL){\textcolor{\textColorForOne}{-}}}}
+\newcommand{\myboxZero}  {\colorbox{\boxColorForZero}{\makebox(\boxWidthL,\boxHeightL){\textcolor{\textColorForZero}{}}}}
+\newcommand{\myboxSqrtPos}{\colorbox{\boxColorForSqrt}{\makebox(\boxWidthL,\boxHeightL){\textcolor{\textColorForSqrt}{}}}}
+\newcommand{\myboxSqrtNeg}{\colorbox{\boxColorForSqrt}{\makebox(\boxWidthL,\boxHeightL){\textcolor{\textColorForSqrt}{-}}}}
+
+\newcommand{\myBlackBox}{\colorbox{black}{\makebox(\boxWidthS,\boxHeightS){\textcolor{\textColorForSqrt}{}}}}
+\newcommand{\myGrayBox}{\colorbox{gray}{\makebox(\boxWidthS,\boxHeightS){\textcolor{\textColorForSqrt}{}}}}
+\newcommand{\myLightgrayBox}{\colorbox{lightgray}{\makebox(\boxWidthS,\boxHeightS){\textcolor{\textColorForSqrt}{}}}}
+\newcommand{\myDarkgrayBox}{\colorbox{darkgray}{\makebox(\boxWidthS,\boxHeightS){\textcolor{\textColorForSqrt}{}}}}
+
+\newcommand{\myBlackBoxHigh}{\colorbox{black}{\makebox(\boxWidthS,\boxHeightHigh){\textcolor{\textColorForSqrt}{}}}}
+\newcommand{\myBlackBoxWide}{\colorbox{black}{\makebox(\boxWidthWide,\boxHeightS){\textcolor{\textColorForSqrt}{}}}}
+\newcommand{\myLightgrayBoxHigh}{\colorbox{lightgray}{\makebox(\boxWidthS,\boxHeightHigh){\textcolor{\textColorForSqrt}{}}}}
+\newcommand{\myLightgrayBoxWide}{\colorbox{lightgray}{\makebox(\boxWidthWide,\boxHeightS){\textcolor{\textColorForSqrt}{}}}}
+
+\usepackage{tcolorbox} 
+
+\newtcolorbox{mytextbox}[1]{%
+    tikznode boxed title,
+    enhanced,
+    arc=0mm,
+    interior style={white},
+    attach boxed title to top left= {xshift=0.5cm, yshift=-\tcboxedtitleheight/2},
+    fonttitle=\bfseries,
+    colbacktitle=white,coltitle=black,
+    boxed title style={size=normal,colframe=gray,boxrule=0pt},
+    title={#1}}

@@ -1,0 +1,44 @@
+\usepackage[%
+%	    leqno,				% Nummern linksbuendig
+%	    reqno,				% Nummern rechtsbuendig (Standard)
+%	    fleqn,				% Gleichungen linksbuendig statt zentriert
+	   ]{amsmath}
+\usepackage{amsfonts}				% Um Zahlenraeume richtig darzustellen
+\usepackage{mathtools}
+\usepackage{amssymb}
+
+% Betragsstriche über \abs, Doppelbetragsstriche über \norm
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}%
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}%
+
+\usepackage[%
+	    thinlines,				% dünne linien
+%	    thicklines,				% dicke linien
+	   ]{easybmat}				% For Matrices with dottet lines between fields, horizontal or vertical
+%\usepackage{MnSymbol}				% Zusaetzliche Zeichen
+\usepackage{trsym}				% Fuer Laplace-Fourier-Symbole
+\usepackage{mathrsfs}				% Fuer Matheschrift
+\usepackage{xfrac}
+\usepackage{nicefrac}
+\usepackage{esint}
+%\usepackage{exscale} % lässt Klammern in Gleichungen verschwinden!!
+%\DeclareMathSizes{10.95}{30}{15}{15} % 10.95 für 11pt in documentclass
+
+\def\mathunderline#1#2{\color{#1}\underline{{\color{black}#2}}\color{black}}
+
+\usepackage{soul}
+
+%\usepackage[%				
+%	    group-separator 	= {.}, 		% group-seperator={,} -> 1,345,234.23
+%   	    round-mode 		= places,		% round-mode= places(2digits), figures(1digit)
+%	    round-precision 	= 3,		% round-precision= x , xdigits are rounded to
+%	    binary-units 	= true,		% Laden von \byte \bit, \kibi usw. (false default)
+%	    locale 		= DE,		% lacale= DE, uses german
+%	    per			= slash,
+%	    alsoload            = binary,
+%	    loctolang		={
+%				  UK:english, 
+%				  DE:ngerman
+%		      		 },		% loctolang={USA:USenglish,DE:ngerman}, if language changed in document
+%	    detect-all				% detect-all : uses the text options not the math mode to set the letters/numbers
+%	   ]{siunitx}
