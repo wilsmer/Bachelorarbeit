@@ -29,20 +29,28 @@
 
 
 \begin{frame}\frametitle{Inhaltsübersicht}
+
+Gliederung:
 \begin{itemize}
  \item Einleitung
  \item Grundlagen
- \item Vergleich von Ansätzen zur Berechnung der DFT
- \item Vergleich verschiedener Größen von Twiddlefaktormatrizen
- \item Optimierung der 8x8-DFT Twiddlefaktormatrix
- \item Benötigte Takte für Berechnungen
- \item Entwickeln der 2D-DFT aus der 1D-DFT
- \item Testumgebung
- \item Zeitabschätzung der Implementation bezogen auf realen Anwendungsfall
- \item Erweiterung zur IDFT
- \item Zusammenfassung
- \item Ausblick
+ \item Analyse und Entwurf
+ \item Testumgebung und Evaluation
+ \item Zusammenfassung und Ausblick
 \end{itemize}
+\end{frame}
+
+
+\begin{frame}\frametitle{Einleitung: Details zur Hardware}
+\begin{itemize}
+ \item \SI{350}{\um} Prozess, EuroPractice
+ \item Array von Magnetsensoren
+ \item Sensoren, Signalverarbeitung \& Ausgabe des digitalen Nutzsignals auf einem ASIC
+\end{itemize}
+\begin{center}
+ \includegraphics[width=0.6\textwidth]{img/Bilder/SensorAusgang.pdf}\\
+ \tiny{Quelle: SensorAusgang.pdf, K.-R. Riemschneider + T. Schüthe}
+\end{center}
 \end{frame}
 
 
@@ -62,25 +70,15 @@
 \end{frame}
 
 
-\begin{frame}\frametitle{Einleitung: Details zur Hardware}
-\begin{itemize}
- \item \SI{350}{\um} Prozess
- \item Array von Magnetsensoren
- \item Sensoren, Signalverarbeitung \& Ausgabe des digitalen Nutzsignals auf einem ASIC
-\end{itemize}
-\end{frame}
 
-
-
-
-\begin{frame}\frametitle{Grundlagen: Übersicht}
+\begin{frame}\frametitle{Grundlagen}
+Gliederung:
  \begin{itemize}
   \item Interpretation von Dualzahlen
   \item Komplexe Multiplikation
   \item Matrixmultiplikation
-  \item DFT
+  \item DFT und IDFT
   \item 2D-DFT
-  \item IDFT
  \end{itemize}
 \end{frame}
 
@@ -95,15 +93,18 @@
   \item positive Ganzahldarstellung (a)
   \item Darstellung im Einerkomplement (b)
   \item Darstellung im Zweierkomplement (c)
-  \item voreichenbehaftete Festkommazahlen (SQ) mit und ohne Vorkommaanteil (d)
+  \item vorzeichenbehaftete Festkommazahlen (SQ-Format) mit u. ohne Vorkommaanteil (d)
  \end{itemize}
+\medskip
+\pause
+Beispiel:\\
 \medskip
 \hspace{1cm}$1001011010100_2$
  \begin{align*}
     4096+512+128+64+16+4 &=  4820_{10}   &\textrm{(a)}\\
     - (512+128+64+16+4) & = -724_{10}   &\textrm{(b)}\\
    -4096+512+128+64+16+4 &= -3372_{10}   &\textrm{(c)}\\
-   -4+0,5+0,125+0,062+0,015625+0,00390625 &= -3.29296875_{10} &\textrm{in S2Q10 (d)}
+   -4+0,5+0,125+0,062+0,015625+0,00390625 &= -3,29296875_{10} &\textrm{in S2Q10 (d)}
  \end{align*} 
 \end{frame}
 
@@ -149,7 +150,7 @@ Komplexe Multiplikation sind 4 einfache Multiplikationen und 2 Additionen.
 % \end{frame}
 
 
-\begin{frame}\frametitle{Matrixmultiplikation}
+\begin{frame}\frametitle{Veranschaulichung der Matrixmultiplikation}
  \begin{center}
  \begin{figure}[ht!]
  \centering
@@ -177,7 +178,7 @@ Komplexe Multiplikation sind 4 einfache Multiplikationen und 2 Additionen.
 \begin{minipage}{0.1\textwidth}
  \hspace{-.5cm}
  \[
-  \cdot
+  \bullet% \cdot
  \]
 \end{minipage}
 \begin{minipage}{0.2\textwidth}
@@ -226,7 +227,7 @@ Komplexe Multiplikation sind 4 einfache Multiplikationen und 2 Additionen.
 }
 \end{minipage}
 
-\caption{Veranschaulichung der Matrixmultiplikation.}
+%\caption{Veranschaulichung der Matrixmultiplikation.}
 \label{fig:grafikMatrizenmultiplikation}
 \end{figure}
 \end{center}
@@ -237,43 +238,144 @@ Komplexe Multiplikation sind 4 einfache Multiplikationen und 2 Additionen.
 
 %Die DFT findet Anwendung, um vom Zeit- bzw. Ortsbereich in den Frequenz- bzw. Bildbereich zu gelangen.
 
-\medskip \medskip \medskip
-
-\begin{equation*}\label{eq:dft}
- X^* \left[ m \right] = \frac{1}{N} \cdot \sum^{N-1}_{n=0} x[n] \cdot e^{\textcolor{red}{-}\frac{j 2 \pi m n}{N}}
-\end{equation*}
+%\medskip 
+%\medskip \medskip
+\vspace{0.5cm}
+\hspace{1cm}
+DFT:
+\begin{align*}\label{eq:dft}
+\textrm{Summenschreibweise\,\,}\\
+ X^* \left[ m \right] &= \frac{1}{N} \cdot \sum^{N-1}_{n=0} x[n] \cdot e^{\textcolor{red}{-}\frac{j 2 \pi m n}{N}}\\
+ \textrm{Matrixschreibweise\quad}\\
+ W &= \sum_{m=0}^{N-1} \sum_{n=0}^{N-1} e^{-\frac{j 2 \pi m n}{N}}\\
+  X^* &= W \cdot x
+\end{align*}
 
 \medskip
-% \begin{equation}\label{eq:Twiddlefaktorenberechnung}
-% W = \sum^{N-1 }_{m=0} \sum^{N-1 }_{n=0} e^{-\frac{j 2 \pi m n}{N}}
-% \end{equation}
-
+\pause
+\hspace{1cm}
+IDFT:
 \begin{equation*}\label{eq:idft}
- x \left[ n \right] = \frac{1}{N} \sum^{N-1}_{n=0} X^*[m] \cdot e^{\textcolor{red}{+}\frac{j 2 \pi m n}{N}}
+\quad \quad \quad \quad \quad \quad \quad \,\, x \left[ n \right] = \frac{1}{N} \sum^{N-1}_{n=0} X^*[m] \cdot e^{\textcolor{red}{+}\frac{j 2 \pi m n}{N}}
 \end{equation*}
 
-\medskip
- \begin{equation*}\label{eq:1D-DFT_MatrixMult}
-X^* = W \cdot x
-\end{equation*}
-
-\medskip
-
-\begin{equation*}
- X = W \cdot X^* \cdot W
-\end{equation*}
-
- 
 \end{frame}
 
+
+
+\begin{frame}\frametitle{2D-DFT als Matrixmultiplikation}
+\begin{align*}
+ X &= W \cdot x \cdot W\\
+   &= X^* \cdot W\\
+\end{align*}
+
+\vspace{-1cm}
+\begin{figure}[ht!]
+\centering
+ \begingroup
+ \renewcommand*{\arraystretch}{1.1} % Zeilenabstand
+ \renewcommand*{\arraycolsep}{0.0pt} % Spaltenabstand
+ \[
+  \stackrel{\mbox{$W$}}{
+   \begin{bmatrix}
+    \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox	& \myLightgrayBox	& \myLightgrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
+   \end{bmatrix}
+  }
+  \quad \bullet \quad
+ \renewcommand*{\arraystretch}{0.0} % Zeilenabstand
+ \renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
+  \stackrel{\mbox{$x$}}{
+   \begin{bmatrix}
+    \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh \\
+    \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh \\
+    \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh \\
+    \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 
+   \end{bmatrix}
+  }
+ \quad = \quad
+\renewcommand*{\arraystretch}{1.1} % Zeilenabstand
+\renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand 
+  \stackrel{\mbox{$X^*$}}{
+   \begin{bmatrix}
+    \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
+   \end{bmatrix}
+  }
+\]
+ \endgroup
+\label{pic:1D-DFT_als_Matrixmultiplikation}
+\end{figure}
+\vspace{-1cm}
+\begin{figure}[ht!]
+\centering 
+ \begingroup
+ \renewcommand*{\arraystretch}{1.1} % Zeilenabstand
+ \renewcommand*{\arraycolsep}{0.0pt} % Spaltenabstand
+ \[
+  \stackrel{\mbox{$X^*$}}{
+   \begin{bmatrix}
+    \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox	& \myLightgrayBox	& \myLightgrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
+   \end{bmatrix}
+  }
+  \quad \bullet \quad
+ \renewcommand*{\arraystretch}{0.0} % Zeilenabstand
+ \renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
+  \stackrel{\mbox{$W$}}{
+   \begin{bmatrix}
+    \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh \\
+    \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh \\
+    \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh \\
+    \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 	& \myBlackBoxHigh 
+   \end{bmatrix}
+  }
+  \quad = \quad
+\renewcommand*{\arraystretch}{1.1} % Zeilenabstand
+\renewcommand*{\arraycolsep}{0.8pt} % Spaltenabstand
+  \stackrel{\mbox{$X$}}{
+   \begin{bmatrix}
+    \myBlackBox 	& \myBlackBox 		& \myBlackBox 		& \myBlackBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox \\
+    \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 	& \myLightgrayBox 
+   \end{bmatrix}
+  }
+ \]
+ \endgroup
+\label{pic:2D-DFT_als_Matrixmultiplikation}
+\end{figure}
+
+\end{frame}
+
+
+%\begin{frame}\frametitle{Transponiert}
+\begin{frame}\frametitle{Alternative Schreibweise der 2D-DFT als Matrixmultiplikation}
+ \begin{align*}
+ X &= \left(\left(x\cdot W\right)^T\cdot W\right)^T \label{eq:MatMultTranspose}\\
+   &= \left(X^{*T} \cdot W\right)^T \nonumber
+\end{align*}
+ \begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.95\textwidth]{img/MatMultTranspose2.png}
+ %\caption{Darstellung der Berechnung der 2D-DFT aus Gleichung (\ref{eq:MatMultTranspose}).}
+ %\label{pic:MatMultTranspose}
+\end{figure}
+\end{frame}
 
 
 \begin{frame}\frametitle{Berechnungsarten der DFT und deren Aufwand}
  \begin{itemize}
   \item optimierte Matrixmultiplikation mit reellen Eingangswerten
   \item optimierte Matrixmultiplikation mit komplexen Eingangswerten
-  \item Fast Fouriertransformation
-  \item variable Matrixmultiplikation
+  \item Fast Fouriertransformation (Butterfly-Algorithmus)
+  \item allgemeine Matrixmultiplikation
  \end{itemize}
 \end{frame}
 
@@ -282,18 +384,73 @@ X^* = W \cdot x
 % 3) Transformationsart (-matrix) tauschbar
 % 4) Vergleich, nicht von Interesse wegen ausschließlich $2^n$
 
+\multipleframe
+\begin{frame}\frametitle{2D-DFT mit reellen Eingangswerten zur Ausnutzung von Redundanzen}
+\begin{minipage}{0.48\textwidth}
+\begin{center}
+ \includegraphics[width=0.85\textwidth]{img/reelleMatMult.png}
+\end{center}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+ 
+\end{minipage}
+\end{frame}
 
-\begin{frame}\frametitle{Reelle Eingangswerte}
+
+\begin{frame}\frametitle{2D-DFT mit reellen Eingangswerten zur Ausnutzung von Redundanzen}
+\begin{minipage}{0.48\textwidth}
+\begin{center}
+ \includegraphics[width=0.85\textwidth]{img/reelleMatMult.png}
+\end{center}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+ \begin{center}
+ \includegraphics[width=0.6\textwidth]{img/reelleMatMultRedundanzRealteil.png} 
+ 
+ \vspace{0.5cm}
+ \includegraphics[width=0.6\textwidth]{img/reelleMatMultRedundanzImagteil.png} 
+\end{center}
+\end{minipage}
+\end{frame}
+\restoreframe
+
+
+\begin{frame}\frametitle{2D-DFT mit komplexen Eingangswerten}
  \begin{figure}[htbp]
  \centering
-   \includegraphics[width=0.4\textwidth]{img/reelleMatMult.png}
+   \includegraphics[width=0.25\textwidth]{img/komplexeMatMult.png}
 % \caption{Veranschaulichung der Berechnung der DFT mit reellen Eingangswerten.}
- \label{pic:reelleDFT}
+ \label{pic:komplexeDFT}
 \end{figure}
 \end{frame}
 
 
-\begin{frame}\frametitle{Analyse und Entwicklung: Übersicht}
+
+\begin{frame}\frametitle{Anzahl reeller Multiplikationen für die Berechnung der 8x8-2D-DFT}
+
+\begin{table}[ht!]
+\centering
+%\caption{Auflistung benötigter reeller Multiplikationen der verschiedenen Methoden für die 2D-DFT}
+ \begin{tabular}{lc}
+  \hline
+  Methode  & Anzahl reeller Multiplikationen\\
+  \hline
+  reelle Eingangswerte   & 64\\
+  komplexe Eingangswerte & 128\\
+  FFT   & 128\\
+  allgemeine Matrixmultiplikation & 4096\\
+  \hline
+ \end{tabular}
+ \label{tab:AuflistungMultiplikationen}
+\end{table} 
+\end{frame}
+
+
+
+\begin{frame}\frametitle{Analyse und Entwicklung}
+Gliederung:
  \begin{itemize}
   \item Gegenüberstellung verschiedener Größen von Twiddlefaktormatrizen
   \item Optimieren der 8x8-DFT
@@ -312,7 +469,6 @@ X^* = W \cdot x
   \renewcommand*{\arraystretch}{1.2} % Zeilenabstand der Tabelle
   \begin{table}[!ht]
   \centering
-  %\caption{Bewertung der DFT-Twiddlefaktor-Matrizen}
    \begin{tabular}{lccccc}
    \hline
     N							& 8	& 9	& 12	& 15		& 16 \\
@@ -345,8 +501,6 @@ X^* = W \cdot x
    \begin{figure}[!h]
   \centering
   \includegraphics[width=0.3\textwidth]{img/Einheitskreis-crop.pdf}
-  %\caption{Einheitskreis mit relevanten Werten der 8x8-DFT.}
-  \label{pic:Einheitskreis_Faktoren}
 \end{figure}
 
 \vspace{-0.3cm}
@@ -385,8 +539,6 @@ X^* = W \cdot x
   \]
 \vspace{0.5cm}
   Legende: $\myboxOnePos$ = 1 \quad $\myboxOneNeg$ = -1 \quad $\myboxZero$ = 0 \quad $\myboxSqrtPos$ = $\nicefrac{\sqrt{2}}{2}$ \quad $\myboxSqrtNeg$ = -$\nicefrac{\sqrt{2}}{2}$
-  %\captionof{figure}{Matrix-Darstellung der 8x8-DFT-Twiddlefaktoren aufgeteilt nach Real- und Imaginärteil.}
-  \label{pic:MatrizenDarstellungTwiddlefaktoren}
 \end{center}
 \endgroup
 \end{minipage}
@@ -395,40 +547,6 @@ X^* = W \cdot x
 \end{frame}
 
 
-
-\begin{frame}\frametitle{Anzahl reeller Multiplikationen für die Berechnung der 2D-DFT}
-
-\begin{table}[ht!]
-\centering
-%\caption{Auflistung benötigter reeller Multiplikationen der verschiedenen Methoden für die 2D-DFT}
- \begin{tabular}{lc}
-  \hline
-  Methode  & Anzahl reeller Multiplikationen\\
-  \hline
-  komplexe Eingangswerte & 128\\
-  reelle Eingangswerte   & 64\\
-  ladbare Matrixmultiplikation & 4096\\
-  FFT   & 128\\
-  \hline
- \end{tabular}
- \label{tab:AuflistungMultiplikationen}
-\end{table} 
-\end{frame}
-
-
-\begin{frame}\frametitle{Konstantenmultiplikation mit $\frac{\sqrt{2}}{2} \simeq 0.70703125 = 0001011010100_2$}
- \begin{figure}[!ht]
-\centering  
- %\fbox{
-  \includegraphics[width=1\textwidth]{img/13Bit_Konstantenmultiplizierer_neu.png}
-  %}
-  %\caption{Schaltnetz des 13 Bit Konstantenmultiplizierers für $\frac{\sqrt{2}}{2} = 0.70711 \simeq 0.70703125 = 0001011010100_2$ in Encounter; Eingang links, Ausgang rechts.}
-  \label{pic:Konstantenmultiplizierer}
-\end{figure}
-\end{frame}
-% Gatter: 82 / 194
-% Gater in Folge: 17
-% Fläche: 6612 / 21985
 
 
 \begin{frame}\frametitle{Anzahl benötigter Takte je Element, ungerade Zeilen}
@@ -470,9 +588,25 @@ X^* = W \cdot x
 \end{table}
 \medskip
 \begin{center}
-Summe der Takte ist $(3 + 5)\cdot 4 \cdot 8 \cdot 2 = 512$ 
+$\Rightarrow$ Summe der Takte ist $\underbrace{3 \cdot 4}_{\substack{\textrm{ungerade}\\\textrm{Zeilen}\\\textrm{aus}\\W}}  + \underbrace{5 \cdot 4}_{\substack{\textrm{gerade}\\\textrm{Zeilen}\\\textrm{aus}\\W}} \cdot \underbrace{8}_{\substack{\textrm{alle}\\\textrm{Spalten}\\\textrm{aus}\\\textrm{Input}}} \cdot \underbrace{2}_{\substack{\textrm{1D-DFT}\\\textrm{und}\\\textrm{2D-DFT}}} = 512$ 
 \end{center}
 \end{frame}
+
+
+\begin{frame}\frametitle{Konstantenmultiplikation mit $\frac{\sqrt{2}}{2} \simeq 0.70703125 = 0001011010100_2$}
+ \begin{figure}[!ht]
+\centering  
+ %\fbox{
+  \includegraphics[width=1\textwidth]{img/13Bit_Konstantenmultiplizierer_neu.png}
+  %}
+  %\caption{Schaltnetz des 13 Bit Konstantenmultiplizierers für $\frac{\sqrt{2}}{2} = 0.70711 \simeq 0.70703125 = 0001011010100_2$ in Encounter; Eingang links, Ausgang rechts.}
+  \label{pic:Konstantenmultiplizierer}
+\end{figure}
+\end{frame}
+% Gatter: 82 / 194
+% Gater in Folge: 17
+% Fläche: 6612 / 21985
+
 
 
 \begin{frame}\frametitle{Zustandsfolge}
@@ -483,26 +617,10 @@ Summe der Takte ist $(3 + 5)\cdot 4 \cdot 8 \cdot 2 = 512$
 \end{frame}
 
 
-\begin{frame}\frametitle{Alternative Schreibweise der 2D-DFT als Matrixmultiplikation}
- \begin{align*}
- X &= W \cdot x \cdot W \nonumber \\
-   &= \left(\left(x\cdot W\right)^T\cdot W\right)^T \label{eq:MatMultTranspose}\\
-   &= \left(X^{*T} \cdot W\right)^T \nonumber
-\end{align*}
-\end{frame}
 
 
-\begin{frame}\frametitle{Alternative Schreibweise der 2D-DFT als Matrixmultiplikation}
- \begin{figure}[htbp]
- \centering
- \includegraphics[width=0.95\textwidth]{img/MatMultTranspose2.png}
- %\caption{Darstellung der Berechnung der 2D-DFT aus Gleichung (\ref{eq:MatMultTranspose}).}
- %\label{pic:MatMultTranspose}
-\end{figure}
-\end{frame}
-
-
-\begin{frame}\frametitle{Evaluation: Übersicht}
+\begin{frame}\frametitle{Evaluation}
+Gliederung:
  \begin{itemize}
   \item Testumgebung
   \item Zeitabschätzung
@@ -512,7 +630,7 @@ Summe der Takte ist $(3 + 5)\cdot 4 \cdot 8 \cdot 2 = 512$
 \end{frame}
 
 
-\begin{frame}\frametitle{Evaluation: Testumgebung}
+\begin{frame}\frametitle{Testumgebung}
  \begin{itemize}
   \item Simulation mit NC\,Sim und SimVision
   \begin{itemize}
@@ -529,67 +647,197 @@ Summe der Takte ist $(3 + 5)\cdot 4 \cdot 8 \cdot 2 = 512$
 \end{frame}
 
 
-\begin{frame}\frametitle{Evaluation: Zeitabschätzung}
+
+\begin{frame}\frametitle{Simulationsprogramm NC\,Sim}
+  \begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.58\textwidth]{img/Simulationsdauer_Anfang.png}
+  \hfill
+  \includegraphics[width=0.161\textwidth]{img/Simulationsdauer_Mitte.png}
+  \hfill
+  \includegraphics[width=0.241\textwidth]{img/Simulationsdauer_Ende.png}
+ \end{figure}
+\end{frame}
+
+\begin{frame}\frametitle{Verifikation der benötigen Takte}
+ \begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.6\textwidth]{img/Simulation_edge_count_clk.png}
+ \end{figure}
+
+\end{frame}
+
+
+
+\begin{frame}\frametitle{Zeitabschätzung}
+\vspace{-0.5cm}
+\begin{center}
+Gegeben: Systemtakt: \SI{100}{MHz}, max. Drehzahl: 8000min\,${}^{-1}$, Auflösung: $1^\circ$ 
+\end{center}
+\vspace{0.3cm}
+
  \begin{align*}
-    \nonumber RPM &= 8000\, \textrm{min}^{-1}\\[10pt] 
-    \frac{RPM}{60} &= 1333,\bar{3}\,\texttt{sec}^{-1}  \\[10pt]
-    \nonumber \curvearrowright 1\, \textrm{Umdrehung} &= \frac{1}{1333,\bar{3}\,\texttt{sec}^{-1}} \\[10pt] 
-    &= 7,5\cdot 10^{-3}\,\textrm{sec}\\[10pt]
-    \nonumber 1^\circ &\widehat{=} \frac{7,5\cdot 10^{-3}\,\textrm{sec}}{360}\\[10pt]
-    1^\circ & \widehat{=} 20,83\cdot10^{-6}\,\sec \\[10pt]
-    \nonumber 100\cdot10^6\,Hz &= 10\cdot10^{-9}\,\sec \\[10pt]
-    \frac{20,83\cdot10^{-6}\sec}{10\cdot10^{-9}\sec} &= 2083\, \textrm{Takte} \label{eq:Takte}
+    \frac{8000\min^{-1}}{60} &= 1333,\bar{3}\,\texttt{sec}^{-1}  \\[10pt]
+    \nonumber \curvearrowright 1\, \textrm{Umdrehung} &= \frac{1}{1333,\bar{3}\,\texttt{sec}^{-1}} = 7,5\cdot 10^{-3}\,\textrm{sec}\\[10pt]
+    \nonumber 1^\circ &\widehat{=} \frac{7,5\cdot 10^{-3}\,\textrm{sec}}{360} = 20,83\cdot10^{-6}\,\sec \\[10pt]
+    \textcolor{red}{20,83\cdot10^{-6}\sec \cdot 100\,\MHz} & \textcolor{red}{ = 2083\, \textrm{Takte}}
 \end{align*}
 \end{frame}
 
 
-\begin{frame}\frametitle{Evaluation: Chipimplementation}
+\begin{frame}\frametitle{Chipimplementation: Stromversorgung}
 \begin{center}
-        \includegraphics[width=0.35\textwidth]{img/FP_2.png}
+        %\includegraphics[width=0.35\textwidth]{img/FP_2.png}
         %\hfill
-        \quad
-        \includegraphics[width=0.35\textwidth]{img/FP_3.png}
+        %\quad
+        \includegraphics[width=0.49\textwidth]{img/FP_3.png}
         %\vskip\baselineskip
-        
-        \includegraphics[width=0.35\textwidth]{img/FP_4.png}
-        \quad
-        \includegraphics[width=0.35\textwidth]{img/FP_5.png}
+        \hfill
+        \includegraphics[width=0.49\textwidth]{img/FP_4.png}
+        %\quad
+        %\includegraphics[width=0.35\textwidth]{img/FP_5.png}
+        blau: Layer 1,  rot:  Layer 2,  grün: Layer 3
 \end{center}
 \end{frame}
 
-% Fläche: 1 524 960 µm² = 1,5mm²
-% Gatter: 15310
-
-\begin{frame}\frametitle{Evaluation: Chipimplementation}
- \begin{figure}
-  \centering
-  \includegraphics[width=0.8\textwidth]{img/Vias.png}
- \end{figure}
+\begin{frame}\frametitle{Chipimplementation: Platzierung der Standardzellen}
+\begin{center}
+ \includegraphics[width=0.85\textwidth]{img/Bilder/Screen1_BlockCell_crop_white.png}\\
+ blau: Layer 1,  rot:  Layer 2,  grün: Layer 3
+\end{center}
 \end{frame}
 
-% blau: Layer 1
-% rot:  Layer 2
-% grün: Layer 3
+\begin{frame}\frametitle{Chipimplementation: Platzierung der Standardzellen}
+\begin{minipage}{0.69\textwidth}
+ \includegraphics[width=1\textwidth]{img/FP_5.png}
+\end{minipage}
+\hfill%
+\begin{minipage}{0.29\textwidth}
+  Standardzellen:\\ \vspace{0.3cm}  \num{15310}\\
+  Fläche:\\ \vspace{0.3cm} \num{1524960}µm² = 1,5mm²\\
+  Prozess: \\ \vspace{0.3cm} 350µm²
+\end{minipage}
+\end{frame}
 
+
+
+
+
+
+
+
+
+
+\multipleframe
+\begin{frame}\frametitle{Zusatzfeature: Implementation der IDFT}
+
+\begin{minipage}{0.48\textwidth}
+\begin{minipage}{1\textwidth}
+
+\begin{align*}
+  W &= \sum_{m=0}^{N-1} \sum_{n=0}^{N-1} e^{\textcolor{red}{-}\frac{j 2 \pi m n}{N}}\\
+\end{align*}
+\end{minipage}
+
+\begin{minipage}{1\textwidth}
+
+\begin{center}
+  %\includegraphics[width=0.6\textwidth]{img/Einheitskreis-crop.pdf}
+\tikzstyle{dot}=[draw,shape=circle]
+
+\begin{tikzpicture}[scale=1.2]
+\draw[step=.5cm,gray, thin];
+\draw (-1.2,0) -> (1.2,0);
+\draw (0,-1.2) ->(0,1.2);
+\draw (0,0) circle[radius=1cm];
+\draw [thick] (0, 0) -- (0.866, 0.5);
+\draw [thick] (0, 0) -- (0.866, -0.5);
+\draw (1.1, 0.1) node {1};
+\draw (1.3, 0.6) node {$e^{+j\pi kt}$};
+\draw (1.3, -0.6) node {$e^{-j\pi kt}$};
+\draw (-0.07, 1.2) node {$j$};
+\draw (-1.2, 0.1) node {$-1$};
+\draw (-0.2, -1.2) node {$-j$};
+\node[dot, fill, inner sep=1pt] at(0.866,0.5){};
+\node[dot, fill, inner sep=1pt] at(0.866,-0.5){};
+\end{tikzpicture}
+
+\end{center}
+\end{minipage}
+\end{minipage}
+\hfill%
+\begin{minipage}{0.48\textwidth}
+\begin{minipage}{1\textwidth}
+\begin{align*}
+W^{*} &= \sum_{m=0}^{N-1} \sum_{n=0}^{N-1} e^{\textcolor{red}{+}\frac{j 2 \pi m n}{N}}\\
+\end{align*} 
+\end{minipage}
+\begin{minipage}{1\textwidth}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{img/IDFT_Zeilentausch_dummy.png}
+\end{center}
+\end{minipage}
+\end{minipage}
+
+\end{frame}
 
 \begin{frame}\frametitle{Zusatzfeature: Implementation der IDFT}
- \begin{figure}[ht]
- \centering
- \includegraphics[width=0.3\textwidth]{img/IDFT_Zeilentausch.png}
- %\caption{Vertauschen der Zeilen 2 und 8, 3 und 7 sowie 4 und 6 der Twiddlefaktormatrix, um von der DFT zur IDFT zu gelangen.}
- \label{pic:IDFT_Zeilentausch}
-\end{figure}
-\end{frame}
+\begin{minipage}{0.48\textwidth}
+\begin{minipage}{1\textwidth}
+\begin{align*}
+  W &= \sum_{m=0}^{N-1} \sum_{n=0}^{N-1} e^{\textcolor{red}{-}\frac{j 2 \pi m n}{N}}\\
+\end{align*}
+\end{minipage}
 
+\begin{minipage}{1\textwidth}
+\begin{center}
+  \tikzstyle{dot}=[draw,shape=circle]
+
+\begin{tikzpicture}[scale=1.2]
+\draw[step=.5cm,gray, thin];
+\draw (-1.2,0) -> (1.2,0);
+\draw (0,-1.2) ->(0,1.2);
+\draw (0,0) circle[radius=1cm];
+\draw [thick] (0, 0) -- (0.866, 0.5);
+\draw [thick] (0, 0) -- (0.866, -0.5);
+\draw (1.1, 0.1) node {1};
+\draw (1.3, 0.6) node {$e^{+j\pi kt}$};
+\draw (1.3, -0.6) node {$e^{-j\pi kt}$};
+\draw (-0.07, 1.2) node {$j$};
+\draw (-1.2, 0.1) node {$-1$};
+\draw (-0.2, -1.2) node {$-j$};
+\node[dot, fill, inner sep=1pt] at(0.866,0.5){};
+\node[dot, fill, inner sep=1pt] at(0.866,-0.5){};
+\end{tikzpicture}
+\end{center}
+\end{minipage}
+\end{minipage}
+\hfill%
+\begin{minipage}{0.48\textwidth}
+\begin{minipage}{1\textwidth}
+\begin{align*}
+W^{*} &= \sum_{m=0}^{N-1} \sum_{n=0}^{N-1} e^{\textcolor{red}{+}\frac{j 2 \pi m n}{N}}\\
+\end{align*} 
+\end{minipage}
+\begin{minipage}{1\textwidth}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{img/IDFT_Zeilentausch.png}
+\end{center}
+\end{minipage}
+\end{minipage}
+
+\end{frame}
+\restoreframe
 
 \begin{frame}\frametitle{Zusammenfassung}
  \begin{itemize}
-  \item DFT als 8x8 hat sich als effizienteste erwiesen
+  \item DFT als 8x8 hat sich als effizient erwiesen
   \item Optimierung der Multiplikationen mit der Twiddlefaktormatrix
   \item Kritischer Pfad scheint Konstantenmultiplikation zu sein
   \item Berechnung der 1D- und 2D-DFT mit selber Einheit
   \item Benötigte Takte liegen im realistischen Rahmen
-  \item IDFT kann durch geringe Ergänzungen im Quelltext berechnet werden
+  \item DFT und IDFT benötigen zusammen etwa 50\% der verfügbaren Takte
+  \item IDFT kann durch geringe Ergänzungen berechnet werden
   \item Wertvolle Grundlagen für die Implementation der 15x15 2D-DFT
  \end{itemize}
 
@@ -600,7 +848,7 @@ Summe der Takte ist $(3 + 5)\cdot 4 \cdot 8 \cdot 2 = 512$
 \begin{itemize}
  \item Reduzierung des kritischen Pfades
  \begin{itemize}
-  \item auf zwei Gatter aufteilen
+  \item auf zwei Schaltnetze aufteilen
   \item Wallace-Tree verwenden
  \end{itemize}
  \item 15x15 mit ähnlich vielen Takten

@@ -6,6 +6,27 @@
 %\usetheme{Montpellier}
 \setbeamertemplate{footline}[frame number]
 
+\newcounter{multipleslide}
+\makeatletter%
+\newcommand{\multipleframe}{%
+\setcounter{multipleslide}{\value{framenumber}}
+\stepcounter{multipleslide}
+\patchcmd{\beamer@@tmpl@footline}% <cmd>
+  {\insertframenumber}% <search>
+  {\themultipleslide}% <replace>
+  {}% <success>
+  {}% <failure>
+}
+\newcommand{\restoreframe}{%
+\patchcmd{\beamer@@tmpl@footline}% <cmd>
+  {\themultipleslide}% <search>
+  {\insertframenumber}% <replace>
+  {}% <success>
+  {}% <failure>
+\setcounter{framenumber}{\value{multipleslide}}%
+}
+\makeatother%
+
 \usepackage{pgfpages}
 \usepackage{booktabs}
 \usepackage[%				
